@@ -7,7 +7,7 @@ image: python:3.10
 
 variables:
   BUNDLE_VAR_commit_hash: $CI_COMMIT_SHORT_SHA
-  BUNDLE_DIR: { { .package_name } }
+  BUNDLE_DIR: {{.package_name}}
 
 .install_databricks_cli:
   before_script:
