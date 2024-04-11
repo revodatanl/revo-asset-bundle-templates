@@ -11,7 +11,7 @@ on:
 
 jobs:
   unittests:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ "{{" }} matrix.os {{ "}}" }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -29,4 +29,4 @@ jobs:
       - name: "Run unit (and integrations) tests"
         run: pytest -v tests
         env:
-          PYTHONPATH: ${{ github.workspace }}/src
+          PYTHONPATH: $${{ "{{" }} github.workspace {{ "}}" }}/src
