@@ -1,0 +1,29 @@
+trigger:
+  - main
+
+variables:
+  - group: dynamite-prod
+
+pool:
+  Default
+  # vmImage: ubuntu-latest
+
+steps:
+  - script: |
+      curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+      databricks version
+    displayName: "Install Databricks CLI"
+
+  - script: |
+      envsubst < ./.azuredevops/databricks.cfg > ~/.databrickscfg
+    env:
+      DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+    displayName: "Configure Databricks authentication"
+
+  - script: |
+      databricks bundle deploy
+    displayName: "Deploy bundle"
+
+  - script: |
+      databricks bundle run vm-usage-subscription-job --refresh-all
+    displayName: "Run job and refresh all tables"

@@ -1,0 +1,31 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  semantic-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: latest
+
+      - name: Install dependencies
+        run: |
+          if [ ! -e package-lock.json ]; then
+            npm i
+            fi
+          npm ci
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release

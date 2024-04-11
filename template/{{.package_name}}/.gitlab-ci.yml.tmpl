@@ -1,0 +1,95 @@
+default:
+  tags:
+    - "002665144501"
+    - "bridgefund-dev"
+
+image: python:3.10
+
+variables:
+  BUNDLE_VAR_commit_hash: $CI_COMMIT_SHORT_SHA
+  BUNDLE_DIR: { { .package_name } }
+
+.install_databricks_cli:
+  before_script:
+    - curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+.install_python_dependencies:
+  before_script:
+    - echo "Installing Python dependencies..."
+    - pip install poetry
+    - poetry install
+    - export PYTHONPATH="."
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
+stages:
+  - security-testing
+  - auth
+  - validate
+  - build
+  - deploy
+
+sast:
+  stage: security-testing
+
+auth:
+  stage: auth
+  extends: .install_databricks_cli
+  script:
+    - |
+      cat <<EOT >> $CI_PROJECT_DIR/.databrickscfg
+      [DEFAULT]
+      host             = https://dbc-d0593d7e-6cb1.cloud.databricks.com/
+      token            = $DATABRICKS_TOKEN_DEV
+      jobs-api-version = 2.0
+
+      [PROD]
+      host             = https://dbc-10a26f68-dc95.cloud.databricks.com/
+      token            = $DATABRICKS_TOKEN_PROD
+      jobs-api-version = 2.0
+      EOT
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/.databrickscfg
+
+validate:bundle:
+  extends: .install_databricks_cli
+  stage: validate
+  script:
+    - cd $BUNDLE_DIR
+    - databricks bundle validate
+  except:
+    - main
+  needs:
+    - auth
+
+# validate:pre-commit:
+#   stage: validate
+#   extends: .install_python_dependencies
+#   script:
+#     - poetry run pre-commit run --all
+
+deploy:dev:
+  extends: .install_databricks_cli
+  stage: deploy
+  script:
+    - cd $BUNDLE_DIR
+    - databricks bundle deploy -t dev
+  except:
+    - main
+  needs:
+    - auth
+    - validate:bundle
+    # - validate:pre-commit
+
+deploy:prod:
+  extends: .install_databricks_cli
+  stage: deploy
+  script:
+    - cd $BUNDLE_DIR
+    - databricks bundle deploy -t prod
+  dependencies:
+    - auth
+  only:
+    - main

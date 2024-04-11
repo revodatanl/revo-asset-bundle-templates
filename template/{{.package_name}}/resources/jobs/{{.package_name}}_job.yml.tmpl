@@ -1,0 +1,48 @@
+# The main job for {{.package_name}}.
+resources:
+  jobs:
+    {{.package_name}}_job:
+      name: {{.package_name}}_job
+
+      schedule:
+        # Run every day at 8:37 AM
+        quartz_cron_expression: "44 37 8 * * ?"
+        timezone_id: Europe/Amsterdam
+
+      email_notifications:
+        on_failure:
+          - {{.email}}
+
+      tasks:
+        - task_key: notebook_task
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: ../src/notebook.ipynb
+
+        - task_key: refresh_pipeline
+          depends_on:
+            - task_key: notebook_task
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.{{.package_name}}_pipeline.id}
+
+        - task_key: main_task
+          depends_on:
+            - task_key: refresh_pipeline
+          job_cluster_key: job_cluster
+          python_wheel_task:
+            package_name: {{.package_name}}
+            entry_point: main
+          libraries:
+            # By default we just include the .whl file generated for the {{.package_name}} package.
+            # See https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
+            # for more information on how to add other libraries.
+            - whl: ../dist/*.whl
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 14.3.x-scala2.12
+            node_type_id: Standard_D3_v2
+            autoscale:
+              min_workers: 1
+              max_workers: 4
