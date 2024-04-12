@@ -1,0 +1,38 @@
+name: check_python_packaging
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/check_python_packaging.yml"
+      - "src/{{.package_name}}/**"
+      - "resources/**"
+      - "tests/**"
+      - "pyproject.toml"
+
+jobs:
+  check_python_packaging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - name: Install dependencies
+        run: |
+          poetry export -f requirements.txt --without-hashes --output=build-requirements.txt
+          python -m pip install --upgrade pip
+          python -m pip install -r build-requirements.txt
+      - name: Build the package using Poetry
+        run: |
+          poetry build
+      - name: Unpack the generated package
+        run: |
+          tar -xvzf dist/{{.package_name}}-*.tar.gz
+      - name: Compare contents with the repo folder
+        run: |
+          diff -r -x __pycache__ src/{{.package_name}}/ {{.package_name}}-*/src/{{.package_name}}
