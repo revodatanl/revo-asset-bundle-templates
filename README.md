@@ -2,6 +2,8 @@
 
 The `RevoData Bundle Templates` contains our custom templates for Databricks Asset Bundles. The template should initate a complete development environment for new Databricks projects, including GitHub Actions, pre-commit hooks, and example pipelines and jobs that can be deployed to Databricks.
 
+Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing the foundation for this template!
+
 ## Getting started
 
 1. Install the Databricks CLI from <https://docs.databricks.com/dev-tools/cli/databricks-cli.html>
