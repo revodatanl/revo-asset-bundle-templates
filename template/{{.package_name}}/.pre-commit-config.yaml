@@ -34,6 +34,14 @@ repos:
     repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.9.0
   - hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: ["--load-plugins=databricks.labs.pylint.all"]
+    repo: local
+  - hooks:
       - id: pytest-unit-tests
         name: pytest-unit-tests
         args: [./tests/unit/]
