@@ -18,7 +18,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    runs-on: ${{ matrix.os }}
+    runs-on: $${{ "{{" }} matrix.os {{ "}}" }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
