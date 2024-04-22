@@ -36,10 +36,12 @@ repos:
   - hooks:
       - id: pylint
         name: pylint
-        entry: bash -c 'source ./.venv/bin/activate && pylint'
+        entry: pylint
         language: system
         types: [python]
-        args: ["--rcfile=pyproject.toml", "--load-plugins=databricks.labs.pylint.all"]
+        args:
+          - --rcfile=pyproject.toml
+          - --load-plugins=databricks.labs.pylint.all
     repo: local
   - hooks:
       - id: pytest-unit-tests
