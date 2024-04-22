@@ -8,6 +8,7 @@
     "redhat.vscode-yaml",
     "ms-python.mypy-type-checker",
     "davidanson.vscode-markdownlint",
-    "njpwerner.autodocstring"
+    "njpwerner.autodocstring",
+    "ms-python.pylint"
   ]
 }
