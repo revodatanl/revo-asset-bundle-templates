@@ -1,3 +1,8 @@
+# ANSI escape codes
+GREEN=\033[0;32m
+ORANGE=\033[38;5;208m
+RESET=\033[0m
+
 setup:
 	@echo "Before continuing, please ensure you have the following tools installed and configured:"
 	@echo "  - python"
@@ -55,4 +60,26 @@ dev_deploy:
 		databricks configure --profile "$$PROFILE_NAME"; \
 	else \
 		databricks bundle deploy --profile "$$PROFILE_NAME"; \
+	fi
+
+# This target initializes a local git repo, creates a repository in RevoData's GitHub, 
+# adds a remote to the local git repo, and publishes the project.
+publish:
+	@printf "$(GREEN)Initializing git repository...$(RESET)\n"
+	@(git init && \
+	git add . && \
+	(git diff --cached --exit-code || git commit -m "Initial commit")) > /dev/null;
+	@printf "Local git repository set up.\n"
+
+	@printf "$(GREEN)Creating repository in RevoData's GitHub...$(RESET)\n"
+	@if ! gh repo view revodatanl/${project_name} > /dev/null 2>&1; then \
+		REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}'); \
+		gh repo create revodatanl/${project_name} -y --private -d "$$REPO_DESCRIPTION" > /dev/null 2>&1; \
+		printf "Repository created at revodatanl/${project_name}...$(RESET)\n"; \
+		printf "$(GREEN)Publishing project...$(RESET)\n"; \
+		(git remote | grep origin || git remote add origin git@github.com:revodatanl/${project_name}.git && \
+		git push -u origin main) > /dev/null 2>&1; \
+		printf "Repository published.\n"; \
+	else \
+		printf "Repository revodatanl/${project_name} already exists.\n"; \
 	fi
