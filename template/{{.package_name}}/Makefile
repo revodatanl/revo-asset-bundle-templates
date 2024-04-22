@@ -1,6 +1,5 @@
 # ANSI escape codes
 GREEN=\033[0;32m
-ORANGE=\033[38;5;208m
 RESET=\033[0m
 
 setup:
@@ -28,6 +27,10 @@ setup:
 	poetry config virtualenvs.in-project true --local; \
 	poetry env use python $$PYTHON_VERSION; \
 	poetry install;
+
+	@if [ ! -d ".git" ]; then \
+		git init > /dev/null; \
+	fi
 
 	. .venv/bin/activate;
 	.venv/bin/pre-commit install;
@@ -62,24 +65,17 @@ dev_deploy:
 		databricks bundle deploy --profile "$$PROFILE_NAME"; \
 	fi
 
-# This target initializes a local git repo, creates a repository in RevoData's GitHub, 
-# adds a remote to the local git repo, and publishes the project.
+# Create a repository in RevoData's GitHub, and adds a remote to the local git repo
 publish:
-	@printf "$(GREEN)Initializing git repository...$(RESET)\n"
-	@(git init && \
-	git add . && \
-	(git diff --cached --exit-code || git commit -m "Initial commit")) > /dev/null;
-	@printf "Local git repository set up.\n"
-
 	@printf "$(GREEN)Creating repository in RevoData's GitHub...$(RESET)\n"
-	@if ! gh repo view revodatanl/${project_name} > /dev/null 2>&1; then \
-		REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}'); \
-		gh repo create revodatanl/${project_name} -y --private -d "$$REPO_DESCRIPTION" > /dev/null 2>&1; \
-		printf "Repository created at revodatanl/${project_name}...$(RESET)\n"; \
+	@PROJECT_NAME=$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'); \
+	REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}'); \
+	if ! gh repo view revodatanl/$$PROJECT_NAME > /dev/null 2>&1; then \
+		gh repo create revodatanl/$$PROJECT_NAME -y --private -d "$$REPO_DESCRIPTION" > /dev/null 2>&1; \
+		(git remote | grep origin || git remote add origin git@github.com:revodatanl/$$PROJECT_NAME.git) > /dev/null 2>&1; \
+		printf "Repository created at revodatanl/$$PROJECT_NAME...$(RESET)\n"; \
 		printf "$(GREEN)Publishing project...$(RESET)\n"; \
-		(git remote | grep origin || git remote add origin git@github.com:revodatanl/${project_name}.git && \
-		git push -u origin main) > /dev/null 2>&1; \
 		printf "Repository published.\n"; \
 	else \
-		printf "Repository revodatanl/${project_name} already exists.\n"; \
+		printf "Repository revodatanl/$$PROJECT_NAME already exists.\n"; \
 	fi
