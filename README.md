@@ -21,20 +21,3 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
 
 This will create a new directory with the template files. You can now start developing your project.
 
-## Prerequisites
-
-This bundle heavily depends on a specific python version being `3.10.12`.
-If you run another version, ensure you first create and activate a venv with that version
-
-```bash
-virtualenv ./.venv --python=3.10
-source ./.venv/bin/activate
-```
-
-## Setup
-Run the setup by executing
-
-```bash
-make setup
-```
-
