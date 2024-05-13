@@ -5,6 +5,21 @@ variables:
   var_name:
     description: Description.
     default: "default_value"
+  spark_version:
+    description: "default Spark version to use for jobs"
+    default: "14.3.x-scala2.12"
+  default_driver_pool:
+    description: "Pool ID for Standard_DS3_v2 machines"
+    default: ""
+  default_worker_pool:
+    description: "Pool ID for Standard_DS4as_v5 machines"
+    default: ""
+  advanced_driver_pool:
+    description: "Pool ID for Standard_DS5_v2 machines"
+    default: ""
+  advanced_worker_pool:
+    description: "Pool ID for Standard_DS16ds_v5 machines"
+    default: ""
 
 include:
   - resources/jobs/*.yml
