@@ -35,13 +35,6 @@ setup:
 	. .venv/bin/activate;
 	.venv/bin/pre-commit install;
 
-test:
-	.venv/bin/pre-commit run --all-files
-	poetry update
-	poetry build
-	poetry install --only-root
-	pytest --cov=src tests/
-
 clean:
 	-@if command -v deactivate &> /dev/null; then \
 		bash -c "source deactivate" || true; \
@@ -52,12 +45,19 @@ clean:
 	find . -name ".mypy_cache" -type d -exec rm -rf {} +
 	find . -name ".ruff_cache" -type d -exec rm -rf {} +
 
-dev_deploy:
+test:
+	.venv/bin/pre-commit run --all-files
+	poetry update
+	poetry build
+	poetry install --only-root
+	pytest --cov=src tests/
+
+deploy_dev:
 	.venv/bin/pre-commit run --all-files
 	poetry update
 	poetry build
 
-	@PROFILE_NAME="profile_name"; \
+	@PROFILE_NAME="{{.profile_name}}"; \
 	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile "$$PROFILE_NAME"; \
@@ -65,8 +65,21 @@ dev_deploy:
 		databricks bundle deploy --profile "$$PROFILE_NAME"; \
 	fi
 
+deploy_prod:
+	.venv/bin/pre-commit run --all-files
+	poetry update
+	poetry build
+
+	@PROFILE_NAME="{{.profile_name}}"; \
+	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
+	if [[ $$output == *"Error: resolve:"* ]]; then \
+		databricks configure --profile "$$PROFILE_NAME"; \
+	else \
+		databricks bundle deploy --profile "$$PROFILE_NAME" --target prod; \
+	fi
+
 # Create a repository in RevoData's GitHub, and adds a remote to the local git repo
-publish:
+repo:
 	@printf "$(GREEN)Creating repository in RevoData's GitHub...$(RESET)\n"
 	@PROJECT_NAME=$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'); \
 	REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}'); \

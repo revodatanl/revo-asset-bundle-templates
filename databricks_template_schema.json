@@ -19,6 +19,11 @@
       "type": "string",
       "description": "Description of the project",
       "order": 4
+    },
+    "profile_name": {
+      "type": "string",
+      "description": "Configured ~/.databrickscfg profile for this Bundle",
+      "order": 5
     }
   },
   "success_message": "\n Your new project has been created in the '{{.package_name}}' directory."
