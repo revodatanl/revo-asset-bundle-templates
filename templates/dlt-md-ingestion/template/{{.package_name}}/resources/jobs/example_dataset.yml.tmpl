@@ -22,7 +22,7 @@ resources:
 
       email_notifications:
         on_failure:
-          - { { .email } }
+          - {{.email}}
 
       schedule:
         # Run every day at 8:37 AM
