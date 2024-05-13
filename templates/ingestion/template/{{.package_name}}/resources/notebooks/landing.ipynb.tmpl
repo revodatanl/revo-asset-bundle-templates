@@ -1,0 +1,184 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "file_path = str(spark.conf.get(\"bundle.sourcePath\", \".\"))  # noqa: F821\n",
+    "\n",
+    "%pip install {file_path}/dist/{{.package_name}}-*-py3-none-any.whl"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Landing\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "854585a4-85e4-49e0-bc3d-81ea7fce9788",
+     "showTitle": false,
+     "title": ""
+    }
+   },
+   "source": [
+    "#### Load libraries and functions\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "60385ce8-677c-4fa1-b71b-d9da3963e343",
+     "showTitle": false,
+     "title": ""
+    }
+   },
+   "outputs": [],
+   "source": [
+    "import dlt\n",
+    "from pyspark.sql import DataFrame\n",
+    "from pyspark.sql import functions as F"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "if \"spark\" not in locals():\n",
+    "    from pyspark.sql import SparkSession\n",
+    "\n",
+    "    spark = SparkSession.builder.appName(\"local_spark\").getOrCreate()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "d2c8fc2a-8dd3-4fa3-b8ad-9cc189579cb4",
+     "showTitle": false,
+     "title": ""
+    }
+   },
+   "source": [
+    "### Set parameters\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "table_name = spark.conf.get(\"table_name\")\n",
+    "autoloader_path = spark.conf.get(\"autoloader_path\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "8ed3b4a6-390f-4804-b89d-c2686f3012ee",
+     "showTitle": false,
+     "title": ""
+    }
+   },
+   "source": [
+    "## Load raw data into Landing using Auto Loader\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "01c20bca-909c-4ff9-aa79-c99e6787edc5",
+     "showTitle": false,
+     "title": ""
+    }
+   },
+   "outputs": [],
+   "source": [
+    "@dlt.table(\n",
+    "    name=f\"landing_{table_name}\",\n",
+    "    # temporary=True,\n",
+    "    table_properties={\"quality\": \"bronze\"},\n",
+    "    comment=\"Data loaded from Landing Zone\",\n",
+    ")\n",
+    "def landing() -> DataFrame:\n",
+    "    \"\"\"Ingest raw data from the landing zone using the Auto Loader.\"\"\"\n",
+    "    return (\n",
+    "        spark.readStream.format(\"cloudFiles\")\n",
+    "        .option(\"cloudFiles.format\", \"parquet\")\n",
+    "        .load(autoloader_path)\n",
+    "        .withColumn(\"load_date\", F.current_timestamp())\n",
+    "        .select(\"*\", \"_metadata\")\n",
+    "    )"
+   ]
+  }
+ ],
+ "metadata": {
+  "application/vnd.databricks.v1+notebook": {
+   "dashboards": [],
+   "language": "python",
+   "notebookMetadata": {
+    "pythonIndentUnit": 4
+   },
+   "notebookName": "landing",
+   "widgets": {}
+  },
+  "kernelspec": {
+   "display_name": ".venv",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}
