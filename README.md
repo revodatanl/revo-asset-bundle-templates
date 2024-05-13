@@ -20,4 +20,3 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
    ```
 
 This will create a new directory with the template files. You can now start developing your project.
-

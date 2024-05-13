@@ -96,20 +96,34 @@ disable = [
     "C0301",    # "Line too long." My comments and docstrings are sometimes longer than 100 characters.
 ]
 
-[tool.bumpver]
-current_version = "0.1.0"
-version_pattern = "MAJOR.MINOR.PATCH"
-commit_message = "bump version {old_version} -> {new_version}"
-commit = true
-tag = true
-push = true
-
-[tool.bumpver.file_patterns]
-"pyproject.toml" = [
-    '^version = "{version}"$',
-    '^current_version = "{version}"$',
-]
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:tool.poetry.version"]
+major_on_zero = true
+branch = "main"
+hvcs = "github"
+commit_author = "github-actions <actions@github.com>"
+upload_to_release = "false"
+changelog_file = "CHANGELOG.md"
+changelog_generate = "true"
+commit_parser = "angular"
+commit_version_number = { enabled = "true" }
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = [
+    # Uncomment these patterns to repress from CHANGELOG
+    # '''chore(?:\([^)]*?\))?: .+''',
+    # '''ci(?:\([^)]*?\))?: .+''',
+    # '''refactor(?:\([^)]*?\))?: .+''',
+    # '''style(?:\([^)]*?\))?: .+''',
+    # '''test(?:\([^)]*?\))?: .+''',
+    # '''build\((?!deps\): .+)''',
+    '''Merged? .*''',
+    '''Initial Commit.*''',
+    '''Merge pull request #\d+ from .+''',
+    # Old semantic-release version commits
+    '''^\d+\.\d+\.\d+''',
+]
