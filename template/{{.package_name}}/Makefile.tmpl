@@ -92,3 +92,8 @@ repo:
 	else \
 		printf "Repository revodatanl/$$PROJECT_NAME already exists.\n"; \
 	fi
+
+# Add custom RevoData modules to the project
+module_dlt:
+	@printf "$(GREEN)Adding DLT module...$(RESET)\n"
+	databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/dlt-md-ingestion
