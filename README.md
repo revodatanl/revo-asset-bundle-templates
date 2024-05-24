@@ -15,8 +15,8 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
 
 2. Initialize a new project using the template:
 
-   ```bash
-   databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
-   ```
+```bash
+databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
+```
 
 This will create a new directory with the template files. You can now start developing your project.
