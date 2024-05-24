@@ -11,5 +11,5 @@
       "order": 2
     }
   },
-  "success_message": "\nYour DLT ingestion pipeline has been added to the '{{.package_name}}' directory."
+  "success_message": "\nYour DLT ingestion pipeline(s) have been added to the 'resources' directory."
 }
