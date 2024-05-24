@@ -13,7 +13,7 @@ packages = [{ include = "{{.package_name}}", from = "src" }]
 python = "^3.10.12"
 
 [tool.poetry.dev-dependencies]
-bumpver = "^2023.1129"
+databricks = "^0.2"
 databricks-connect = "^14.3.1"
 databricks-sdk = "^0.24.0"
 ipykernel = "^6.25.2"
@@ -22,20 +22,17 @@ pre-commit = "^3.7.0"
 pre-commit-update = "^0.2.1"
 pydantic = "^2.6.4"
 pyspark = "^3.5.1"
-
-[tool.poetry.group.format.dependencies]
-databricks-labs-pylint = "^0.1.1"
 mypy = "^1.9.0"
 mypy-extensions = "^1.0.0"
 pylint = "^3.1.0"
+databricks-labs-pylint = "^0.1.1"
 ruff = "^0.3.5"
 types-pytz = "^2024.1.0.20240203"
-
-[tool.poetry.group.test.dependencies]
 coverage = "^7.4.4"
 pytest = "^8.1.1"
 pytest-cov = "^5.0.0"
 pytest-mock = "^3.14.0"
+python-semantic-release = "^9.6.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -54,19 +51,16 @@ select = ["ALL"]
 ignore = [
     "D203",     # "One blank line required before class docstring." Should be disabled by default.
     "D213",     # "Multi-line docstring summary should start at the second line." Should be disabled by default.
-    "E501",     # "Line too long." If Black is happy, I'm happy.
+    "E501",     # "Line too long." Sometimes my comments are a bit longer.
     "S101",     # "Use of `assert` detected." Used quite often in tests.
     "FBT001",   # "Boolean positional arg in function definition." I sometimes use this.
     "FBT002",   # "Boolean default value in function definition." I sometimes use this too.
     "ERA001",   # "Found commented out code." I comment out code sometimes
     "E731",     # "Do not assign a lambda expression, use a def." Needed for spark UDFs.
     "N812",     # "Lowercase `functions` imported as non-lowercase." Pretty standard for spark programming.
-    # formatter-specific exceptions
     "COM812",   # "Missing trailing comma." Ignored since it conflicts with the formatter.
     "ISC001",   # "Implicit string concatenation." Ignored since it conflicts with the formatter.
-    # project-specific exceptions
-    "T201",     # "`print` found." I use this for debugging. Sue me.
-    "S608",     # "Possible SQL injection vector through string-based query construction." This is the way I set up the queries.
+    "T201",     # "`print` found." I use this for debugging.
 ]
 unfixable = [
     "F401",     # "Unused import." Disabled since it makes linting/formatting notebooks messy and impossible.
@@ -93,7 +87,9 @@ ignore_missing_imports = true
 max-line-length = 100
 ignore-paths = [".venv/"]
 disable = [
-    "C0301",    # "Line too long." My comments and docstrings are sometimes longer than 100 characters.
+    "C0301",    # "Line too long." Handled by Ruff.
+    "C8920",    # "Remove commented out code." Handled by Ruff.
+    "R0913",    # "Too many arguments." Handled by Ruff.
 ]
 
 [tool.pytest.ini_options]
