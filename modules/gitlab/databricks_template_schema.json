@@ -1,0 +1,10 @@
+{
+  "properties": {
+    "package_name": {
+      "type": "string",
+      "description": "Package name",
+      "order": 1
+    }
+  },
+  "success_message": "\nYour default Gitlab pipeline(s) have been added to the '{{.package_name}}' directory.\n\nYou can remove the '{{.package_name}}/.github' directory if you do not intend to use GitHub."
+}

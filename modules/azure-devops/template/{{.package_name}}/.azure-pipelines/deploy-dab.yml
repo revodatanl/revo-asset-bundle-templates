@@ -1,0 +1,29 @@
+name: deploy-dab
+
+# This configuration ensures that deployment only happens if there are changes merged into the main branch.
+trigger:
+  branches:
+    include:
+      - "main"
+
+jobs:
+  - job: deploy_dab
+    displayName: Deploy Databricks Asset Bundle into the `dev` workspace
+    pool:
+      vmImage: "ubuntu-latest"
+
+    steps:
+      - script: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+          databricks version
+        displayName: "Install Databricks CLI"
+
+      - script: |
+          envsubst < ./.azure-pipelines/databricks.cfg > ~/.databrickscfg
+        env:
+          DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+        displayName: "Configure Databricks authentication"
+
+      - script: |
+          databricks bundle deploy
+        displayName: "Deploy bundle"

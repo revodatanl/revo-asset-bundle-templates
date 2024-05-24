@@ -1,0 +1,68 @@
+name: CI
+
+pr:
+  branches:
+    include:
+      - "*"
+  paths:
+    include:
+      - ".azure-pipelines/**"
+      - "src/**"
+      - "tests/**"
+      - "resources/**"
+      - "pyproject.toml"
+
+jobs:
+  - job: ci
+    displayName: CI
+    strategy:
+      matrix:
+        ubuntu:
+          imageName: "ubuntu-latest"
+        macos:
+          imageName: "macos-latest"
+        windows:
+          imageName: "windows-latest"
+    pool:
+      vmImage: $(imageName)
+
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: "3.10"
+        displayName: Setup Python
+
+      - script: |
+          python -m pip install --upgrade pip
+          pip install poetry
+        displayName: Install Poetry
+
+      - script: |
+          poetry install --no-root
+        displayName: Install dependencies
+
+      - script: |
+          poetry run ruff check --output-format=github .
+          poetry run mypy .
+        displayName: Run formatting checks
+        condition: |
+          or(contains(variables['Build.SourceBranchName'], 'src/'),
+             contains(variables['Build.SourceBranchName'], 'tests/'))
+
+      - script: |
+          poetry run pytest -v tests
+        displayName: Run unit tests
+        condition: contains(variables['Build.SourceBranchName'], 'tests/')
+        env:
+          PYTHONPATH: $(Build.SourcesDirectory)/src/{{.package_name}}
+
+      # Running in a bash shell is necessary to use the `diff` on Windows
+      - task: Bash@3
+        inputs:
+          targetType: "inline"
+          script: |
+            poetry build
+            tar -xvzf dist/{{.package_name}}-*.tar.gz
+            diff -r -x __pycache__ src/{{.package_name}}/ {{.package_name}}-*/src/{{.package_name}}
+        displayName: "Build and Check Package"
+        condition: contains(variables['Build.SourceBranchName'], 'src/')

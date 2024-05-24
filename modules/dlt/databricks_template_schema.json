@@ -8,8 +8,8 @@
     "email": {
       "type": "string",
       "description": "Email of author",
-      "order": 3
+      "order": 2
     }
   },
-  "success_message": "\nYour metadata-driven DLT ingestion pipeline has been added to the '{{.package_name}}' directory."
+  "success_message": "\nYour DLT ingestion pipeline has been added to the '{{.package_name}}' directory."
 }

@@ -1,0 +1,10 @@
+{
+  "properties": {
+    "package_name": {
+      "type": "string",
+      "description": "Package name",
+      "order": 1
+    }
+  },
+  "success_message": "\nYour default Azure DevOps pipeline(s) have been added to the '{{.package_name}}/.azure-pipelines' directory.\n\nYou can remove the '{{.package_name}}/.github' directory if you do not intend to use GitHub."
+}

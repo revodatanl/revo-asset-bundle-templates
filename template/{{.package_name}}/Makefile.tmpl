@@ -96,4 +96,12 @@ repo:
 # Add custom RevoData modules to the project
 module_dlt:
 	@PROFILE_NAME="{{.profile_name}}"; \
-	databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/dlt-md-ingestion --profile "$$PROFILE_NAME"
+	databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/dlt --profile "$$PROFILE_NAME"
+
+module_azure-devops:
+	@PROFILE_NAME="{{.profile_name}}"; \
+	databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/azure-devops --profile "$$PROFILE_NAME"
+
+module_gitlab:
+	@PROFILE_NAME="{{.profile_name}}"; \
+	databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/gitlab --profile "$$PROFILE_NAME"
