@@ -6,5 +6,5 @@
       "order": 1
     }
   },
-  "success_message": "\nYour default Gitlab pipeline(s) have been added to the '{{.package_name}}' directory.\n\nYou can remove the '{{.package_name}}/.github' directory if you do not intend to use GitHub."
+  "success_message": "\nYour default Gitlab CI/CD pipeline has been added to the home directory.\nYou can remove the '{{.package_name}}/.github' directory if you do not intend to use GitHub."
 }

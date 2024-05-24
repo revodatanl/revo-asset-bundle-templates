@@ -94,14 +94,45 @@ repo:
 	fi
 
 # Add custom RevoData modules to the project
+module:
+	@echo "Select the module to deploy:"
+	@echo "1) DLT"
+	@echo "2) Azure DevOps"
+	@echo "3) GitLab"
+	@read -p "Enter the number of the module you want to deploy: " choice; \
+	case $$choice in \
+		1) $(MAKE) module_dlt;; \
+		2) $(MAKE) module_azure-devops;; \
+		3) $(MAKE) module_gitlab;; \
+		*) echo "Invalid choice. Exiting."; exit 1;; \
+	esac
+
 module_dlt:
-	@PROFILE_NAME="{{.profile_name}}"; \
-	databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/dlt --profile "$$PROFILE_NAME"
+	@{ \
+	set -e; \
+	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
+	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/dlt 2>&1; then \
+		echo "Exiting." >&2; \
+	fi; \
+	}
 
 module_azure-devops:
-	@PROFILE_NAME="{{.profile_name}}"; \
-	databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/azure-devops --profile "$$PROFILE_NAME"
+	@{ \
+	set -e; \
+	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
+	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/azure-devops 2>&1; then \
+		echo "Exiting." >&2; \
+	fi; \
+	}
 
 module_gitlab:
-	@PROFILE_NAME="{{.profile_name}}"; \
-	databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/gitlab --profile "$$PROFILE_NAME"
+	@{ \
+	set -e; \
+	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
+	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/gitlab 2>&1; then \
+		echo "Exiting." >&2; \
+	fi; \
+	}
