@@ -112,7 +112,7 @@ module_dlt:
 	set -e; \
 	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/dlt 2>&1; then \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/dlt 2>&1; then \
 		echo "Exiting." >&2; \
 	fi; \
 	}
@@ -122,7 +122,7 @@ module_azure-devops:
 	set -e; \
 	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/azure-devops 2>&1; then \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/azure-devops 2>&1; then \
 		echo "Exiting." >&2; \
 	fi; \
 	}
@@ -132,7 +132,7 @@ module_gitlab:
 	set -e; \
 	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feature/nested-templates --template-dir modules/gitlab 2>&1; then \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/gitlab 2>&1; then \
 		echo "Exiting." >&2; \
 	fi; \
 	}
