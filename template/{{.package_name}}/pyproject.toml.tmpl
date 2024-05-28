@@ -10,18 +10,18 @@ classifiers = ["Programming Language :: Python :: 3.10.12", "Operating System ::
 packages = [{ include = "{{.package_name}}", from = "src" }]
 
 [tool.poetry.dependencies]
-python = "^3.10.12"
+python = "3.10.12"  # Databricks Runtime 14.3 LTS
 
 [tool.poetry.dev-dependencies]
 databricks = "^0.2"
 databricks-connect = "^14.3.1"
 databricks-sdk = "^0.24.0"
 ipykernel = "^6.25.2"
-pandas = "2.0.3"
+pandas = "1.5.3"  # Databricks Runtime 14.3 LTS
 pre-commit = "^3.7.0"
 pre-commit-update = "^0.2.1"
 pydantic = "^2.6.4"
-pyspark = "^3.5.1"
+pyspark = "3.5.0"  # Databricks Runtime 14.3 LTS
 mypy = "^1.9.0"
 mypy-extensions = "^1.0.0"
 pylint = "^3.1.0"
