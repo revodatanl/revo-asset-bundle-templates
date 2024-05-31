@@ -4,8 +4,6 @@
 - `feat:` for new features: triggers a minor version update (e.g. 1.0.0 -> 1.1.0)
 - `feat!:` for breaking changes: triggers a major version update (e.g. 1.0.0 -> 2.0.0) -->
 
-# Description
-
 <!-- Please provide a brief summary of the changes in this PR and any necessary context. -->
 
 ## What
