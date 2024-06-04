@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "bierner.markdown-mermaid",
+    "charliermarsh.ruff",
+    "ms-python.vscode-pylance",
+    "corschenzi.mermaid-graphical-editor",
+    "redhat.vscode-yaml",
+    "ms-python.mypy-type-checker",
+    "davidanson.vscode-markdownlint",
+    "njpwerner.autodocstring",
+    "tamasfe.even-better-toml"
+  ]
+}

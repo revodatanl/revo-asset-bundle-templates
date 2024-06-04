@@ -37,23 +37,18 @@ jobs:
           poetry install --no-root
 
       - name: Run formatting checks
-        if: >
-          contains(github.event.pull_request.changed_files, 'src/') ||
-          contains(github.event.pull_request.changed_files, 'tests/')
         run: |
           poetry run ruff check --output-format=github .
           poetry run mypy .
 
-      - name: Run unit tests
-        if: contains(github.event.pull_request.changed_files, 'tests/')
-        run: |
-          poetry run pytest -v tests
-        env:
-          PYTHONPATH: $${{ "{{" }} github.workspace {{ "}}" }}/src/{{.package_name}}
-
       - name: Build and check package
-        if: contains(github.event.pull_request.changed_files, 'src/')
         run: |
           poetry build
           tar -xvzf dist/{{.package_name}}-*.tar.gz
           diff -r -x __pycache__ src/{{.package_name}}/ {{.package_name}}-*/src/{{.package_name}}
+
+      - name: Run unit tests with coverage report
+        run: |
+          poetry run pytest -v tests --cov=src tests/ --cov-report term
+        env:
+          PYTHONPATH: $${{ "{{" }} github.workspace {{ "}}" }}/src/{{.package_name}}

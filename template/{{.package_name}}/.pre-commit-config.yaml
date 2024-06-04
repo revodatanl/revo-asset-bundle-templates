@@ -47,7 +47,7 @@ repos:
       - id: pytest-unit-tests
         name: pytest-unit-tests
         args: [./tests/unit/]
-        entry: bash -c 'source ./.venv/bin/activate && pytest'
+        entry: bash -c 'source ./.venv/bin/activate && pytest -v tests --cov=src tests/ && coverage-badge -f -o assets/coverage.svg'
         language: system
         pass_filenames: false
         stages: [commit]
