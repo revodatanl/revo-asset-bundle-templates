@@ -99,11 +99,13 @@ module:
 	@echo "1) DLT"
 	@echo "2) Azure DevOps"
 	@echo "3) GitLab"
+	@echo "4) Default VSCode settings"
 	@read -p "Enter the number of the module you want to deploy: " choice; \
 	case $$choice in \
 		1) $(MAKE) module_dlt;; \
 		2) $(MAKE) module_azure-devops;; \
 		3) $(MAKE) module_gitlab;; \
+		4) $(MAKE) module_vscode;; \
 		*) echo "Invalid choice. Exiting."; exit 1;; \
 	esac
 
@@ -133,6 +135,16 @@ module_gitlab:
 	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
 	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/gitlab 2>&1; then \
+		echo "Exiting." >&2; \
+	fi; \
+	}
+
+module_vscode:
+	@{ \
+	set -e; \
+	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
+	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/vscode 2>&1; then \
 		echo "Exiting." >&2; \
 	fi; \
 	}
