@@ -1,18 +1,19 @@
 repos:
-  - hooks:
+  - repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
+    hooks:
       - id: pre-commit-update
         args:
           - --verbose
-    repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
-    rev: v0.3.1post2
-  - hooks:
+    rev: v0.3.2
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-json
-    repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
-  - hooks:
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    hooks:
       - id: ruff
         args:
           - --config=pyproject.toml
@@ -23,32 +24,28 @@ repos:
         args:
           - --config=pyproject.toml
         types_or: [python, pyi, jupyter]
-    repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.4.4
-  - hooks:
+    rev: v0.4.7
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    hooks:
       - id: mypy
         args:
           - --config=pyproject.toml
         additional_dependencies:
           - types-pytz
-    repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.10.0
-  - hooks:
+  - repo: local
+    hooks:
       - id: pylint
         name: pylint
-        entry: pylint
+        entry: poetry run pylint
         language: system
         types: [python]
         args:
           - --rcfile=pyproject.toml
           - --load-plugins=databricks.labs.pylint.all
-    repo: local
-  - hooks:
       - id: pytest-unit-tests
         name: pytest-unit-tests
-        args: [./tests/unit/]
-        entry: bash -c 'source ./.venv/bin/activate && pytest -v tests --cov=src tests/ && coverage-badge -f -o assets/coverage.svg'
+        entry: bash -c 'poetry run pytest -v tests --cov=src tests && poetry run coverage-badge -f -o assets/coverage.svg'
         language: system
         pass_filenames: false
         stages: [commit]
-    repo: local
