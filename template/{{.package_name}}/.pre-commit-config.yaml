@@ -1,18 +1,19 @@
 repos:
   - repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
+    rev: v0.3.2
     hooks:
       - id: pre-commit-update
         args:
           - --verbose
-    rev: v0.3.2
   - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-json
-    rev: v4.6.0
   - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.4.8
     hooks:
       - id: ruff
         args:
@@ -24,15 +25,14 @@ repos:
         args:
           - --config=pyproject.toml
         types_or: [python, pyi, jupyter]
-    rev: v0.4.7
   - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0
     hooks:
       - id: mypy
         args:
           - --config=pyproject.toml
         additional_dependencies:
           - types-pytz
-    rev: v1.10.0
   - repo: local
     hooks:
       - id: pylint
@@ -45,7 +45,11 @@ repos:
           - --load-plugins=databricks.labs.pylint.all
       - id: pytest-unit-tests
         name: pytest-unit-tests
-        entry: bash -c 'poetry run pytest -v tests --cov=src tests && poetry run coverage-badge -f -o assets/coverage.svg'
+        entry: >
+          bash -c '
+            poetry run pytest -v tests --cov=src tests &&
+            poetry run coverage-badge -f -o assets/coverage.svg
+          '
         language: system
         pass_filenames: false
         stages: [commit]
