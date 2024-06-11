@@ -8,12 +8,6 @@ variables:
   spark_version:
     description: Default Spark version to use for jobs
     default: 14.3.x-scala2.12
-  default_pool:
-    description: Pool ID for Standard_DS3_v2 machines
-    default: default_pool_id
-  advanced_pool:
-    description: Pool ID for Standard_DS5_v2 machines
-    default: advanced_pool_id
 
 include:
   - resources/jobs/*.yml

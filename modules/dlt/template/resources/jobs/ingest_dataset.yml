@@ -24,11 +24,7 @@ resources:
       job_clusters:
         - job_cluster_key: job_cluster
           new_cluster:
-            spark_version: ${var.spark_version}
-            instance_pool_id: ${var.default_pool}
-            driver_instance_pool_id: ${var.default_pool}
-            data_security_mode: SINGLE_USER
-            runtime_engine: STANDARD
+            spark_version: ${var.spark_version}}}
             node_type_id: Standard_D3_v2
             num_workers: 1
             spark_conf:
