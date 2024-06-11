@@ -1,9 +1,9 @@
 version: 2
 updates:
-  - package-ecosystem: "pip"
-    directory: "/python/helpers"
+  - package-ecosystem: pip
+    directory: /python/helpers
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       common:
         patterns:

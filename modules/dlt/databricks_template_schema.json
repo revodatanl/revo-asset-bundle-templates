@@ -1,15 +1,3 @@
 {
-  "properties": {
-    "package_name": {
-      "type": "string",
-      "description": "Package name",
-      "order": 1
-    },
-    "email": {
-      "type": "string",
-      "description": "Email of author",
-      "order": 2
-    }
-  },
-  "success_message": "\nYour DLT ingestion pipeline(s) have been added to the 'resources' directory."
+  "success_message": "\nYour DLT ingestion pipeline, part of the 'ingest_dataset' workflow, has been added to the 'resources' directory."
 }

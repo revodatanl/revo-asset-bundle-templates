@@ -6,7 +6,7 @@ resources:
 
       schedule:
         # Run every day at 8:37 AM
-        quartz_cron_expression: "44 37 8 * * ?"
+        quartz_cron_expression: 44 37 8 * * ?
         timezone_id: Europe/Amsterdam
 
       email_notifications:
@@ -17,17 +17,11 @@ resources:
         - task_key: notebook_task
           job_cluster_key: job_cluster
           notebook_task:
-            notebook_path: ../src/notebook.ipynb
-
-        - task_key: refresh_pipeline
-          depends_on:
-            - task_key: notebook_task
-          pipeline_task:
-            pipeline_id: ${resources.pipelines.{{.package_name}}_pipeline.id}
+            notebook_path: ../notebooks/hello_revodata.ipynb
 
         - task_key: main_task
           depends_on:
-            - task_key: refresh_pipeline
+            - task_key: notebook_task
           job_cluster_key: job_cluster
           python_wheel_task:
             package_name: {{.package_name}}

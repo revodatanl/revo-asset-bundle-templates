@@ -1,0 +1,62 @@
+defaults: &default_task_config
+  run_if: ALL_SUCCESS
+  libraries:
+    - whl: ../../dist/*.whl
+  timeout_seconds: 0
+
+resources:
+  jobs:
+    ingest_dataset:
+      name: ingest_dataset
+
+      tasks:
+        - task_key: dlt_ingest_dataset
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.dlt_ingest_dataset.id}
+
+      max_concurrent_runs: 1
+
+      schedule:
+        # Run every day at 8:37 AM
+        quartz_cron_expression: 44 37 8 * * ?
+        timezone_id: Europe/Amsterdam
+
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: ${var.spark_version}
+            instance_pool_id: ${var.default_pool}
+            driver_instance_pool_id: ${var.default_pool}
+            data_security_mode: SINGLE_USER
+            runtime_engine: STANDARD
+            node_type_id: Standard_D3_v2
+            num_workers: 1
+            spark_conf:
+              spark.databricks.delta.optimizeWrite.enabled: true
+
+  pipelines:
+    dlt_ingest_dataset:
+      name: dlt_ingest_dataset
+      target: dlt
+      libraries:
+        - notebook:
+            path: ../notebooks/dlt_ingest_dataset.ipynb
+
+      clusters:
+        - label: default
+          num_workers: 1
+          node_type_id: Standard_D4s_v3
+
+      configuration:
+        bundle.sourcePath: Workspace${workspace.file_path}
+        table_name: iris
+        autoloader_path: ${workspace.file_path}/fixtures/
+        bundle.env: ${bundle.environment}
+        pipelines.allowCustomSchemaForSql: true
+        pipelines.allowCustomSchemaForPython: true
+
+      continuous: false
+      photon: false
+      development: true
+
+      channel: PREVIEW

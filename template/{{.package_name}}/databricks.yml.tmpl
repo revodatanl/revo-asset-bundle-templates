@@ -4,16 +4,16 @@ bundle:
 variables:
   var_name:
     description: Description.
-    default: "default_value"
+    default: default_value
   spark_version:
-    description: "default Spark version to use for jobs"
-    default: "14.3.x-scala2.12"
+    description: Default Spark version to use for jobs
+    default: 14.3.x-scala2.12
   default_pool:
-    description: "Pool ID for Standard_DS3_v2 machines"
-    default: ""
+    description: Pool ID for Standard_DS3_v2 machines
+    default: default_pool_id
   advanced_pool:
-    description: "Pool ID for Standard_DS5_v2 machines"
-    default: ""
+    description: Pool ID for Standard_DS5_v2 machines
+    default: advanced_pool_id
 
 include:
   - resources/jobs/*.yml
@@ -23,11 +23,11 @@ artifacts:
   platform:
     type: whl
     path: ./
-    build: "poetry build"
+    build: poetry build
 
 sync:
   include:
-    - "./dist/{{.package_name}}-*-py3-none-any.whl"
+    - ./dist/{{.package_name}}-*-py3-none-any.whl
 
 targets:
   # The 'dev' target, for development purposes. This target is the default.
