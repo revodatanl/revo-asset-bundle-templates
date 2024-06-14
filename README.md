@@ -20,11 +20,3 @@ databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
 ```
 
 This will create a new directory with the template files. You can now start developing your project.
-
-## Modules
-
-To add a module to your project, navigate to the newly created directory and run the following command:
-
-```bash
-make module
-```
