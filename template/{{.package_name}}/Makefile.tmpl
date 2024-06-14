@@ -56,7 +56,7 @@ test:
 	poetry update
 	poetry build
 	poetry install --only-root
-	pytest --cov=src tests/
+	pytest tests --cov=src  --cov-report html --cov-report term
 
 deploy_dev:
 	.venv/bin/pre-commit run --all-files
@@ -71,6 +71,15 @@ deploy_dev:
 		databricks bundle deploy --profile "$$PROFILE_NAME"; \
 	fi
 
+destroy_dev:
+	@PROFILE_NAME="{{.profile_name}}"; \
+	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
+	if [[ $$output == *"Error: resolve:"* ]]; then \
+		databricks configure --profile "$$PROFILE_NAME"; \
+	else \
+		databricks bundle destroy --profile "$$PROFILE_NAME"; \
+	fi
+
 deploy_prod:
 	.venv/bin/pre-commit run --all-files
 	poetry update
@@ -82,6 +91,15 @@ deploy_prod:
 		databricks configure --profile "$$PROFILE_NAME"; \
 	else \
 		databricks bundle deploy --profile "$$PROFILE_NAME" --target prod; \
+	fi
+
+destroy_prod:
+	@PROFILE_NAME="{{.profile_name}}"; \
+	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
+	if [[ $$output == *"Error: resolve:"* ]]; then \
+		databricks configure --profile "$$PROFILE_NAME"; \
+	else \
+		databricks bundle destroy --profile "$$PROFILE_NAME" --target prod; \
 	fi
 
 # Create a repository in RevoData's GitHub, and adds a remote to the local git repo
