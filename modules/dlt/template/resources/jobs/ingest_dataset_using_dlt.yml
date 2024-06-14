@@ -6,11 +6,11 @@ defaults: &default_task_config
 
 resources:
   jobs:
-    ingest_dataset:
-      name: ingest_dataset
+    ingest_dataset_using_dlt:
+      name: ingest_dataset_using_dlt
 
       tasks:
-        - task_key: dlt_ingest_dataset
+        - task_key: dlt_task
           pipeline_task:
             pipeline_id: ${resources.pipelines.dlt_ingest_dataset.id}
 
@@ -34,6 +34,7 @@ resources:
     dlt_ingest_dataset:
       name: dlt_ingest_dataset
       target: dlt
+      catalog: main # this option enables Unity Catalog
       libraries:
         - notebook:
             path: ../notebooks/dlt_ingest_dataset.ipynb
@@ -44,9 +45,9 @@ resources:
           node_type_id: Standard_D4s_v3
 
       configuration:
-        bundle.sourcePath: Workspace${workspace.file_path}
-        table_name: iris
-        autoloader_path: ${workspace.file_path}/fixtures/
+        bundle.sourcePath: /Workspace${workspace.file_path}
+        table_name: dlt_data
+        autoloader_path: file:/Workspace${workspace.file_path}/fixtures
         bundle.env: ${bundle.environment}
         pipelines.allowCustomSchemaForSql: true
         pipelines.allowCustomSchemaForPython: true

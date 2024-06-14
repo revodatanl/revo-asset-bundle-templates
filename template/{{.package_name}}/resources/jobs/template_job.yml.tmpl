@@ -1,8 +1,8 @@
-# The main job for {{.package_name}}.
+# The main job for the {{.package_name}} package.
 resources:
   jobs:
-    {{.package_name}}_job:
-      name: {{.package_name}}_job
+    template_job:
+      name: template_job
 
       schedule:
         # Run every day at 8:37 AM
@@ -19,7 +19,7 @@ resources:
           notebook_task:
             notebook_path: ../notebooks/hello_revodata.ipynb
 
-        - task_key: main_task
+        - task_key: wheel_task
           depends_on:
             - task_key: notebook_task
           job_cluster_key: job_cluster
