@@ -2,9 +2,9 @@
   "properties": {
     "package_name": {
       "type": "string",
-      "description": "Package name",
+      "description": "Sorry, what was the main package name again?",
       "order": 1
     }
   },
-  "success_message": "\nYour default Azure DevOps CI/CD pipeline(s) have been added to the '.azure-pipelines' directory.\nYou can remove the '.github' directory if you do not intend to use GitHub.\nIn that case, do not forget to (manually) remove the GitHub badges from the README."
+  "success_message": "\nYour default Azure DevOps CI/CD pipeline(s) have been added to the '.azure-pipelines' directory.\nYou can remove the '.github' directory if you do not intend to use GitHub (do not forget to manually remove the GitHub badges from the README)."
 }
