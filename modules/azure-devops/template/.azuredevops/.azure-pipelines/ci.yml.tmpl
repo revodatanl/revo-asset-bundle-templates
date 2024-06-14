@@ -21,37 +21,36 @@ jobs:
           imageName: ubuntu-latest
         macos:
           imageName: macos-latest
-        windows:
-          imageName: windows-latest
+        # windows:
+        #   imageName: windows-latest # Python 3.10.12 is unfortunately not available for the Windows VM
     pool:
       vmImage: $(imageName)
-
     steps:
+      - script: |
+          PYTHON_VERSION=$(cat .python-version)
+          echo "##vso[task.setvariable variable=PYTHON_VERSION]$PYTHON_VERSION"
+          echo Python version: $PYTHON_VERSION
+        displayName: Read Python version from .python-version and add to environment variables
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: 3.10
+          versionSpec: $(PYTHON_VERSION)
         displayName: Setup Python
-
       - script: |
           python -m pip install --upgrade pip
           pip install poetry
         displayName: Install Poetry
-
       - script: |
           poetry install --no-root
         displayName: Install dependencies
-
       - script: |
           poetry run ruff check --output-format=github .
           poetry run mypy .
         displayName: Run formatting checks
-
       - script: |
           poetry run pytest -v tests
         displayName: Run unit tests
         env:
           PYTHONPATH: $(Build.SourcesDirectory)/src/{{.package_name}}
-
       # Running in a bash shell is necessary to use the `diff` on Windows
       - task: Bash@3
         inputs:
