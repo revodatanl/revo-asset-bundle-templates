@@ -4,16 +4,10 @@ bundle:
 variables:
   var_name:
     description: Description.
-    default: "default_value"
+    default: default_value
   spark_version:
-    description: "default Spark version to use for jobs"
-    default: "14.3.x-scala2.12"
-  default_pool:
-    description: "Pool ID for Standard_DS3_v2 machines"
-    default: ""
-  advanced_pool:
-    description: "Pool ID for Standard_DS5_v2 machines"
-    default: ""
+    description: Default Spark version to use for jobs
+    default: 14.3.x-scala2.12
 
 include:
   - resources/jobs/*.yml
@@ -23,11 +17,11 @@ artifacts:
   platform:
     type: whl
     path: ./
-    build: "poetry build"
+    build: poetry build
 
 sync:
   include:
-    - "./dist/{{.package_name}}-*-py3-none-any.whl"
+    - ./dist/{{.package_name}}-*-py3-none-any.whl
 
 targets:
   # The 'dev' target, for development purposes. This target is the default.
@@ -38,8 +32,9 @@ targets:
     # - The 'development' mode is used for Delta Live Tables pipelines
     mode: development
     default: true
-    workspace:
-      host: https://<id>.azuredatabricks.net
+    # Best practice is to use the host mapping with configured profiles in your .databrickscfg file
+    # workspace:
+    #   host: https://<id>.azuredatabricks.net
 
   ## Optionally, there could be a 'staging' target here.
   ## (See Databricks docs on CI/CD at https://docs.databricks.com/dev-tools/bundles/ci-cd.html.)

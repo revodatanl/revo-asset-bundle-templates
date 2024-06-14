@@ -1,29 +1,100 @@
 name: deploy-dab
 
-# This configuration ensures that deployment only happens if there are changes merged into the main branch.
+# Pipeline is triggered upon completed pull request in the main branch, if files in provided paths are modified
 trigger:
   branches:
     include:
-      - "main"
+      - main
+  paths:
+    include:
+      - azuredevops/.azure-pipelines/**
+      - src/**
+      - tests/**
+      - resources/**
+      - pyproject.toml
 
-jobs:
-  - job: deploy_dab
-    displayName: Deploy Databricks Asset Bundle into the `dev` workspace
-    pool:
-      vmImage: "ubuntu-latest"
+pool:
+  name: ubuntu-latest
 
-    steps:
-      - script: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
-          databricks version
-        displayName: "Install Databricks CLI"
+stages:
+  - stage: deploy_dev
+    jobs:
+      - job: deploy_dev
+        displayName: Authenticate using secrets from Azure Key Vault and deploy Databricks Asset Bundle to `dev`
+        variables:
+          - group: blifc-dev-sub
+        steps:
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: reg-dev-eu-blinformationfactorycloud (SPN)
+              KeyVaultName: kv-dev-eu-blifc-main
+              SecretsFilter: DATABRICKS-CLIENT-ID,DATABRICKS-CLIENT-SECRET
+            displayName: Extract secrets from Azure Key Vault
+          - script: |
+              PYTHON_VERSION=$(cat .python-version)
+              echo "##vso[task.setvariable variable=PYTHON_VERSION]$PYTHON_VERSION"
+              echo Python version: $PYTHON_VERSION
+            displayName: Read Python version from .python-version and add to environment variables
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(PYTHON_VERSION)
+            displayName: Setup Python
+          - script: |
+              curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+              databricks version
+            displayName: Install Databricks CLI
+          - script: |
+              python -m pip install --upgrade pip poetry
+              poetry build
+            displayName: Install Poetry and build the package
+          - script: |
+              envsubst < ./.azuredevops/.azure-pipelines/databricks.cfg > ~/.databrickscfg
+            env:
+              DATABRICKS_HOST: $(DATABRICKS-HOST) # from DevOps Library
+              DATABRICKS_CLIENT_ID: $(DATABRICKS-CLIENT-ID)
+              DATABRICKS_CLIENT_SECRET: $(DATABRICKS-CLIENT-SECRET)
+            displayName: Configure Databricks authentication
+          - script: |
+              databricks bundle deploy --target dev
+            displayName: Deploy bundle to `dev`
 
-      - script: |
-          envsubst < ./.azure-pipelines/databricks.cfg > ~/.databrickscfg
-        env:
-          DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
-        displayName: "Configure Databricks authentication"
-
-      - script: |
-          databricks bundle deploy
-        displayName: "Deploy bundle"
+  - stage: deploy_acc
+    jobs:
+      - job: deploy_acc
+        displayName: Authenticate using secrets from Azure Key Vault and deploy Databricks Asset Bundle to `acc`
+        variables:
+          - group: blifc-acc-sub
+        steps:
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: reg-prd-eu-blinformationfactoryclacc (SPN)
+              KeyVaultName: kv-acc-eu-blifc-main
+              SecretsFilter: DATABRICKS-CLIENT-ID,DATABRICKS-CLIENT-SECRET
+            displayName: Extract secrets from Azure Key Vault
+          - script: |
+              PYTHON_VERSION=$(cat .python-version)
+              echo "##vso[task.setvariable variable=PYTHON_VERSION]$PYTHON_VERSION"
+              echo Python version: $PYTHON_VERSION
+            displayName: Read Python version from .python-version
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(PYTHON_VERSION)
+            displayName: Setup Python
+          - script: |
+              curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+              databricks version
+            displayName: Install Databricks CLI
+          - script: |
+              python -m pip install --upgrade pip poetry
+              poetry build
+            displayName: Install Poetry and build the package
+          - script: |
+              envsubst < ./.azuredevops/.azure-pipelines/databricks.cfg > ~/.databrickscfg
+            env:
+              DATABRICKS_HOST: $(DATABRICKS-HOST) # from DevOps Library
+              DATABRICKS_CLIENT_ID: $(DATABRICKS-CLIENT-ID)
+              DATABRICKS_CLIENT_SECRET: $(DATABRICKS-CLIENT-SECRET)
+            displayName: Configure Databricks authentication
+          - script: |
+              databricks bundle deploy --target acc
+            displayName: Deploy bundle to `acc`

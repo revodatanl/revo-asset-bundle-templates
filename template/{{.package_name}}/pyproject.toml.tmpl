@@ -8,6 +8,7 @@ authors = [
 readme = "README.md"
 classifiers = ["Programming Language :: Python :: 3.10.12", "Operating System :: OS Independent"]
 packages = [{ include = "{{.package_name}}", from = "src" }]
+scripts = { "main" = "{{.package_name}}.main:main" }
 
 [tool.poetry.dependencies]
 python = "3.10.12"  # Databricks Runtime 14.3 LTS

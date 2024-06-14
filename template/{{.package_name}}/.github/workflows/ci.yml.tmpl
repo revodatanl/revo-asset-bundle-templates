@@ -4,10 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
-      - ".github/workflows/**"
-      - "src/**/**"
-      - "tests/**"
-      - "pyproject.toml"
+      - .github/workflows/**
+      - src/**/**
+      - tests/**
+      - pyproject.toml
 
 jobs:
   ci:
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5.1.0
         with:
-          python-version: "3.11"
+          python-version: 3.10
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
