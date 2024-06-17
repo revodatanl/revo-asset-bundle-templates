@@ -20,6 +20,18 @@ setup:
 			echo >&2 "Poetry version $$POETRY_VERSION is less than required version $$REQUIRED_VERSION. Please upgrade it."; exit 1; \
 		fi \
 	fi
+	@if ! command -v python >/dev/null 2>&1; then \
+		echo "Python is not configured correctly."; \
+		echo "Make sure to add the following lines to the .zshrc / .bashrc configuration file in your home directory:"; \
+		echo ""; \
+		echo "# pyenv"; \
+		echo 'export PATH="$$HOME/.pyenv/bin:$$PATH"'; \
+		echo 'eval "$$(pyenv init --path)"'; \
+		echo 'eval "$$(pyenv init -)"'; \
+		echo ""; \
+		echo "Exiting"; \
+		exit 1; \
+	fi
 
 	@PYTHON_VERSION=$$(cat .python-version); \
 	echo "Using Python version $$PYTHON_VERSION"; \
