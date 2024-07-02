@@ -45,14 +45,10 @@ target-version = "py310"
 line-length = 100
 extend-include = ["*.ipynb"]
 exclude = [".venv/"]
-builtins = [
-    "dbutils",
-    "dlt",
-    "display",
-    "spark",
-]
+builtins = ["dbutils", "dlt", "display", "spark"]
 
 [tool.ruff.lint]
+src = ["src"]
 pydocstyle.convention = "numpy"
 select = ["ALL"]
 ignore = [
@@ -84,12 +80,7 @@ files = "src/**/*.py, tests/**/*.py"
 exclude = [".venv/"]
 
 [[tool.mypy.overrides]]
-module = [
-    "dbutils",
-    "dlt",
-    "display",
-    "spark",
-]
+module = ["dbutils", "dlt", "display", "spark"]
 ignore_missing_imports = true
 
 [tool.pylint]
