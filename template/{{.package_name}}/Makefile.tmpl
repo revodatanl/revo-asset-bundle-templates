@@ -1,4 +1,4 @@
-.PHONY: install setup clean test deploy_dev deploy_acc deploy_prd destroy_dev destroy_acc destroy_prd repo module module_azure module_dlt module_gitlab module_vscode
+.PHONY: install setup clean test deploy_% destroy_% repo module module_%
 
 install:
 	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
@@ -162,42 +162,16 @@ module:
 		*) echo "Invalid choice. Exiting."; exit 1;; \
 	esac
 
-module_dlt:
+module_%:
+	@if [ "$*" != "dlt" ] && [ "$*" != "azure-devops" ] && [ "$*" != "gitlab" ] && [ "$*" != "vscode" ]; then \
+		echo "Error: Invalid module. Use 'dlt', 'azure-devops', 'gitlab', or 'vscode'."; \
+		exit 1; \
+	fi
 	@{ \
 	set -e; \
 	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/dlt 2>&1; then \
-		echo "Exiting." >&2; \
-	fi; \
-	}
-
-module_azure-devops:
-	@{ \
-	set -e; \
-	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
-	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/azure-devops 2>&1; then \
-		echo "Exiting." >&2; \
-	fi; \
-	}
-
-module_gitlab:
-	@{ \
-	set -e; \
-	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
-	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/gitlab 2>&1; then \
-		echo "Exiting." >&2; \
-	fi; \
-	}
-
-module_vscode:
-	@{ \
-	set -e; \
-	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
-	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/vscode 2>&1; then \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/$* 2>&1; then \
 		echo "Exiting." >&2; \
 	fi; \
 	}
