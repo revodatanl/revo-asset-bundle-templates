@@ -40,13 +40,13 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
+src = ["src"]
 target-version = "py310"
 line-length = 100
 extend-include = ["*.ipynb"]
 builtins = ["dbutils", "dlt", "display", "spark"]
 
 [tool.ruff.lint]
-src = ["src"]
 pydocstyle.convention = "numpy"
 select = ["ALL"]
 ignore = [
@@ -64,7 +64,6 @@ ignore = [
     "T201",     # "`print` found." I use this for debugging.
     "FBT003",   # "Boolean positional value in function call." This is fairly common in spark.
     "ANN101",   # "Missing type annotation for `self`." Deprecated.
-
 ]
 unfixable = [
     "F401",     # "Unused import." Disabled since it makes linting/formatting notebooks messy and impossible.

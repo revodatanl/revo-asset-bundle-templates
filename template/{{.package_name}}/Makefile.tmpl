@@ -50,7 +50,7 @@ setup:
 
 	@if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
-		git init > /dev/null; \
+		git init -b main > /dev/null; \
 	fi
 
 	@echo "Setting up pre-commit..."
@@ -74,7 +74,7 @@ test:
 	poetry update
 	poetry build
 	poetry install --only-root
-	pytest tests --cov=src  --cov-report html --cov-report term
+	poetry run pytest tests --cov=src  --cov-report term
 
 deploy_%:
 	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
@@ -161,7 +161,7 @@ tree:
 	@echo "Generating project tree..."
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|.DS_Store' -a
 
-docs:
-	@echo "Generating documentation..."
-	@poetry run pdoc --pdf {{.package_name}}.main > docs/modules/{{.package_name}}.md
-	@poetry run pdoc --pdf tests.default_test > docs/tests/default_test.md
+# docs:
+# 	@echo "Generating documentation..."
+#	@poetry run pdoc --pdf {{.package_name}}.main > docs/modules/{{.package_name}}.md
+# 	@poetry run pdoc --pdf tests.default_test > docs/tests/default_test.md
