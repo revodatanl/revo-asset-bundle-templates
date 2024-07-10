@@ -1,19 +1,18 @@
-.PHONY: install setup clean test deploy_% destroy_% repo module module_%
+.PHONY: install setup clean test deploy_% destroy_% repo module module_% tree docs
 
 install:
+	@echo "Verifying if Homebrew is installed..."
 	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
 
 	@echo "Installing required tools..."
-
 	@if ! command -v databricks >/dev/null 2>&1; then \
 		echo "Tapping databricks..."; \
 		brew tap databricks/tap; \
 		brew install databricks; \
 	else \
-		echo "Databricks is already installed. Skipping."; \
+		echo "Databricks CLI is already installed. Skipping."; \
 	fi
-
-	@for tool in git poetry pyenv gh; do \
+	@for tool in git poetry pyenv; do \
 		if ! command -v $$tool >/dev/null 2>&1; then \
 			echo "Installing $$tool..."; \
 			brew install $$tool; \
@@ -21,6 +20,13 @@ install:
 			echo "$$tool is already installed. Skipping."; \
 		fi; \
 	done
+
+	@PYTHON_VERSION=$$(cat .python-version); \
+	echo "Setting up Python version $$PYTHON_VERSION"; \
+	pyenv install --skip-existing $$PYTHON_VERSION; \
+	pyenv local $$PYTHON_VERSION; \
+	which python; \
+	python --version;
 
 	@echo "Adding pyenv configuration to .zprofile (environment variables for login shells)"
 	@grep -q '# pyenv' ~/.zshrc || (printf '\n# pyenv configuration (added by `revo-asset-bundle-templates` on %s)\n' "$$(date +"%Y-%m-%d %H:%M:%S")" >> ~/.zshrc)
@@ -34,52 +40,26 @@ install:
 	@grep -q 'PYENV_ROOT/bin' ~/.zprofile || (echo '[[ -d $$PYENV_ROOT/bin ]] && export PATH="$$PYENV_ROOT/bin:$$PATH"' >> ~/.zprofile)
 	@grep -q 'pyenv init' ~/.zprofile || (echo 'eval "$$(pyenv init -)"' >> ~/.zprofile)
 
-	@echo "All tools installed successfully."
+	@echo "All tools installed successfully. Restart your terminal to apply the changes."
 
 setup:
-	@echo "Please ensure you have the following tools installed and configured:"
-	@echo "  - pyenv"
-	@echo "  - git"
-	@echo "  - gh (GitHub CLI)"
-	@echo "  - poetry >= 1.6.1"
-	@echo ""
-
-	@for tool in pyenv git gh; do \
-		@command -v $$tool >/dev/null 2>&1 || { echo >&2 "$$tool is not installed. Exiting."; exit 1; }
-	done
-
-	@if ! command -v poetry >/dev/null 2>&1; then \
-		echo >&2 "Poetry is not installed. Exiting."; exit 1; \
-	else \
-		POETRY_VERSION=$$(poetry --version | cut -d' ' -f3); \
-		REQUIRED_VERSION="1.6.1"; \
-		if [ "$$(echo -e "$$POETRY_VERSION\n$$REQUIRED_VERSION" | sort -V | head -n1)" != "$$REQUIRED_VERSION" ]; then \
-			echo >&2 "Poetry version $$POETRY_VERSION is less than required version $$REQUIRED_VERSION. Please upgrade it."; exit 1; \
-		fi \
-	fi
-
-	@PYTHON_VERSION=$$(cat .python-version); \
-	echo "Using Python version $$PYTHON_VERSION"; \
-	pyenv install --skip-existing $$PYTHON_VERSION; \
-	pyenv local $$PYTHON_VERSION; \
-	which python; \
-	python --version;
-
-	curl -sSL https://install.python-poetry.org | python -; \
-	poetry --version; \
-	poetry config virtualenvs.in-project true --local; \
+	@echo "Setting up the project..."
+	@poetry config virtualenvs.in-project true --local; \
 	poetry env use python $$PYTHON_VERSION; \
 	poetry install;
 
 	@if [ ! -d ".git" ]; then \
+		echo "Setting up git..."; \
 		git init > /dev/null; \
 	fi
 
+	@echo "Setting up pre-commit..."
 	. .venv/bin/activate;
 	.venv/bin/pre-commit install;
 
 clean:
-	-@if command -v deactivate &> /dev/null; then \
+	@echo "Cleaning up..."
+	@if command -v deactivate &> /dev/null; then \
 		bash -c "source deactivate" || true; \
 	fi
 	rm -rf .venv
@@ -89,6 +69,7 @@ clean:
 	find . -name ".ruff_cache" -type d -exec rm -rf {} +
 
 test:
+	@echo "Running tests..."
 	.venv/bin/pre-commit run --all-files
 	poetry update
 	poetry build
@@ -96,8 +77,8 @@ test:
 	pytest tests --cov=src  --cov-report html --cov-report term
 
 deploy_%:
-	@if [ "$*" != "dev" ] && [ "$*" != "acc" ] && [ "$*" != "prd" ]; then \
-		echo "Error: Invalid environment. Use 'dev', 'acc', or 'prd'."; \
+	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
+		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
 		exit 1; \
 	fi
 	.venv/bin/pre-commit run --all-files
@@ -175,3 +156,12 @@ module_%:
 		echo "Exiting." >&2; \
 	fi; \
 	}
+
+tree:
+	@echo "Generating project tree..."
+	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|.DS_Store' -a
+
+docs:
+	@echo "Generating documentation..."
+	@poetry run pdoc --pdf {{.package_name}}.main > docs/modules/{{.package_name}}.md
+	@poetry run pdoc --pdf tests.default_test > docs/tests/default_test.md
