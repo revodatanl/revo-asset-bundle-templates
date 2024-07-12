@@ -3,7 +3,7 @@
   "python.terminal.activateEnvInCurrentTerminal": true,
   "databricks.python.envFile": "${workspaceFolder}/.env",
   "python.envFile": "${workspaceFolder}/.databricks/.databricks.env",
-  "python.analysis.extraPaths": ["${workspaceFolder}/src"],
+  "python.analysis.extraPaths": ["${workspaceFolder}"],
   "python.analysis.stubPath": ".vscode",
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "autoDocstring.docstringFormat": "numpy",

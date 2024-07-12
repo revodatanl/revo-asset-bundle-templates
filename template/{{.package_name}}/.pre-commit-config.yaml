@@ -45,7 +45,7 @@ repos:
         name: pytest-unit-tests
         entry: >
           bash -c '
-            poetry run pytest -v tests --cov=src tests &&
+            poetry run pytest -v tests --cov=src &&
             poetry run coverage-badge -f -o assets/coverage.svg
           '
         language: system
