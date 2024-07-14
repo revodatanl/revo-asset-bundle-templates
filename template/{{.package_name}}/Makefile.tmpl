@@ -62,9 +62,8 @@ setup:
 
 clean:
 	@echo "Cleaning up..."
-	@if command -v deactivate &> /dev/null; then \
-		bash -c "source deactivate" || true; \
-	fi
+	@deactivate 2>/dev/null; \
+	bash -c "source deactivate" 2>/dev/null; \
 	rm -rf .venv
 	rm -rf poetry.lock
 	find . -name ".pytest_cache" -type d -exec rm -rf {} +
