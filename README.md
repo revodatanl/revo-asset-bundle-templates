@@ -28,3 +28,5 @@ databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
 ```
 
 This will create a new directory with the template files. You can now start developing your project.
+
+![bundle-init](assets/bundle-init.png)

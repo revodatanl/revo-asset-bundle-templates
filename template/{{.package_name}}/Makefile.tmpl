@@ -62,9 +62,8 @@ setup:
 
 clean:
 	@echo "Cleaning up..."
-	@if command -v deactivate &> /dev/null; then \
-		bash -c "source deactivate" || true; \
-	fi
+	@deactivate 2>/dev/null; \
+	bash -c "source deactivate" 2>/dev/null; \
 	rm -rf .venv
 	rm -rf poetry.lock
 	find . -name ".pytest_cache" -type d -exec rm -rf {} +
@@ -164,13 +163,13 @@ tree:
 	@echo "Generating project tree..."
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|.DS_Store' -a
 
-# docs:
-# 	@echo "Generating documentation..."
-#	@poetry run pdoc --pdf {{.package_name}}.main > docs/modules/{{.package_name}}.md
-#	@poetry run pdoc --html src/{{.package_name}} -o docs --force
+docs:
+	@echo "Generating documentation..."
+	@poetry run pdoc --pdf demo_package.main > docs/modules/demo_package.md
+	@poetry run pdoc --html src/demo_package -o docs --force
 
-# 	@poetry run pdoc --pdf tests.default_test > docs/tests/default_test.md
-#	@poetry run pdoc --html tests -o docs --force
+	@poetry run pdoc --pdf tests.default_test > docs/tests/default_test.md
+	@poetry run pdoc --html tests -o docs --force
 
 #	@echo "Generating coverage report..."
 #	@poetry run pytest tests -v --cov=src --cov-report html:docs/tests/coverage

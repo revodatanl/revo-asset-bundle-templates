@@ -32,6 +32,8 @@ This will install the following prerequisites:
 - [Poetry](https://python-poetry.org/docs) >= 1.6.1
 - [pyenv](https://github.com/pyenv/pyenv)
 
+![make-install](assets/make-install.png)
+
 ## Set up the development environment
 
 To set up a fully configured development environment for this project run the following command:
@@ -44,7 +46,7 @@ This will use [pyenv](https://github.com/pyenv/pyenv) to configure the correct [
 
 Note that the default `{{.package_name}}` project configuration matches Databricks Runtime 14.3 LTS (Python 3.10.12, Apache Spark 3.5.0, and pandas 1.5.3).
 
-![make setup](assets/make-setup.png)
+![make-setup](assets/make-setup.png)
 
 ## Clean up the development environment
 
@@ -56,7 +58,7 @@ make clean
 
 This command deactivates the virtual environment, removes the virtual environment and the `poetry.lock` file, and removes any caches.
 
-![make clean](assets/make-clean.png)
+![make-clean](assets/make-clean.png)
 
 ## RevoData Modules
 
@@ -66,7 +68,7 @@ To add our custom modules to your project, run the following command:
 make module
 ```
 
-![make module](./assets/make-module.png)
+![make-module](assets/make-module.png)
 
 ## Create GitHub repository
 
@@ -78,7 +80,7 @@ make repo
 
 This assumes that the [GitHub CLI](https://cli.github.com) is installed, and access to the RevoData GitHub organization is granted and configured.
 
-![make repo](./assets/make-repo.png)
+![make repo](assets/make-repo.png)
 
 
 ## Bundle Deployment
@@ -91,7 +93,7 @@ make deploy_*
 
 The `*` in the command above can be replaced with the following options: `dev` or `prod`.
 
-![make deploy_dev](assets/make-deploy_dev.png)
+![make-deploy_dev](assets/make-deploy_dev.png)
 
 ## Bundle Destruction
 
@@ -103,4 +105,23 @@ make destroy_*
 
 The `*` in the command above can be replaced with the following options: `dev` or `prod`.
 
-![make destroy_dev](assets/make-destroy_dev.png)
+![make-destroy_dev](assets/make-destroy_dev.png)
+
+## Documentation
+
+For more detailed information about the project, please refer to the following documentation:
+
+- [Index](docs/index.md)
+    - [Setup](docs/setup.md)
+    - [Deployment](docs/deployment.md)
+    - [Configuration](docs/configuration.md)
+    - [Running Tests](docs/tests.md)
+    - [Coding Standards](docs/coding_standards.md)
+    - [Jobs](docs/jobs/index.md)
+        - (...)
+    - [Notebooks](docs/notebooks/index.md)
+        - (...)
+    - [Modules](docs/modules/index.md)
+        - [Main](docs/modules/main.md)
+    - [Tests](docs/tests/index.md)
+        - [Default test](docs/tests/default_test.md)
