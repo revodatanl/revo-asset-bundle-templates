@@ -1,60 +1,68 @@
-# ANSI escape codes
-GREEN=\033[0;32m
-RESET=\033[0m
+.PHONY: install setup clean test deploy_% destroy_% repo module module_% tree docs
 
-setup:
-	@echo "Please ensure you have the following tools installed and configured:"
-	@echo "  - python"
-	@echo "  - pyenv"
-	@echo "  - poetry >= 1.6.1"
-	@echo ""
+install:
+	@echo "Verifying if Homebrew is installed..."
+	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
 
-	@command -v python >/dev/null 2>&1 || { echo >&2 "Python is not installed. Exiting."; exit 1; }
-	@command -v pyenv >/dev/null 2>&1 || { echo >&2 "pyenv is not installed. Exiting."; exit 1; }
-	@if ! command -v poetry >/dev/null 2>&1; then \
-		echo >&2 "Poetry is not installed. Exiting."; exit 1; \
+	@echo "Installing required tools..."
+	@if ! command -v databricks >/dev/null 2>&1; then \
+		echo "Tapping databricks..."; \
+		brew tap databricks/tap; \
+		brew install databricks; \
 	else \
-		POETRY_VERSION=$$(poetry --version | cut -d' ' -f3); \
-		REQUIRED_VERSION="1.6.1"; \
-		if [ "$$(echo -e "$$POETRY_VERSION\n$$REQUIRED_VERSION" | sort -V | head -n1)" != "$$REQUIRED_VERSION" ]; then \
-			echo >&2 "Poetry version $$POETRY_VERSION is less than required version $$REQUIRED_VERSION. Please upgrade it."; exit 1; \
-		fi \
+		echo "Databricks CLI is already installed. Skipping."; \
 	fi
-	@if ! command -v python >/dev/null 2>&1; then \
-		echo "Python is not configured correctly."; \
-		echo "Make sure to add the following lines to the .zshrc / .bashrc configuration file in your home directory:"; \
-		echo ""; \
-		echo "# pyenv"; \
-		echo 'export PATH="$$HOME/.pyenv/bin:$$PATH"'; \
-		echo 'eval "$$(pyenv init --path)"'; \
-		echo 'eval "$$(pyenv init -)"'; \
-		echo ""; \
-		echo "Exiting"; \
-		exit 1; \
-	fi
+	@for tool in git poetry pyenv; do \
+		if ! command -v $$tool >/dev/null 2>&1; then \
+			echo "Installing $$tool..."; \
+			brew install $$tool; \
+		else \
+			echo "$$tool is already installed. Skipping."; \
+		fi; \
+	done
 
 	@PYTHON_VERSION=$$(cat .python-version); \
-	echo "Using Python version $$PYTHON_VERSION"; \
+	echo "Setting up Python version $$PYTHON_VERSION"; \
 	pyenv install --skip-existing $$PYTHON_VERSION; \
 	pyenv local $$PYTHON_VERSION; \
-	which python; \
-	python --version;
 
-	curl -sSL https://install.python-poetry.org | python -; \
-	poetry --version; \
-	poetry config virtualenvs.in-project true --local; \
+	@echo "Adding pyenv configuration to .zprofile (environment variables for login shells)"
+	@grep -q '# pyenv' ~/.zshrc || (printf '\n# pyenv configuration (added by `revo-asset-bundle-templates` on %s)\n' "$$(date +"%Y-%m-%d %H:%M:%S")" >> ~/.zshrc)
+	@grep -q 'PYENV_ROOT' ~/.zshrc || (echo 'export PYENV_ROOT="$$HOME/.pyenv"' >> ~/.zshrc)
+	@grep -q 'PYENV_ROOT/bin' ~/.zshrc || (echo '[[ -d $$PYENV_ROOT/bin ]] && export PATH="$$PYENV_ROOT/bin:$$PATH"' >> ~/.zshrc)
+	@grep -q 'pyenv init' ~/.zshrc || (echo 'eval "$$(pyenv init -)"' >> ~/.zshrc)
+
+	@echo "Adding pyenv configuration to .zshrc    (environment variables for interactive shells)"
+	@grep -q '# pyenv' ~/.zprofile || (printf '\n# pyenv configuration (added by `revo-asset-bundle-templates` on %s)\n' "$$(date +"%Y-%m-%d %H:%M:%S")" >> ~/.zprofile)
+	@grep -q 'PYENV_ROOT' ~/.zprofile || (echo 'export PYENV_ROOT="$$HOME/.pyenv"' >> ~/.zprofile)
+	@grep -q 'PYENV_ROOT/bin' ~/.zprofile || (echo '[[ -d $$PYENV_ROOT/bin ]] && export PATH="$$PYENV_ROOT/bin:$$PATH"' >> ~/.zprofile)
+	@grep -q 'pyenv init' ~/.zprofile || (echo 'eval "$$(pyenv init -)"' >> ~/.zprofile)
+
+	@echo "Restarting the terminal..."/
+	@exec zsh -c "source ~/.zshrc"
+
+	@echo "All tools installed successfully."
+
+setup:
+	@echo "Setting up the project..."
+	@which python
+	@python --version
+	@poetry config virtualenvs.in-project true --local; \
 	poetry env use python $$PYTHON_VERSION; \
 	poetry install;
 
 	@if [ ! -d ".git" ]; then \
-		git init > /dev/null; \
+		echo "Setting up git..."; \
+		git init -b main > /dev/null; \
 	fi
 
+	@echo "Setting up pre-commit..."
 	. .venv/bin/activate;
 	.venv/bin/pre-commit install;
 
 clean:
-	-@if command -v deactivate &> /dev/null; then \
+	@echo "Cleaning up..."
+	@if command -v deactivate &> /dev/null; then \
 		bash -c "source deactivate" || true; \
 	fi
 	rm -rf .venv
@@ -64,61 +72,54 @@ clean:
 	find . -name ".ruff_cache" -type d -exec rm -rf {} +
 
 test:
+	@echo "Running tests..."
 	.venv/bin/pre-commit run --all-files
 	poetry update
 	poetry build
 	poetry install --only-root
-	pytest tests --cov=src  --cov-report html --cov-report term
+	poetry run pytest tests --cov=src --cov-report term
 
-deploy_dev:
+deploy_%:
+	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
+		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
+		exit 1; \
+	fi
 	.venv/bin/pre-commit run --all-files
 	poetry update
 	poetry build
-
 	@PROFILE_NAME="{{.profile_name}}"; \
 	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile "$$PROFILE_NAME"; \
 	else \
-		databricks bundle deploy --profile "$$PROFILE_NAME"; \
+		databricks bundle deploy --profile "$$PROFILE_NAME" $$(if [ "$*" != "dev" ]; then echo "--target $*"; fi); \
 	fi
 
-destroy_dev:
-	@PROFILE_NAME="{{.profile_name}}"; \
-	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
-	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile "$$PROFILE_NAME"; \
-	else \
-		databricks bundle destroy --profile "$$PROFILE_NAME"; \
+destroy_%:
+	@if [ "$*" != "dev" ] && [ "$*" != "acc" ] && [ "$*" != "prd" ]; then \
+		echo "Error: Invalid environment. Use 'dev', 'acc', or 'prd'."; \
+		exit 1; \
 	fi
-
-deploy_prod:
-	.venv/bin/pre-commit run --all-files
-	poetry update
-	poetry build
-
 	@PROFILE_NAME="{{.profile_name}}"; \
 	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile "$$PROFILE_NAME"; \
 	else \
-		databricks bundle deploy --profile "$$PROFILE_NAME" --target prod; \
-	fi
-
-destroy_prod:
-	@PROFILE_NAME="{{.profile_name}}"; \
-	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
-	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile "$$PROFILE_NAME"; \
-	else \
-		databricks bundle destroy --profile "$$PROFILE_NAME" --target prod; \
+		databricks bundle destroy --profile "$$PROFILE_NAME" --target $*; \
 	fi
 
 # Create a repository in RevoData's GitHub, and adds a remote to the local git repo
 repo:
+	# ANSI escape codes
+	GREEN=\033[0;32m
+	RESET=\033[0m
 	@printf "$(GREEN)Creating repository in RevoData's GitHub...$(RESET)\n"
 	@PROJECT_NAME=$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'); \
 	REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}'); \
+	if ! gh auth status >/dev/null 2>&1; then \
+		echo "Error: GitHub CLI is not authenticated. Please run 'gh auth login' first."; \
+		exit 1; \
+	fi; \
 	if ! gh repo view revodatanl/$$PROJECT_NAME > /dev/null 2>&1; then \
 		gh repo create revodatanl/$$PROJECT_NAME -y --private -d "$$REPO_DESCRIPTION" > /dev/null 2>&1; \
 		(git remote | grep origin || git remote add origin git@github.com:revodatanl/$$PROJECT_NAME.git) > /dev/null 2>&1; \
@@ -135,7 +136,7 @@ module:
 	@echo "1) DLT"
 	@echo "2) Azure DevOps"
 	@echo "3) GitLab"
-	@echo "4) VSCode settings"
+	@echo "4) VSCode settings (update)"
 	@read -p "Enter the number of the module you want to deploy: " choice; \
 	case $$choice in \
 		1) $(MAKE) module_dlt;; \
@@ -145,42 +146,32 @@ module:
 		*) echo "Invalid choice. Exiting."; exit 1;; \
 	esac
 
-module_dlt:
+module_%:
+	@if [ "$*" != "dlt" ] && [ "$*" != "azure-devops" ] && [ "$*" != "gitlab" ] && [ "$*" != "vscode" ]; then \
+		echo "Error: Invalid module. Use 'dlt', 'azure-devops', 'gitlab', or 'vscode'."; \
+		exit 1; \
+	fi
 	@{ \
 	set -e; \
 	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/dlt 2>&1; then \
+	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/$* 2>&1; then \
 		echo "Exiting." >&2; \
 	fi; \
 	}
 
-module_azure-devops:
-	@{ \
-	set -e; \
-	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
-	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/azure-devops 2>&1; then \
-		echo "Exiting." >&2; \
-	fi; \
-	}
+tree:
+	@echo "Generating project tree..."
+	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|.DS_Store' -a
 
-module_gitlab:
-	@{ \
-	set -e; \
-	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
-	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/gitlab 2>&1; then \
-		echo "Exiting." >&2; \
-	fi; \
-	}
+# docs:
+# 	@echo "Generating documentation..."
+#	@poetry run pdoc --pdf {{.package_name}}.main > docs/modules/{{.package_name}}.md
+#	@poetry run pdoc --html src/{{.package_name}} -o docs --force
 
-module_vscode:
-	@{ \
-	set -e; \
-	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
-	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/vscode 2>&1; then \
-		echo "Exiting." >&2; \
-	fi; \
-	}
+# 	@poetry run pdoc --pdf tests.default_test > docs/tests/default_test.md
+#	@poetry run pdoc --html tests -o docs --force
+
+#	@echo "Generating coverage report..."
+#	@poetry run pytest tests -v --cov=src --cov-report html:docs/tests/coverage
+#	@rm -rf docs/tests/coverage/.gitignore

@@ -4,6 +4,7 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+![macOS](https://img.shields.io/badge/os-macOS-lightgrey?logo=apple)
 
 The `RevoData Asset Bundle Templates` contains our own custom templates for Databricks Asset Bundles. The template should initate a complete development environment for new Databricks projects, including GitHub Actions, pre-commit hooks, and example pipelines and jobs that can be deployed to Databricks.
 
@@ -11,7 +12,14 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
 
 ## Getting started
 
-1. Install the Databricks CLI from <https://docs.databricks.com/dev-tools/cli/databricks-cli.html>
+1. Install the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli) by running the following command:
+
+```bash
+brew tap databricks/tap
+brew install databricks
+```
+
+Make sure to add your [configuration profile](https://docs.databricks.com/en/dev-tools/cli/profiles.html) to the `.databrickscfg` file. You will need the name of your profile to initialize a new project.
 
 2. Initialize a new project using the template:
 

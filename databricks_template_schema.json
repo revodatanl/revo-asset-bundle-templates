@@ -2,7 +2,7 @@
   "properties": {
     "package_name": {
       "type": "string",
-      "description": "Package name",
+      "description": "Package name (use underscores)",
       "order": 1
     },
     "author": {
@@ -22,6 +22,7 @@
     },
     "profile_name": {
       "type": "string",
+      "default": "DEFAULT",
       "description": "Configured ~/.databrickscfg profile for this Bundle",
       "order": 5
     }
