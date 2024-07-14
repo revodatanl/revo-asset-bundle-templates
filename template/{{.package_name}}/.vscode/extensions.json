@@ -1,6 +1,5 @@
 {
   "recommendations": [
-    "databricks.databricks",
     "bierner.markdown-mermaid",
     "charliermarsh.ruff",
     "ms-python.vscode-pylance",
@@ -8,6 +7,7 @@
     "redhat.vscode-yaml",
     "ms-python.mypy-type-checker",
     "davidanson.vscode-markdownlint",
-    "njpwerner.autodocstring"
+    "njpwerner.autodocstring",
+    "tamasfe.even-better-toml"
   ]
 }

@@ -6,6 +6,9 @@
   "python.analysis.extraPaths": ["${workspaceFolder}"],
   "python.analysis.stubPath": ".vscode",
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUndefinedVariable": "none"
+  },
   "autoDocstring.docstringFormat": "numpy",
   "jupyter.interactiveWindow.cellMarker.codeRegex": "^# COMMAND ----------|^# Databricks notebook source|^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])",
   "jupyter.interactiveWindow.cellMarker.default": "# COMMAND ----------",
