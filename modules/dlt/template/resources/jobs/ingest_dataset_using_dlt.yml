@@ -37,7 +37,7 @@ resources:
       catalog: main # this option enables Unity Catalog
       libraries:
         - notebook:
-            path: ../notebooks/dlt_ingest_dataset.ipynb
+            path: ../notebooks/dlt_ingest_dataset.py
 
       clusters:
         - label: default
