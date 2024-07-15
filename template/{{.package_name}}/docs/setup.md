@@ -21,7 +21,7 @@ This will:
 - Set up the Python version specified in the `.python-version` file using pyenv.
 - Add pyenv configuration to `.zprofile` and `.zshrc`.
 
-![make-install](assets/make-install.png)
+![make-install](./assets/make-install.png)
 
 ## Set up the development environment
 
@@ -39,7 +39,7 @@ This will:
 - Initialize a `git` repository if not already present.
 - Install the `pre-commit` hooks.
 
-![make-setup](assets/make-setup.png)
+![make-setup](./assets/make-setup.png)
 
 ## Clean up the development environment
 
@@ -49,4 +49,4 @@ To deactivate and remove the virtual environment, remove the `poetry.lock` file,
 make clean
 ```
 
-![make-clean](assets/make-clean.png)
+![make-clean](./assets/make-clean.png)
