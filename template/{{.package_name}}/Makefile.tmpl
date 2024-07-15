@@ -38,7 +38,7 @@ install:
 	@grep -q 'PYENV_ROOT/bin' ~/.zprofile || (echo '[[ -d $$PYENV_ROOT/bin ]] && export PATH="$$PYENV_ROOT/bin:$$PATH"' >> ~/.zprofile)
 	@grep -q 'pyenv init' ~/.zprofile || (echo 'eval "$$(pyenv init -)"' >> ~/.zprofile)
 
-	@echo "Restarting the terminal..."/
+	@echo "Restarting the terminal..."
 	@exec zsh -c "source ~/.zshrc"
 
 	@echo "All tools installed successfully."
