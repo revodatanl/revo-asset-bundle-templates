@@ -1,4 +1,4 @@
-.PHONY: install setup clean test deploy_% destroy_% repo module module_% tree docs
+.PHONY: install setup clean test deploy_% destroy_% repo module module_% tree docs docs_html
 
 install:
 	@echo "Verifying if Homebrew is installed..."
@@ -109,10 +109,7 @@ destroy_%:
 
 # Create a repository in RevoData's GitHub, and adds a remote to the local git repo
 repo:
-	# ANSI escape codes
-	GREEN=\033[0;32m
-	RESET=\033[0m
-	@printf "$(GREEN)Creating repository in RevoData's GitHub...$(RESET)\n"
+	@printf "Creating repository in RevoData's GitHub...\n"
 	@PROJECT_NAME=$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'); \
 	REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}'); \
 	if ! gh auth status >/dev/null 2>&1; then \
@@ -122,8 +119,8 @@ repo:
 	if ! gh repo view revodatanl/$$PROJECT_NAME > /dev/null 2>&1; then \
 		gh repo create revodatanl/$$PROJECT_NAME -y --private -d "$$REPO_DESCRIPTION" > /dev/null 2>&1; \
 		(git remote | grep origin || git remote add origin git@github.com:revodatanl/$$PROJECT_NAME.git) > /dev/null 2>&1; \
-		printf "Repository created at revodatanl/$$PROJECT_NAME...$(RESET)\n"; \
-		printf "$(GREEN)Publishing project...$(RESET)\n"; \
+		printf "Repository created at revodatanl/$$PROJECT_NAME...\n"; \
+		printf "Publishing project...\n"; \
 		printf "Repository published.\n"; \
 	else \
 		printf "Repository revodatanl/$$PROJECT_NAME already exists.\n"; \
@@ -164,13 +161,14 @@ tree:
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|.DS_Store' -a
 
 docs:
-	@echo "Generating documentation..."
+	@echo "Generating module/test documentation..."
 	@poetry run pdoc --pdf demo_package.main > docs/modules/demo_package.md
-	@poetry run pdoc --html src/demo_package -o docs --force
-
 	@poetry run pdoc --pdf tests.default_test > docs/tests/default_test.md
-	@poetry run pdoc --html tests -o docs --force
 
-#	@echo "Generating coverage report..."
-#	@poetry run pytest tests -v --cov=src --cov-report html:docs/tests/coverage
-#	@rm -rf docs/tests/coverage/.gitignore
+docs_html:
+	@echo "Generating module/test documentation in HTML..."
+	@poetry run pdoc --html src/demo_package -o docs --force
+	@poetry run pdoc --html tests -o docs --force
+	@echo "Generating coverage report..."
+	@poetry run pytest tests -v --cov=src --cov-report html:docs/tests/coverage
+	@rm -rf docs/tests/coverage/.gitignore

@@ -21,19 +21,20 @@ jobs:
           imageName: ubuntu-latest
         macos:
           imageName: macos-latest
-        # windows:
-        #   imageName: windows-latest # Python 3.10.12 is unfortunately not available for the Windows VM
+        windows:
+          imageName: windows-latest
     pool:
       vmImage: $(imageName)
     steps:
-      - script: |
-          PYTHON_VERSION=$(cat .python-version)
-          echo "##vso[task.setvariable variable=PYTHON_VERSION]$PYTHON_VERSION"
-          echo Python version: $PYTHON_VERSION
-        displayName: Read Python version from .python-version and add to environment variables
+      # - script: |
+      #     PYTHON_VERSION=$(cat .python-version)
+      #     echo "##vso[task.setvariable variable=PYTHON_VERSION]$PYTHON_VERSION"
+      #     echo Python version: $PYTHON_VERSION
+      #   displayName: Read Python version from .python-version and add to environment variables
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: $(PYTHON_VERSION)
+          versionSpec: "3.10"
+        #   versionSpec: $(PYTHON_VERSION)
         displayName: Setup Python
       - script: |
           python -m pip install --upgrade pip

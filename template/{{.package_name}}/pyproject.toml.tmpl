@@ -11,7 +11,7 @@ packages = [{ include = "{{.package_name}}", from = "src" }]
 scripts = { "main" = "{{.package_name}}.main:main" }
 
 [tool.poetry.dependencies]
-python = "3.10.12"  # Databricks Runtime 14.3 LTS
+python = "3.10.*"  # Databricks Runtime 14.3 LTS
 
 [tool.poetry.dev-dependencies]
 coverage = "^7.5.3"
@@ -21,7 +21,7 @@ mypy = "^1.9.0"
 mypy-extensions = "^1.0.0"
 numpy = "1.23.5"  # Databricks Runtime 14.3 LTS
 pandas = "1.5.3"  # Databricks Runtime 14.3 LTS
-pandas-stubs = "^2.2.2.240603"
+pandas-stubs = "^2.2.2.240603"  # Databricks Runtime 14.3 LTS
 pdoc3 = "^0.11.1"
 pre-commit = "^3.7.0"
 pre-commit-update = "^0.2.1"
