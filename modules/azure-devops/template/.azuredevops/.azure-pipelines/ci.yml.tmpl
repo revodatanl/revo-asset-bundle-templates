@@ -26,15 +26,9 @@ jobs:
     pool:
       vmImage: $(imageName)
     steps:
-      # - script: |
-      #     PYTHON_VERSION=$(cat .python-version)
-      #     echo "##vso[task.setvariable variable=PYTHON_VERSION]$PYTHON_VERSION"
-      #     echo Python version: $PYTHON_VERSION
-      #   displayName: Read Python version from .python-version and add to environment variables
       - task: UsePythonVersion@0
         inputs:
           versionSpec: "3.10"
-        #   versionSpec: $(PYTHON_VERSION)
         displayName: Setup Python
       - script: |
           python -m pip install --upgrade pip
