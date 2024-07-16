@@ -46,7 +46,7 @@ resources:
 
       configuration:
         bundle.sourcePath: /Workspace${workspace.file_path}
-        table_name: dlt_data
+        table: dlt_data
         autoloader_path: file:/Workspace${workspace.file_path}/fixtures
         bundle.env: ${bundle.environment}
         pipelines.allowCustomSchemaForSql: true

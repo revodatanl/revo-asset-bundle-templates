@@ -1,5 +1,6 @@
 # Databricks notebook source
-# MAGIC %pip install {file_path}/dist/*.whl
+# MAGIC file_path = str(spark.conf.get("bundle.sourcePath", "."))
+# MAGIC %pip install --no-deps --force-reinstall {file_path}/dist/*.whl
 
 # COMMAND ----------
 
@@ -90,40 +91,40 @@ def set_expectations() -> DataFrame:
 
 # COMMAND ----------
 
-# # Set the date_column as a string
-# date_column = "registration_dttm"
+# Set the date_column as a string
+date_column = "registration_dttm"
 
-# # Set the key_columns, track_columns, and exclude_columns as a list of strings
-# key_columns = ["id"]
-# track_columns = [
-#     "first_name",
-#     "last_name",
-#     "email",
-#     "gender",
-#     "ip_address",
-#     "cc",
-#     "country",
-#     "birthdate",
-#     "salary",
-#     "title",
-# ]
-# except_columns = ["comments", "_metadata"]
+# Set the key_columns, track_columns, and exclude_columns as a list of strings
+key_columns = ["id"]
+track_columns = [
+    "first_name",
+    "last_name",
+    "email",
+    "gender",
+    "ip_address",
+    "cc",
+    "country",
+    "birthdate",
+    "salary",
+    "title",
+]
+except_columns = ["comments", "_metadata"]
 
 # COMMAND ----------
 
-# dlt.create_streaming_table(
-#     name=f"silver_{table}",
-#     comment="SCD2 implemented",
-#     table_properties={"quality": "silver"},
-# )
+dlt.create_streaming_table(
+    name=f"silver_{table}",
+    comment="SCD2 implemented",
+    table_properties={"quality": "silver"},
+)
 
-# dlt.apply_changes(
-#     target=f"silver_{table}",
-#     source=f"bronze_{table}",
-#     keys=key_columns,
-#     sequence_by=F.col(date_column),
-#     except_column_list=except_columns,
-#     ignore_null_updates=False,
-#     track_history_column_list=track_columns,
-#     stored_as_scd_type="2",
-# )
+dlt.apply_changes(
+    target=f"silver_{table}",
+    source=f"bronze_{table}",
+    keys=key_columns,
+    sequence_by=F.col(date_column),
+    except_column_list=except_columns,
+    ignore_null_updates=False,
+    track_history_column_list=track_columns,
+    stored_as_scd_type="2",
+)
