@@ -160,7 +160,7 @@ tree:
 
 docs:
 	@echo "Generating HTML documentation..."
-	@poetry run pdoc --html src/demo_repo -o docs/api --force
+	@poetry run pdoc --html src/{{.package_name}} -o docs/api --force
 	@poetry run pdoc --html tests -o docs/api --force
 	@echo "Generating coverage report..."
 	@poetry run pytest tests -v --cov=src --cov-report html:docs/tests/coverage
