@@ -18,17 +18,20 @@ jobs:
     defaults:
       run:
         shell: bash
-      run:
-        shell: bash
     runs-on: ${{ "{{" }} matrix.os {{ "}}" }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Setup Python
+      - name: Read Python version from .python-version and add as environment variable
+        run: |
+          PYTHON_VERSION=$(cut -d. -f1,2 < .python-version)
+          echo "PYTHON_VERSION=$PYTHON_VERSION" >> $GITHUB_ENV
+          echo "PYTHON_VERSION=$PYTHON_VERSION"
+      - name: Setup Python version ${{ "{{" }} env.PYTHON_VERSION {{ "}}" }}
         uses: actions/setup-python@v5.1.0
         with:
-          python-version: "3.10"
+          python-version: ${{ "{{" }} env.PYTHON_VERSION {{ "}}" }}
       - name: Install Poetry
         uses: snok/install-poetry@v1
       - name: Install dependencies
