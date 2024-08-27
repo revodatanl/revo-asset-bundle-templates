@@ -76,7 +76,7 @@ For a full test suite, including pre-commit checks, dependency updates, package 
 make test
 ```
 
-![make-test](../assets/make-test.png)
+![make-test](assets/make-test.png)
 
 ### Writing New Tests
 
