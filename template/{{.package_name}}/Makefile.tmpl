@@ -50,6 +50,7 @@ setup:
 	@poetry config virtualenvs.in-project true --local; \
 	poetry env use python $$PYTHON_VERSION; \
 	poetry install;
+	poetry types update;
 
 	@if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
@@ -62,13 +63,10 @@ setup:
 
 clean:
 	@echo "Cleaning up..."
-	@deactivate 2>/dev/null; \
-	bash -c "source deactivate" 2>/dev/null; \
-	rm -rf .venv
-	rm -rf poetry.lock
-	find . -name ".pytest_cache" -type d -exec rm -rf {} +
-	find . -name ".mypy_cache" -type d -exec rm -rf {} +
-	find . -name ".ruff_cache" -type d -exec rm -rf {} +
+	rm -rf .venv poetry.lock
+	find . -type d \( -name ".pytest_cache" -o -name ".mypy_cache" -o -name ".ruff_cache" \) -exec rm -rf {} +
+	@echo "Cleanup completed. Resetting terminal..."
+	@reset
 
 test:
 	@echo "Running tests..."
@@ -161,14 +159,9 @@ tree:
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|.DS_Store' -a
 
 docs:
-	@echo "Generating module/test documentation..."
-	@poetry run pdoc --pdf demo_package.main > docs/modules/demo_package.md
-	@poetry run pdoc --pdf tests.default_test > docs/tests/default_test.md
-
-docs_html:
-	@echo "Generating module/test documentation in HTML..."
-	@poetry run pdoc --html src/demo_package -o docs --force
-	@poetry run pdoc --html tests -o docs --force
+	@echo "Generating HTML documentation..."
+	@poetry run pdoc --html src/{{.package_name}} -o docs/api --force
+	@poetry run pdoc --html tests -o docs/api --force
 	@echo "Generating coverage report..."
 	@poetry run pytest tests -v --cov=src --cov-report html:docs/tests/coverage
 	@rm -rf docs/tests/coverage/.gitignore

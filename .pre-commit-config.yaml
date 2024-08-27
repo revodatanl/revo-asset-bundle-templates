@@ -4,7 +4,7 @@ repos:
     -   id: pre-commit-update
         args:
         -   --verbose
-    rev: v0.3.3post1
+    rev: v0.4.0post1
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     hooks:
     -   id: trailing-whitespace
