@@ -1,20 +1,22 @@
 # Release
 
-Our project follows a streamlined and automated release process using Semantic Release. This ensures that versioning, changelog generation, and package publishing are handled consistently and efficiently.
+Our releases are automatically tagged by following [Semantic Versioning](https://semver.org). This ensures that versioning, changelog generation, and package publishing are handled consistently and efficiently.
 
 ## Semantic Release
 
-We utilize Semantic Release to automatically bump the version of the repository based on the nature of the changes introduced. Semantic Release analyzes commit messages following the Conventional Commits standard to determine the next version number:
+We utilize the principles of Semantic Release to automatically bump the version of the repository based on the nature of the changes introduced. Semantic Release analyzes commit messages following the [Conventional Commits](https://www.conventionalcommits.org) standard (with the [Angular](https://angular.dev/style-guide) convention) to determine the next version number:
 
-- `fix:` triggers a patch version bump.
-- `feat:` triggers a minor version bump.
-- `feat!:` or `BREAKING CHANGES:` trigger a major version bump.
+| Commit Type                               | Description                                     | Example                     |
+|-------------------------------------------|-------------------------------------------------|-----------------------------|
+| `fix:`                                    | for bug fixes: triggers a **patch** version update | 1.0.0 -> 1.0.1              |
+| `feat:`                                   | for new features: triggers a **minor** version update | 1.0.0 -> 1.1.0              |
+| `*!:` (or using `BREAKING CHANGES` in the commit message) | for breaking changes: triggers a **major** version update | 1.0.0 -> 2.0.0              |
 
 The appropriate version number is then automatically updated in the repository.
 
-## Automated Changelog Generation
+## Automated CHANGELOG Generation
 
-As part of the release process, we auto-generate a comprehensive changelog. This changelog is automatically updated with each release, capturing all notable changes, enhancements, bug fixes, and breaking changes based on the commit messages.
+As part of the release process, we auto-generate a comprehensive [CHANGELOG](CHANGELOG.md). The CHANGELOG is automatically updated with each release, capturing all notable changes, enhancements, bug fixes, and breaking changes based on the commit messages.
 
 ## Automated Release
 

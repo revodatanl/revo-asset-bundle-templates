@@ -1,17 +1,23 @@
-site_name: {{.package_name}} Documentation
+site_name: {{.package_name}}
 
 nav:
-  - Home: index.md
-  - Development: development.md
+  - Introduction: index.md
+  - Getting Started: getting_started.md
+  - Bundle Deployment: bundle_deployment.md
+  - List of Commands: commands.md
+  - Configuration: configuration.md
+  - CI/CD: cicd.md
   - Resources:
       - Jobs: jobs/index.md
       - Notebooks: notebooks/index.md
       - Modules: modules.md
-      - Tests: tests/index.md
+  - Tests:
+      - Configuration: tests/test_configuration.md
+      - Tests: tests/tests.md
+      - Coverage: tests/coverage_report.md
   - Release: release.md
   - Coding Standards: coding_standards.md
+  - CHANGELOG: CHANGELOG.md
 
 theme:
-  # name: mkdocs
-  # name: readthedocs
   name: material

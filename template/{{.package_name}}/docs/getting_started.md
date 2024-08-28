@@ -18,7 +18,7 @@ This will:
 
 - Install [`Homebrew`](https://brew.sh) if not already installed.
 - Install the required tools: [`Databricks CLI`](https://docs.databricks.com/dev-tools/cli/databricks-cli.html), [`git`](https://git-scm.com), [`Poetry`](https://python-poetry.org/docs), and [`pyenv`](https://github.com/pyenv/pyenv).
-- Set up the Python version specified in the `.python-version` file using pyenv.
+- Set up the Python version specified in the `.python-version` file using `pyenv`.
 - Add pyenv configuration to `.zprofile` and `.zshrc`.
 
 ![make-install](assets/make-install.png)
