@@ -1,8 +1,8 @@
-<!-- To trigger the automated versioning process, please ensure your commit messages follow semantic versioning conventions. Use prefixes like `fix:`, `feat:`, or `breaking:` (or `feat!`) in your commit messages to indicate the type of change:
+<!-- To trigger the Semantic Release process, ensure you use Convention Commits prefixes.
 
-- `fix:` for bug fixes: triggers a patch version update (e.g. 1.0.0 -> 1.0.1)
+- `fix:`  for bug fixes: triggers a patch version update (e.g. 1.0.0 -> 1.0.1)
 - `feat:` for new features: triggers a minor version update (e.g. 1.0.0 -> 1.1.0)
-- `breaking:` (or `feat!`) for breaking changes: triggers a major version update (e.g. 1.0.0 -> 2.0.0) -->
+- `*!:` (or using `BREAKING CHANGES` in the commit message): triggers a major version update (e.g. 1.0.0 -> 2.0.0) -->
 
 # Description
 
