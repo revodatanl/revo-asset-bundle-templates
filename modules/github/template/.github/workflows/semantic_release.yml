@@ -67,6 +67,6 @@ jobs:
             echo "No changes to commit, skipping commit."
           else
             echo "Committing CHANGELOG..."
-            git commit -m "[automated] Update CHANGELOG for PR #${{ github.event.pull_request.number }}"
+            git commit -m "chore(pr): update CHANGELOG for PR #${{ github.event.pull_request.number }} [automated]"
             git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git ${{ github.ref_name }}
           fi

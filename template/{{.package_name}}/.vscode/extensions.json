@@ -2,12 +2,17 @@
   "recommendations": [
     "bierner.markdown-mermaid",
     "charliermarsh.ruff",
-    "ms-python.vscode-pylance",
-    "corschenzi.mermaid-graphical-editor",
-    "redhat.vscode-yaml",
-    "ms-python.mypy-type-checker",
     "davidanson.vscode-markdownlint",
+    "esbenp.prettier-vscode",
+    "mechatroner.rainbow-csv",
+    "mhutchie.git-graph",
+    "ms-python.mypy-type-checker",
+    "ms-python.vscode-pylance",
+    "ms-vscode.makefile-tools",
     "njpwerner.autodocstring",
-    "tamasfe.even-better-toml"
+    "redhat.vscode-xml",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "vscode-icons-team.vscode-icons"
   ]
 }

@@ -16,7 +16,7 @@
 
 # COMMAND ----------
 
-import dlt  # type: ignore[import-not-found]
+import dlt
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
@@ -48,7 +48,7 @@ autoloader_path = spark.conf.get("autoloader_path")
 )
 def ingest() -> DataFrame:
     """Ingest raw data from the landing zone using the Auto Loader."""
-    return (  # type: ignore[no-any-return]
+    return (
         spark.readStream.format("cloudFiles")
         .option("cloudFiles.format", "parquet")
         .option("pathGlobfilter", "*.parquet")
@@ -80,7 +80,7 @@ expectations: dict[str, str] = {}
 @dlt.expect_all_or_drop(expectations)
 def set_expectations() -> DataFrame:
     """Set expectations on raw data to set bronze quality."""
-    return dlt.read_stream(f"raw_{table}")  # type: ignore[no-any-return]
+    return dlt.read_stream(f"raw_{table}")
 
 
 # COMMAND ----------
