@@ -15,5 +15,11 @@ updates:
     groups:
       dev-deps:
         dependency-type: development
+        exclude-patterns:
+          - pandas* # Fixed at Databricks Runtime 14.3 LTS
+          - numpy* # Fixed at Databricks Runtime 14.3 LTS
       prod-deps:
         dependency-type: production
+        exclude-patterns:
+          - pandas* # Fixed at Databricks Runtime 14.3 LTS
+          - numpy* # Fixed at Databricks Runtime 14.3 LTS
