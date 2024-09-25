@@ -1,0 +1,10 @@
+{
+  "properties": {
+    "package_name": {
+      "type": "string",
+      "description": "Sorry, what was the main package name again?",
+      "order": 1
+    }
+  },
+  "success_message": "\nYour default GitHub CI/CD pipeline(s) have been added to the '.github' directory."
+}

@@ -1,0 +1,72 @@
+name: Semantic Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - .github/workflows/**
+      - resources/**
+      - src/**
+      - pyproject.toml
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      # Step 1: Checkout the repository and fetch all history and tags
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Step 2: Run Semantic Release to bump version and tag
+      - name: Python Semantic Release
+        id: semantic_release
+        uses: python-semantic-release/python-semantic-release@v9.8.8
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 3: Fetch the latest tags after the release
+      - name: Fetch latest tags
+        run: git fetch --tags
+
+      # Step 5: Reset file ownership after actions
+      - name: Fix .git folder permissions
+        run: sudo chown -R $USER:$USER .git
+
+      # Step 4: Generate CHANGELOG after fetching the new tags
+      - name: Generate CHANGELOG
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: pyproject.toml
+          args: --github-repo ${{ github.repository }}
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      # Step 6: Commit CHANGELOG
+      - name: Commit CHANGELOG
+        run: |
+          # Set up git configuration
+          git config user.name 'github-actions[bot]'
+          git config user.email 'actions@github.com'
+
+          # Add generated CHANGELOG
+          git add CHANGELOG.md
+
+          # Check if there are any changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit, skipping commit."
+          else
+            echo "Committing CHANGELOG..."
+            git commit -m "[automated] Update CHANGELOG for PR #${{ github.event.pull_request.number }}"
+            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git ${{ github.ref_name }}
+          fi
