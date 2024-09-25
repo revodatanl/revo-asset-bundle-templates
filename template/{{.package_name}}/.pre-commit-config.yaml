@@ -5,6 +5,11 @@ repos:
       - id: pre-commit-update
         args:
           - --verbose
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
@@ -12,6 +17,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-json
+      - id: check-xml
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.6.2
     hooks:
@@ -37,6 +43,12 @@ repos:
         additional_dependencies:
           - types-pytz
         exclude: scratch
+  - repo: https://github.com/jsh9/pydoclint
+    rev: 0.5.7
+    hooks:
+      - id: pydoclint
+        args:
+          - --config=pyproject.toml
   - repo: local
     hooks:
       - id: pytest-unit-tests

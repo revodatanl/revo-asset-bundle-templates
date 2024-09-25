@@ -12,28 +12,29 @@ scripts = { "main" = "{{.package_name}}.main:main" }
 
 [tool.poetry.dependencies]
 python = "3.10.*"  # Databricks Runtime 14.3 LTS
+databricks-sdk = "^0.29.0"
+numpy = "1.23.5"  # Databricks Runtime 14.3 LTS
+pandas = "1.5.3"  # Databricks Runtime 14.3 LTS
+pyspark = "^3.5.1"
 
 [tool.poetry.dev-dependencies]
 coverage = "^7.5.3"
 coverage-badge = "^1.1.1"
-databricks-sdk = "^0.29.0"
+git-cliff = "^2.5.0"
 ipykernel = "^6.25.2"
 mkdocs = "^1.6.0"
 mkdocs-material = "^9.5.33"
 mypy = "^1.11.0"
 mypy-extensions = "^1.0.0"
-numpy = "1.23.5"  # Databricks Runtime 14.3 LTS
-pandas = "1.5.3"  # Databricks Runtime 14.3 LTS
 pdoc3 = "^0.11.1"
 pre-commit = "^3.7.0"
-pre-commit-update = "^0.3.3.post1"
-pydantic = "^2.6.4"
-pyspark = "^3.5.1"
-python-semantic-release = "^9.6.0"
-pytest = "^8.1.1"
+pre-commit-update = "^0.5.0"
+pydoclint = "^0.5.7"
+pytest = "^8.3.3"
 pytest-cov = "^5.0.0"
 pytest-mock = "^3.14.0"
-ruff = "^0.5.1"
+python-semantic-release = "^9.8.8"
+ruff = "^0.6.4"
 
 [tool.poetry.group.types.dependencies]
 
@@ -48,6 +49,7 @@ line-length = 100
 extend-include = ["*.ipynb"]
 exclude = ["scratch"]
 builtins = ["dbutils", "dlt", "display", "spark"]
+external = ["DOC"]  # pydoclint
 
 [tool.ruff.lint]
 pydocstyle.convention = "numpy"
@@ -96,30 +98,60 @@ ignore_missing_imports = true
 testpaths = ["tests"]
 pythonpath = ["src"]
 
+[tool.pydoclint]
+style = "numpy"
+exclude = ".git|.venv|scratch"
+
 [tool.semantic_release]
 version_toml = ["pyproject.toml:tool.poetry.version"]
 major_on_zero = true
 branch = "main"
-hvcs = "github"
-commit_author = "github-actions <actions@github.com>"
-upload_to_release = "false"
-changelog_file = "CHANGELOG.md"
-changelog_generate = "true"
-commit_parser = "angular"
-commit_version_number = { enabled = "true" }
+commit_author = "github-actions[bot] <actions@github.com>"
+changelog_generate = false
 
-[tool.semantic_release.changelog]
-exclude_commit_patterns = [
-    # Uncomment these patterns to repress from CHANGELOG
-    # '''chore(?:\([^)]*?\))?: .+''',
-    # '''ci(?:\([^)]*?\))?: .+''',
-    # '''refactor(?:\([^)]*?\))?: .+''',
-    # '''style(?:\([^)]*?\))?: .+''',
-    # '''test(?:\([^)]*?\))?: .+''',
-    # '''build\((?!deps\): .+)''',
-    '''Merged? .*''',
-    '''Initial Commit.*''',
-    '''Merge pull request #\d+ from .+''',
-    # Old semantic-release version commits
-    '''^\d+\.\d+\.\d+''',
+[tool.git-cliff.changelog]
+header = """
+# Changelog\n
+All notable changes to this project will be documented in this file.\n
+"""
+body = """
+{% if version %}\
+    ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
+    ## [unreleased]
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | striptags | trim | upper_first }}
+    {% for commit in commits %}
+        - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
+            {% if commit.breaking %}[**breaking**] {% endif %}\
+            {{ commit.message | upper_first }}\
+    {% endfor %}
+{% endfor %}\n
+"""
+trim = true
+
+[tool.git-cliff.git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_parsers = [
+  { message = "^feat", group = "<!-- 0 -->🚀 Features" },
+  { message = "^fix", group = "<!-- 1 -->🐛 Bug Fixes" },
+  { message = "^doc", group = "<!-- 3 -->📚 Documentation" },
+  { message = "^perf", group = "<!-- 4 -->⚡ Performance" },
+  { message = "^refactor", group = "<!-- 2 -->🚜 Refactor" },
+  { message = "^style", group = "<!-- 5 -->🎨 Styling" },
+  { message = "^test", group = "<!-- 6 -->🧪 Testing" },
+  { message = "^chore\\(release\\): prepare for", skip = true },
+  { message = "^chore\\(deps.*\\)", skip = true },
+  { message = "^chore\\(pr\\)", skip = true },
+  { message = "^chore\\(pull\\)", skip = true },
+  { message = "^chore|^ci", group = "<!-- 7 -->⚙️ Miscellaneous Tasks" },
+  { body = ".*security", group = "<!-- 8 -->🛡️ Security" },
+  { message = "^revert", group = "<!-- 9 -->◀️ Revert" },
+  { message = "^build", group = "<!-- 10 -->🏗️ Build System" },
 ]
+filter_commits = false
+topo_order = false
+sort_commits = "oldest"
