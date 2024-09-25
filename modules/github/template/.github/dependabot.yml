@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: .
+    schedule:
+      interval: daily
+    groups:
+      actions-deps:
+        patterns:
+          - "*"
+  - package-ecosystem: pip
+    directory: .
+    schedule:
+      interval: daily
+    groups:
+      dev-deps:
+        dependency-type: development
+        exclude-patterns:
+          - pandas* # Fixed at Databricks Runtime 14.3 LTS
+          - numpy* # Fixed at Databricks Runtime 14.3 LTS
+      prod-deps:
+        dependency-type: production
+        exclude-patterns:
+          - pandas* # Fixed at Databricks Runtime 14.3 LTS
+          - numpy* # Fixed at Databricks Runtime 14.3 LTS

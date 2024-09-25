@@ -59,7 +59,7 @@ setup:
 
 	@echo "Setting up pre-commit..."
 	. .venv/bin/activate;
-	.venv/bin/pre-commit install;
+	.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg;
 
 clean:
 	@echo "Cleaning up..."
@@ -129,20 +129,20 @@ module:
 	@echo "Select the module to deploy:"
 	@echo "1) DLT"
 	@echo "2) Azure DevOps"
-	@echo "3) GitLab"
+	@echo "3) GitHub"
 	@echo "4) VSCode settings (update)"
 	@read -p "Enter the number of the module you want to deploy: " choice; \
 	case $$choice in \
 		1) $(MAKE) module_dlt;; \
 		2) $(MAKE) module_azure-devops;; \
-		3) $(MAKE) module_gitlab;; \
+		3) $(MAKE) module_github;; \
 		4) $(MAKE) module_vscode;; \
 		*) echo "Invalid choice. Exiting."; exit 1;; \
 	esac
 
 module_%:
-	@if [ "$*" != "dlt" ] && [ "$*" != "azure-devops" ] && [ "$*" != "gitlab" ] && [ "$*" != "vscode" ]; then \
-		echo "Error: Invalid module. Use 'dlt', 'azure-devops', 'gitlab', or 'vscode'."; \
+	@if [ "$*" != "dlt" ] && [ "$*" != "azure-devops" ] && [ "$*" != "github" ] && [ "$*" != "vscode" ]; then \
+		echo "Error: Invalid module. Use 'dlt', 'azure-devops', 'github', or 'vscode'."; \
 		exit 1; \
 	fi
 	@{ \
@@ -156,7 +156,7 @@ module_%:
 
 tree:
 	@echo "Generating project tree..."
-	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|.DS_Store' -a
+	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a
 
 docs:
 	@echo "Generating HTML documentation..."

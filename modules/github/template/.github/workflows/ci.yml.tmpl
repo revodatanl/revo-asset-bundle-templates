@@ -5,7 +5,8 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - .github/workflows/**
-      - src/**/**
+      - src/**
+      - resources/**
       - tests/**
       - pyproject.toml
 
@@ -29,7 +30,7 @@ jobs:
           echo "PYTHON_VERSION=$PYTHON_VERSION" >> $GITHUB_ENV
           echo "PYTHON_VERSION=$PYTHON_VERSION"
       - name: Setup Python version ${{ "{{" }} env.PYTHON_VERSION {{ "}}" }}
-        uses: actions/setup-python@v5.1.0
+        uses: actions/setup-python@v5.2.0
         with:
           python-version: ${{ "{{" }} env.PYTHON_VERSION {{ "}}" }}
       - name: Install Poetry
@@ -41,6 +42,7 @@ jobs:
         run: |
           poetry run ruff check --output-format=github .
           poetry run mypy .
+          poetry run pydoclint .
       - name: Build and check package
         run: |
           poetry build

@@ -1,0 +1,101 @@
+name: Semantic Release (using Git Tagging)
+
+on:
+  pull_request:
+    types: [closed]
+    paths:
+      - .github/workflows/**
+      - modules/**
+      - template/**
+      - databricks_template_schema.json
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository and fetch all history and tags
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Step 2: Bump version based on PR title
+      - name: Bump version based on PR title
+        id: bump_version
+        run: |
+          # Set up git configuration
+          git config user.name 'github-actions[bot]'
+          git config user.email 'actions@github.com'
+
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo PR Title: $PR_TITLE
+
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "Latest tagged version: $LATEST_TAG"
+
+          # Extract version components (remove the 'v' prefix)
+          VERSION=${LATEST_TAG#v}
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+
+          # Set the new version based on PR title
+          case "$PR_TITLE" in
+            fix:*)
+              PATCH=$((PATCH + 1))
+              ;;
+            feat:*)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            *!:*)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            *)
+              echo "No Conventional Commits keywords (fix:, feat:, feat!:, ...) found in PR title. Exiting."
+              exit 1
+              ;;
+          esac
+
+          NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
+          echo "New version: $NEW_VERSION"
+
+          # Create and push the new tag
+          git tag $NEW_VERSION
+          git push origin $NEW_VERSION
+
+      # Step 3: Fetch the latest tags after the release
+      - name: Fetch latest tags
+        run: git fetch --tags
+
+      # Step 4: Generate CHANGELOG after fetching the new tags
+      - name: Generate CHANGELOG
+        uses: orhun/git-cliff-action@v4.2.0
+        with:
+          config: cliff.toml
+          args: --github-repo ${{ github.repository }}
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      # Step 5: Commit the CHANGELOG after it is generated, only if there are changes
+      - name: Commit CHANGELOG
+        run: |
+          # Set up git configuration (again)
+          git config user.name 'github-actions[bot]'
+          git config user.email 'actions@github.com'
+
+          # Add generated CHANGELOG
+          git add CHANGELOG.md
+
+          # Check if there are any changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit, skipping commit."
+          else
+            git commit -m "chore(pr): update CHANGELOG for PR #${{ github.event.pull_request.number }} [automated]"
+            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git ${{ github.ref_name }}
+          fi
