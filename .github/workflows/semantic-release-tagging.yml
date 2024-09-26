@@ -90,14 +90,13 @@ jobs:
           OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
 
-      # # Step 6: Fetch and Rebase onto latest main again before committing
-      # - name: Fetch and Rebase onto latest main before commit
-      #   run: |
-      #     git fetch origin
-      #     git rebase origin/main
-      #     # git rebase --autostash origin/main
+      # Step 6: Fetch and Rebase onto latest main again before committing
+      - name: Fetch and Rebase onto latest main before commit
+        run: |
+          git fetch origin
+          git rebase origin/main
 
-      # Step 7: Commit the CHANGELOG after it is generated, only if there are changes
+      # Step 5: Commit the CHANGELOG after it is generated, only if there are changes
       - name: Commit CHANGELOG
         run: |
           # Set up git configuration (again)
