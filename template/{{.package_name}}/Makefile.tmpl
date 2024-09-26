@@ -165,5 +165,5 @@ docs:
 	@echo "Generating coverage report..."
 	@poetry run pytest tests -v --cov=src --cov-report html:docs/tests/coverage
 	@rm -rf docs/tests/coverage/.gitignore
-	@mkdocs build
-	@mkdocs serve
+	@poetry run mkdocs build
+	@poetry run mkdocs serve
