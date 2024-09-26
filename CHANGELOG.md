@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2024-09-26
+
+### 🐛 Bug Fixes
+
+- *(semantic-release)* Fix rebase issue in semantic-release-tagging.yml
+- *(semantic-release)* Remove unnecessary code for fetching and rebasing onto latest main
+- *(semantic-release)* Versioning using the language-agnostic Semantic Release package
+- *(semantic-release)* Update the Semantic Release pipeline
+- Adapted pull request template for all modules
+- *(semantic-release)* Automatically update version in README template
+- *(coverage)* Generate coverage badge with `genbadge` and `coverage`
+- *(docs)* Minor fixes in the mkdocs configuration
+
+### ◀️ Revert
+
+- *(semantic-release)* Remove semantic PR title pipeline
+
+## [0.5.1] - 2024-09-26
+
+### 🐛 Bug Fixes
+
+- *(semantic-release)* Streamline semantic-release pipeline to prevent merge commits
+- *(modules)* Update CI/CD pipelines for Azure DevOps and GitHub
+- *(modules)* Include CI/CD template for Databricks Asset Bundle deployment with GitHub (to Azure)
+
 ## [0.5.0] - 2024-09-25
 
 ### 🚀 Features
