@@ -6,6 +6,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 ![macOS](https://img.shields.io/badge/os-macOS-lightgrey?logo=apple)
+[![semantic-release](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/semantic-release.yml)
 
 The `RevoData Asset Bundle Templates` contains our own custom templates for Databricks Asset Bundles. The template should initate a complete development environment for new Databricks projects, including GitHub Actions, pre-commit hooks, and example pipelines and jobs that can be deployed to Databricks.
 

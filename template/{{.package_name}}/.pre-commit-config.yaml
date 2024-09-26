@@ -1,62 +1,65 @@
 repos:
-  - repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
-    rev: v0.4.0post1
+-   repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
+    rev: v0.5.1post1
     hooks:
-      - id: pre-commit-update
+    -   id: pre-commit-update
         args:
-          - --verbose
-  - repo: https://github.com/compilerla/conventional-pre-commit
+        -   --verbose
+-   repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.4.0
     hooks:
-      - id: conventional-pre-commit
+    -   id: conventional-pre-commit
         stages: [commit-msg]
-  - repo: https://github.com/pre-commit/pre-commit-hooks
+-   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-json
-      - id: check-xml
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.6.2
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+        exclude_types: [svg]
+    -   id: check-yaml
+    -   id: check-json
+    -   id: check-xml
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.6.8
     hooks:
-      - id: ruff
+    -   id: ruff
         args:
-          - --config=pyproject.toml
-          - --fix
-          - --exit-non-zero-on-fix
+        -   --config=pyproject.toml
+        -   --fix
+        -   --exit-non-zero-on-fix
         types_or: [python, pyi, jupyter]
-      - id: ruff-format
+    -   id: ruff-format
         args:
-          - --config=pyproject.toml
+        -   --config=pyproject.toml
         types_or: [python, pyi, jupyter]
-  - repo: https://github.com/pre-commit/mirrors-mypy
+-   repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.11.2
     hooks:
-      - id: mypy
+    -   id: mypy
         args:
-          - --strict
-          - --allow-untyped-decorators
-          - --ignore-missing-imports
-          - --disable-error-code=name-defined
+        -   --strict
+        -   --allow-untyped-decorators
+        -   --ignore-missing-imports
+        -   --disable-error-code=name-defined
         additional_dependencies:
-          - types-pytz
+        -   types-pytz
         exclude: scratch
-  - repo: https://github.com/jsh9/pydoclint
-    rev: 0.5.7
+-   repo: https://github.com/jsh9/pydoclint
+    rev: 0.5.8
     hooks:
-      - id: pydoclint
+    -   id: pydoclint
         args:
-          - --config=pyproject.toml
-  - repo: local
+        -   --config=pyproject.toml
+-   repo: local
     hooks:
-      - id: pytest-unit-tests
+    -   id: pytest-unit-tests
         name: pytest-unit-tests
         entry: >
           bash -c '
-            poetry run pytest -v tests --cov=src &&
-            poetry run coverage-badge -f -o docs/assets/coverage.svg
+            poetry run pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml &&
+            poetry run coverage xml -o docs/tests/coverage/coverage.xml &&
+            poetry run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg &&
+            poetry run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg
           '
         language: system
         pass_filenames: false
