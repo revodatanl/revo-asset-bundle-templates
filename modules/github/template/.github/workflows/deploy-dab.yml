@@ -1,0 +1,72 @@
+name: Deploy Databricks Asset Bundle
+
+on:
+  push:
+    branches:
+      - main
+      - release/**
+
+jobs:
+  deploy_dev:
+    runs-on: ubuntu-latest
+
+    env:
+      groupName: ${{ secrets.GROUP_NAME }} # GitHub Secrets for Azure Library Group name
+      keyVaultName: ${{ secrets.KEY_VAULT_NAME }} # GitHub Secrets for Azure Key Vault name
+      azureSubscription: ${{ secrets.AZURE_SUBSCRIPTION_NAME }} # GitHub Secrets for Azure Subscription name / Service Principal name
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }} # Databricks Host from GitHub Secrets
+      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }} # Databricks Client ID from GitHub Secrets
+      DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }} # Databricks Client Secret from GitHub Secrets
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python version
+        run: |
+          PYTHON_VERSION=$(cat .python-version)
+          echo "PYTHON_VERSION=$PYTHON_VERSION" >> $GITHUB_ENV
+          echo Python version: $PYTHON_VERSION
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get secrets from Azure Key Vault
+        uses: azure/get-keyvault-secrets@v1
+        with:
+          keyvault: ${{ env.keyVaultName }}
+          secrets: |
+            DATABRICKS-CLIENT-ID
+            DATABRICKS-CLIENT-SECRET
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+          databricks version
+
+      - name: Install Poetry and build the package
+        run: |
+          python -m pip install --upgrade pip poetry
+          poetry build
+
+      - name: Configure Databricks authentication
+        run: |
+          envsubst < ./.azuredevops/.azure-pipelines/databricks.cfg > ~/.databrickscfg
+        env:
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+
+      - name: Deploy Databricks Bundle
+        run: |
+          databricks bundle deploy --target dev

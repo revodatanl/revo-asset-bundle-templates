@@ -1,17 +1,10 @@
-name: deploy-dab
+name: Deploy Databricks Asset Bundle
 
-# Pipeline is triggered upon completed pull request in the main branch, if files in provided paths are modified
 trigger:
   branches:
     include:
       - main
-  paths:
-    include:
-      - azuredevops/.azure-pipelines/**
-      - src/**
-      - tests/**
-      - resources/**
-      - pyproject.toml
+      - release/*
 
 pool:
   name: ubuntu-latest
