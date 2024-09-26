@@ -15,7 +15,7 @@ pr:
       - databricks.yml
 
 pool:
-  name: Rabo-Linux-Production
+  name: ubuntu-latest
 
 stages:
   - stage: semantic_release
@@ -57,7 +57,7 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 # Configure git
-                git config user.email "semantic-release-bot@rabobank.nl"
+                git config user.email "semantic-release[bot]@azure.com"
                 git config user.name "Semantic Release Bot"
 
                 # Get the source branch name
@@ -111,10 +111,6 @@ stages:
                 # Build CHANGELOG.md with git-cliff
                 poetry run git-cliff --bump $BUMP -o CHANGELOG.md
                 cat CHANGELOG.md
-
-                # Configure git
-                git config user.email "semantic-release-bot@rabobank.nl"
-                git config user.name "Semantic Release Bot"
 
                 # Commit and push the changes
                 git add pyproject.toml CHANGELOG.md
