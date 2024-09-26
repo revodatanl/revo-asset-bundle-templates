@@ -1,7 +1,0 @@
-branch: main
-version_variable: VERSION
-# version_pattern: "^(?P<version>.*)$"
-tag_format: v{version}
-upload_to_pypi: false
-changelog:
-  enabled: false
