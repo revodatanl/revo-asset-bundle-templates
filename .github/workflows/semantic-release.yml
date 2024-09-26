@@ -64,15 +64,18 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'actions@github.com'
 
-          # Add generated CHANGELOG
-          git add CHANGELOG.md
+          # Write the latest version to the README
+          VERSION=$(git tag --sort=-v:refname | head -n 1 | sed 's/^v//')
+          sed -i "s/version \`[0-9]*\.[0-9]*\.[0-9]*\`/version \`$VERSION\`/" template/{{.package_name}}/README.md.tmpl
+
+          # Add generated CHANGELOG and updated README
+          git add CHANGELOG.md template/{{.package_name}}/README.md.tmpl
 
           # Check if there are any changes to commit
           if git diff --cached --quiet; then
             echo "No changes to commit, skipping commit."
           else
-            # Use the semantic-release version in the commit message
-            VERSION=$(git tag --sort=-v:refname | head -n 1 | sed 's/^v//')
+            # Commit the generated CHANGELOG and updated README
             git commit -m "chore(release): update CHANGELOG for version $VERSION [automated]"
             # Fetching and rebasing onto the latest main branch before pushing
             git fetch origin
