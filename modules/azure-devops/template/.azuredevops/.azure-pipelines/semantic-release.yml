@@ -109,11 +109,11 @@ stages:
                 fi
 
                 # Build CHANGELOG.md with git-cliff
-                poetry run git-cliff --bump $BUMP -o CHANGELOG.md
-                cat CHANGELOG.md
+                poetry run git-cliff --bump $BUMP -o docs/CHANGELOG.md
+                cat docs/CHANGELOG.md
 
                 # Commit and push the changes
-                git add pyproject.toml CHANGELOG.md
+                git add pyproject.toml docs/CHANGELOG.md
                 git commit -m "chore(pr): bump $BUMP version to $NEW_VERSION - PR #$(System.PullRequest.PullRequestId) [automated]"
                 git push origin HEAD:$SOURCE_BRANCH
 
