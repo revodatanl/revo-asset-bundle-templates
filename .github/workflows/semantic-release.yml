@@ -1,17 +1,13 @@
 name: Semantic Release
 
 on:
-  pull_request:
-    types: [closed]
-    paths:
-      - .github/workflows/**
-      - modules/**
-      - template/**
-      - databricks_template_schema.json
+  push:
+    branches:
+      - main
+      - release/*
 
 jobs:
   release:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -37,11 +33,12 @@ jobs:
 
       # Step 4: Install Semantic Release
       - name: Install Semantic Release
-        run: npm install semantic-release
+        run: |
+          npm install --no-save semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/github
 
       # Step 5: Run Semantic Release
       - name: Run Semantic Release
-        run: npx semantic-release --dry-run
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -51,7 +48,7 @@ jobs:
 
       # Step 7: Generate CHANGELOG
       - name: Generate CHANGELOG
-        uses: orhun/git-cliff-action@v4
+        uses: orhun/git-cliff-action@v4.2.0
         id: git-cliff-changelog
         with:
           config: cliff.toml
@@ -59,27 +56,7 @@ jobs:
           OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
 
-      # Step 8: Generate CHANGES (for release)
-      - name: Generate CHANGES for release
-        uses: orhun/git-cliff-action@v4
-        id: git-cliff-changes
-        with:
-          config: cliff.toml
-          args: -vv --latest --strip header
-        env:
-          OUTPUT: CHANGES.md
-          GITHUB_REPO: ${{ github.repository }}
-
-      # Step 9: Upload the binary releases
-      - name: Upload the binary releases
-        uses: svenstaro/upload-release-action@v2
-        with:
-          file: binary_release.zip
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref }}
-          body: ${{ steps.git-cliff-changes.outputs.content }}
-
-      # Step 10: Commit the CHANGELOG after it is generated (only if there are changes)
+      # Step 8: Commit the CHANGELOG after it is generated (only if there are changes)
       - name: Commit CHANGELOG
         id: commit-changelog
         run: |
@@ -93,21 +70,13 @@ jobs:
           # Check if there are any changes to commit
           if git diff --cached --quiet; then
             echo "No changes to commit, skipping commit."
-            echo "::set-output name=skip_commit::true"
           else
-            git commit -m "chore(pr): update CHANGELOG for PR #${{ github.event.pull_request.number }} [automated]"
-            echo "::set-output name=skip_commit::false"
+            # Use the semantic-release version in the commit message
+            VERSION=$(git tag --sort=-v:refname | head -n 1 | sed 's/^v//')
+            git commit -m "chore(release): update CHANGELOG for version $VERSION [automated]"
+            # Fetching and rebasing onto the latest main branch before pushing
+            git fetch origin
+            git rebase origin/main -X ours
+            # Push changes
+            git push origin main
           fi
-
-      # Step 11: Fetch and Rebase onto latest main before pushing
-      - name: Fetch and Rebase onto latest main before push
-        if: steps.commit-changelog.outputs.skip_commit == 'false'
-        run: |
-          echo "Fetching and rebasing onto the latest main branch before pushing..."
-          git fetch origin
-          git rebase origin/main -X ours
-
-      # Step 12: Push changes
-      - name: Push changes
-        if: steps.commit-changelog.outputs.skip_commit == 'false'
-        run: git push origin main
