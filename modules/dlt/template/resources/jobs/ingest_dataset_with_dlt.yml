@@ -6,8 +6,8 @@ defaults: &default_task_config
 
 resources:
   jobs:
-    ingest_dataset_using_dlt:
-      name: ingest_dataset_using_dlt
+    ingest_dataset_with_dlt:
+      name: ingest_dataset_with_dlt
 
       tasks:
         - task_key: dlt_task
