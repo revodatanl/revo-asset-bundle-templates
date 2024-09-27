@@ -8,7 +8,12 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-laest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
 
     steps:
       # Step 1: Checkout the repository and fetch all history and tags
@@ -34,8 +39,12 @@ jobs:
       # Step 4: Install Semantic Release
       - name: Install Semantic Release
         run: |
-          npm install --no-save semantic-release @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/github
-
+          npm install --no-save \
+            semantic-release \
+            @semantic-release/changelog \
+            @semantic-release/exec \
+            @semantic-release/git \
+            @semantic-release/github
       # Step 5: Run Semantic Release
       - name: Run Semantic Release
         run: npx semantic-release
