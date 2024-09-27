@@ -1,31 +1,36 @@
 {
   "properties": {
+    "project_name": {
+      "type": "string",
+      "description": "Project name (use dashes)",
+      "order": 1
+    },
     "package_name": {
       "type": "string",
       "description": "Package name (use underscores)",
-      "order": 1
+      "order": 2
     },
     "author": {
       "type": "string",
       "description": "Author",
-      "order": 2
+      "order": 3
     },
     "email": {
       "type": "string",
       "description": "Email of author",
-      "order": 3
+      "order": 4
     },
     "description": {
       "type": "string",
       "description": "Description of the project",
-      "order": 4
+      "order": 5
     },
     "profile_name": {
       "type": "string",
       "default": "DEFAULT",
       "description": "Configured ~/.databrickscfg profile for this Bundle",
-      "order": 5
+      "order": 6
     }
   },
-  "success_message": "\nYour new project has been created in the '{{.package_name}}' directory."
+  "success_message": "\nYour new project has been created in the '{{.project_name}}' directory."
 }
