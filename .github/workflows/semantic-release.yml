@@ -58,7 +58,7 @@ jobs:
 
       # Step 7: Generate CHANGELOG
       - name: Generate CHANGELOG
-        uses: orhun/git-cliff-action@v4.2.0
+        uses: orhun/git-cliff-action@v4.3.0
         id: git-cliff-changelog
         with:
           config: cliff.toml
