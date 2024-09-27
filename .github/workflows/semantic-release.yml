@@ -64,12 +64,13 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'actions@github.com'
 
-          # Write the latest version to the README
+          # Write the latest version to the docs
           VERSION=$(git tag --sort=-v:refname | head -n 1 | sed 's/^v//')
           sed -i "s/version \`[0-9]*\.[0-9]*\.[0-9]*\`/version \`$VERSION\`/" template/{{.project_name}}/README.md.tmpl
+          sed -i "s/version \`[0-9]*\.[0-9]*\.[0-9]*\`/version \`$VERSION\`/" template/{{.project_name}}/docs/index.md.tmpl
 
-          # Add generated CHANGELOG and updated README
-          git add CHANGELOG.md template/{{.project_name}}/README.md.tmpl
+          # Add generated CHANGELOG and updated docs
+          git add CHANGELOG.md template/{{.project_name}}/README.md.tmpl template/{{.project_name}}/docs/index.md.tmpl
 
           # Check if there are any changes to commit
           if git diff --cached --quiet; then

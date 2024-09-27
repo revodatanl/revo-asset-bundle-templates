@@ -10,11 +10,6 @@ repos:
     hooks:
     -   id: conventional-pre-commit
         stages: [commit-msg]
--   repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v3.4.0
-    hooks:
-    -   id: conventional-pre-commit
-        stages: [commit-msg]
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     hooks:
     -   id: trailing-whitespace
