@@ -66,10 +66,10 @@ jobs:
 
           # Write the latest version to the README
           VERSION=$(git tag --sort=-v:refname | head -n 1 | sed 's/^v//')
-          sed -i "s/version \`[0-9]*\.[0-9]*\.[0-9]*\`/version \`$VERSION\`/" template/{{.package_name}}/README.md.tmpl
+          sed -i "s/version \`[0-9]*\.[0-9]*\.[0-9]*\`/version \`$VERSION\`/" template/{{.project_name}}/README.md.tmpl
 
           # Add generated CHANGELOG and updated README
-          git add CHANGELOG.md template/{{.package_name}}/README.md.tmpl
+          git add CHANGELOG.md template/{{.project_name}}/README.md.tmpl
 
           # Check if there are any changes to commit
           if git diff --cached --quiet; then
