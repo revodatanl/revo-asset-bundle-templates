@@ -1,6 +1,5 @@
 # Databricks notebook source
-# MAGIC file_path = str(spark.conf.get("bundle.sourcePath", "."))
-# MAGIC %pip install --no-deps --force-reinstall {file_path}/dist/*.whl
+# MAGIC %pip install --no-deps --force-reinstall {str(spark.conf.get("bundle.sourcePath"))}/dist/*.whl
 
 # COMMAND ----------
 

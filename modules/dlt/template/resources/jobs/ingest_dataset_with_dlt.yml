@@ -34,7 +34,7 @@ resources:
     dlt_ingest_dataset:
       name: dlt_ingest_dataset
       target: dlt
-      catalog: main # this option enables Unity Catalog
+      catalog: ${bundle.environment}
       libraries:
         - notebook:
             path: ../notebooks/dlt_ingest_dataset.py
