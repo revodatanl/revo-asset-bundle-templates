@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "bierner.markdown-mermaid",
+    "charliermarsh.ruff",
+    "davidanson.vscode-markdownlint",
+    "esbenp.prettier-vscode",
+    "mechatroner.rainbow-csv",
+    "mhutchie.git-graph",
+    "ms-python.mypy-type-checker",
+    "ms-python.vscode-pylance",
+    "ms-vscode.makefile-tools",
+    "njpwerner.autodocstring",
+    "redhat.vscode-xml",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "vscode-icons-team.vscode-icons"
+  ]
+}
