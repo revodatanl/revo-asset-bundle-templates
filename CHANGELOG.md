@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2024-10-07
+
+### 🚀 Features
+
+- Differentiate between project_name and package_name in template
+
+### 🐛 Bug Fixes
+
+- *(docs)* Add Poetry badge
+- *(semantic-release)* Add the version number to the documentation
+- Add .vscode settings
+- *(DLT)* Update the wheel installation (still non-functional)
+
+### 📚 Documentation
+
+- Update commands page
+
+### ⚙️ Miscellaneous Tasks
+
+- *(docs)* Minor fixes in docs template
+
 ## [0.5.3] - 2024-09-26
 
 ### 🐛 Bug Fixes
