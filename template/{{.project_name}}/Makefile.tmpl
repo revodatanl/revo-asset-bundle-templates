@@ -176,5 +176,5 @@ docs:
 	@echo "Generating HTML documentation..."
 	@poetry run pdoc --html src/blifc -o docs/api --force
 	@poetry run pdoc --html tests -o docs/api --force
-	@poetry run mkdocs build
+	# @poetry run mkdocs build
 	@poetry run mkdocs serve
