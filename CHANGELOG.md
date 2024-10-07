@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2024-10-07
+
+### 🐛 Bug Fixes
+
+- *(azure-devops)* Fix CHANGELOG generation always lagging 1 version behind
+
 ## [0.6.0] - 2024-10-07
 
 ### 🚀 Features
