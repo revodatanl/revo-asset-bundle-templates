@@ -8,9 +8,9 @@ We utilize the principles of Semantic Release to automatically bump the version 
 
 | Commit Type                               | Description                                     | Example                     |
 |-------------------------------------------|-------------------------------------------------|-----------------------------|
-| `fix:`                                    | for bug fixes: triggers a **patch** version update | 1.0.0 -> 1.0.1              |
-| `feat:`                                   | for new features: triggers a **minor** version update | 1.0.0 -> 1.1.0              |
-| `*!:` (or using `BREAKING CHANGES` in the commit message) | for breaking changes: triggers a **major** version update | 1.0.0 -> 2.0.0              |
+| `fix:`                                    | triggers a **patch** version update             | `1.0.0` --> `1.0.1`         |
+| `feat:`                                   | triggers a **minor** version update             | `1.0.0` --> `1.1.0`         |
+| `*!:`                                     | triggers a **major** version update             | `1.0.0` --> `2.0.0`         |
 
 The appropriate version number is then automatically updated in the repository.
 

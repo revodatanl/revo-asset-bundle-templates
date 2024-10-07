@@ -45,6 +45,7 @@ jobs:
             @semantic-release/exec \
             @semantic-release/git \
             @semantic-release/github
+
       # Step 5: Run Semantic Release
       - name: Run Semantic Release
         run: npx semantic-release

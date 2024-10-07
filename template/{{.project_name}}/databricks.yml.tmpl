@@ -16,12 +16,12 @@ include:
 artifacts:
   platform:
     type: whl
-    path: ./
+    path: .
     build: poetry build
 
 sync:
   include:
-    - ./dist/{{.project_name}}-*-py3-none-any.whl
+    - dist/{{.project_name}}-*-py3-none-any.whl
 
 targets:
   # The 'dev' target, for development purposes. This target is the default.
