@@ -167,11 +167,14 @@ tree:
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a
 
 docs:
-	@echo "Generating HTML documentation..."
-	@poetry run pdoc --html src/{{.package_name}} -o docs/api --force
-	@poetry run pdoc --html tests -o docs/api --force
-	@echo "Generating coverage report..."
-	@poetry run pytest tests -v --cov=src --cov-report html:docs/tests/coverage
+	@echo "Running tests and generating badges..."
+	@poetry run pytest -v tests --cov=src --cov-report html:docs/tests/coverage --junitxml=docs/tests/coverage/pytest_coverage.xml
+	@poetry run coverage xml -o docs/tests/coverage/coverage.xml
+	@poetry run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg
+	@poetry run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg
 	@rm -rf docs/tests/coverage/.gitignore
+	@echo "Generating HTML documentation..."
+	@poetry run pdoc --html src/blifc -o docs/api --force
+	@poetry run pdoc --html tests -o docs/api --force
 	@poetry run mkdocs build
 	@poetry run mkdocs serve
