@@ -77,7 +77,8 @@ clean:
 		-o -name ".mypy_cache" \
 		-o -name ".ruff_cache" \
 		-o -name "dist" \) \
-		-exec rm -rf {} +		@echo "Cleanup completed. Resetting terminal..."
+		-exec rm -rf {} +
+	@echo "Cleanup completed. Resetting terminal..."
 	@reset
 
 test:
