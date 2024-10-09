@@ -17,6 +17,7 @@ pandas = "1.5.3"   # Databricks Runtime 14.3 LTS
 
 [tool.poetry.dev-dependencies]
 coverage = "^7.6.1"
+databricks-dlt = "^0.2.1"
 defusedxml = "^0.7.1"
 genbadge = "^1.1.1"
 git-cliff = "^2.6.0"
@@ -46,7 +47,7 @@ target-version = "py310"
 line-length = 100
 extend-include = ["*.ipynb"]
 exclude = ["scratch"]
-builtins = ["dbutils", "dlt", "display", "spark"]
+builtins = ["dbutils", "display", "spark"]
 
 [tool.ruff.lint]
 pydocstyle.convention = "numpy"

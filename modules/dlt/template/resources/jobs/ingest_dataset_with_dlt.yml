@@ -51,6 +51,7 @@ resources:
         bundle.env: ${bundle.environment}
         pipelines.allowCustomSchemaForSql: true
         pipelines.allowCustomSchemaForPython: true
+        pipelines.clusterShutdown.delay: 20
 
       continuous: false
       photon: false
