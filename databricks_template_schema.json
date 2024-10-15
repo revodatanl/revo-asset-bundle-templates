@@ -7,7 +7,7 @@
     },
     "package_name": {
       "type": "string",
-      "description": "Package name (use underscores)",
+      "description": "Package name (use underscores, no dashes)",
       "order": 2
     },
     "author": {
@@ -30,6 +30,13 @@
       "default": "DEFAULT",
       "description": "Configured ~/.databrickscfg profile for this Bundle",
       "order": 6
+    },
+    "include_vscode": {
+      "type": "string",
+      "default": "yes",
+      "enum": ["yes", "no"],
+      "description": "Include default VS Code settings in '{{.project_name}}{{path_separator}}.vscode'",
+      "order": 7
     }
   },
   "success_message": "\nYour new project has been created in the '{{.project_name}}' directory."
