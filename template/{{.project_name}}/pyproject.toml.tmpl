@@ -84,13 +84,14 @@ unfixable = [
 
 [tool.mypy]
 python_version = "3.10"
+mypy_path = ["src"]
 strict = true
 disallow_untyped_decorators = false
 disable_error_code = ["name-defined"]  # Workaround to ignore: spark, dbutils, display, dlt
 exclude = ["scratch"]
 
 [[tool.mypy.overrides]]
-module = ["{{.package_name}}.*"]
+module = ["dlt"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
