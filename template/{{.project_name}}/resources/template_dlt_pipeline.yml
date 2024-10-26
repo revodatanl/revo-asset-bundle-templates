@@ -1,0 +1,43 @@
+resources:
+  jobs:
+    template_dlt_pipeline:
+      name: template_dlt_pipeline
+
+      tasks:
+        - task_key: dlt_task
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.dlt_ingest.id}
+
+      max_concurrent_runs: 1
+
+      schedule:
+        # Run every day at 8:37 AM
+        quartz_cron_expression: 44 37 8 * * ?
+        timezone_id: Europe/Amsterdam
+
+  pipelines:
+    dlt_ingest:
+      name: dlt_ingest
+      target: dlt
+      catalog: main  # or: ${bundle.environment}
+      libraries:
+        - notebook:
+            path: ../notebooks/dlt_ingest.py
+
+      clusters:
+        - label: default
+          num_workers: 1
+          node_type_id: Standard_D4s_v3
+
+      configuration:
+        wheel_path: ${var.wheel_path}
+        table: nyctaxi
+        autoloader_path: dbfs:/databricks-datasets/nyctaxi-with-zipcodes/subsampled
+        pipelines.allowCustomSchemaForPython: true
+        pipelines.clusterShutdown.delay: 20min
+
+      continuous: false
+      photon: false
+      development: true
+
+      channel: CURRENT

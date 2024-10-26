@@ -18,7 +18,6 @@ resources:
           job_cluster_key: job_cluster
           notebook_task:
             notebook_path: ../notebooks/hello_revodata.py
-
         - task_key: wheel_task
           depends_on:
             - task_key: notebook_task
@@ -30,13 +29,11 @@ resources:
             # By default we just include the .whl file generated for the {{.package_name}} package.
             # See https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
             # for more information on how to add other libraries.
-            - whl: ../../dist/*.whl
+            - whl: ../dist/*.whl
 
       job_clusters:
         - job_cluster_key: job_cluster
           new_cluster:
-            spark_version: 14.3.x-scala2.12
+            spark_version: ${var.spark_version}
             node_type_id: Standard_D3_v2
-            autoscale:
-              min_workers: 1
-              max_workers: 4
+            num_workers: 1

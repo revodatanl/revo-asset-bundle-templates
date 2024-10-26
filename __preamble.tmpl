@@ -5,6 +5,8 @@ This file only provides template directives; it is skipped for the actual output
 {{skip "__preamble"}}
 
 {{$notVSCode := not (eq .include_vscode "yes")}}
+{{$notDLT := not (eq .include_vscode "yes")}}
+
 
 {{if $notVSCode}}
   {{skip "{{.project_name}}/.vscode"}}
@@ -21,10 +23,13 @@ This file only provides template directives; it is skipped for the actual output
 #   {{skip "{{.project_name}}/requirements-dev.txt"}}
 # {{end}}
 
-# {{if $notDLT}}
-#   {{skip "{{.project_name}}/src/dlt_pipeline.ipynb"}}
-#   {{skip "{{.project_name}}/resources/{{.project_name}}.pipeline.yml"}}
-# {{end}}
+{{if $notDLT}}
+  {{skip "{{.project_name}}/notebooks/dlt_ingest_dataset.py"}}
+  {{skip "{{.project_name}}/resources/ingest_dataset_with_dlt.yml"}}
+  {{skip "{{.project_name}}/fixtures/dlt_test_data.parquet"}}
+{{else}}
+  {{skip "{{.project_name}}/fixtures/.gitkeep"}}
+{{end}}
 
 # {{if $notNotebook}}
 #   {{skip "{{.project_name}}/src/notebook.ipynb"}}

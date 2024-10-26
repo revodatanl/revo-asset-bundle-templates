@@ -25,18 +25,25 @@
       "description": "Description of the project",
       "order": 5
     },
-    "profile_name": {
-      "type": "string",
-      "default": "DEFAULT",
-      "description": "Configured ~/.databrickscfg profile for this Bundle",
-      "order": 6
-    },
     "include_vscode": {
       "type": "string",
       "default": "yes",
       "enum": ["yes", "no"],
       "description": "Include default VS Code settings in '{{.project_name}}{{path_separator}}.vscode'",
+      "order": 6
+    },
+    "include_dlt": {
+      "type": "string",
+      "default": "yes",
+      "enum": ["yes", "no"],
+      "description": "Include a sample Delta Live Tables pipeline in '{{.project_name}}{{path_separator}}resources'",
       "order": 7
+    },
+    "profile_name": {
+      "type": "string",
+      "default": "DEFAULT",
+      "description": "Configured ~/.databrickscfg profile for this Bundle",
+      "order": 8
     }
   },
   "success_message": "\nYour new project has been created in the '{{.project_name}}' directory."
