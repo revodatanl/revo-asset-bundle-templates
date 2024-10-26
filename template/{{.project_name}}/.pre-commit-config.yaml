@@ -6,7 +6,7 @@ repos:
         args:
         -   --verbose
 -   repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v3.4.0
+    rev: v3.6.0
     hooks:
     -   id: conventional-pre-commit
         stages: [commit-msg]
@@ -20,30 +20,35 @@ repos:
     -   id: check-json
     -   id: check-xml
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.6.9
+    rev: v0.7.1
     hooks:
     -   id: ruff
         args:
-        -   --config=pyproject.toml
         -   --fix
         -   --exit-non-zero-on-fix
         types_or: [python, pyi, jupyter]
     -   id: ruff-format
-        args:
-        -   --config=pyproject.toml
         types_or: [python, pyi, jupyter]
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.11.2
+    rev: v1.13.0
     hooks:
     -   id: mypy
+        language_version: python3.10
         args:
-        -   --strict
-        -   --allow-untyped-decorators
+        -   --config-file=pyproject.toml
         -   --ignore-missing-imports
-        -   --disable-error-code=name-defined
         additional_dependencies:
         -   types-pytz
-        exclude: scratch
+        -   types-python-dateutil
+        exclude: "scratch"
+-   repo: https://github.com/PyCQA/bandit
+    rev: 1.7.10
+    hooks:
+    -   id: bandit
+        args:
+        -   --configfile=pyproject.toml
+        additional_dependencies:
+        -   bandit[toml]
 -   repo: https://github.com/jsh9/pydoclint
     rev: 0.5.9
     hooks:
