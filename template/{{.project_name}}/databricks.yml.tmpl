@@ -2,16 +2,15 @@ bundle:
   name: {{.project_name}}
 
 variables:
-  var_name:
-    description: Description.
-    default: default_value
   spark_version:
     description: Default Spark version to use for jobs
     default: 14.3.x-scala2.12
+  wheel_path:
+    description: Path of the wheel file
+    default: /Workspace${workspace.root_path}/files/dist/{{.package_name}}-*-py3-none-any.whl
 
 include:
-  - resources/jobs/*.yml
-  - resources/pipelines/*.yml
+  - resources/*.yml
 
 artifacts:
   platform:
@@ -21,7 +20,7 @@ artifacts:
 
 sync:
   include:
-    - dist/{{.project_name}}-*-py3-none-any.whl
+    - dist/{{.package_name}}-*-py3-none-any.whl
 
 targets:
   # The 'dev' target, for development purposes. This target is the default.

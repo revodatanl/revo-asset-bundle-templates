@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "{{.project_name}}"
+name = "{{.package_name}}"
 version = "0.1.0"
 description = "{{.description}}"
 authors = [
@@ -11,7 +11,7 @@ packages = [{ include = "{{.package_name}}", from = "src" }]
 scripts = { "main" = "{{.package_name}}.main:main" }
 
 [tool.poetry.dependencies]
-python = "3.10.*"  # Databricks Runtime 14.3 LTS
+python = "^3.10.12"  # Databricks Runtime 14.3 LTS
 numpy = "1.23.5"   # Databricks Runtime 14.3 LTS
 pandas = "1.5.3"   # Databricks Runtime 14.3 LTS
 
@@ -26,12 +26,12 @@ git-cliff = "^2.6.0"
 ipykernel = "^6.29.5"
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.5.36"
-mypy = "^1.13.0"`
+mypy = "^1.13.0"
 pdoc3 = "^0.11.1"
 pre-commit = "^4.0.1"
 pydoclint = "^0.5.8"
 pytest = "^8.3.3"
-pytest-cov = "^5.0.0"
+pytest-cov = "^6.0.0"
 pytest-mock = "^3.14.0"
 ruff = "^0.7.0"
 
@@ -74,7 +74,7 @@ unfixable = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"resources/**/*.py" = [
+"notebooks/**/*.py" = [
     "INP001",   # "Part of an implicit namespace package. Add an `__init__.py`." Not needed for Databricks notebooks.
     "D100",     # "Missing docstring in public module." Not needed for Databricks notebooks.
 ]
