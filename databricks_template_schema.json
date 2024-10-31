@@ -53,7 +53,7 @@
     "python_only": {
       "type": "string",
       "default": "no",
-      "enum": ["yes", "no"],
+      "enum": ["no", "yes"],
       "description": "Create a python-only project (remove all Databricks Asset Bundle files)",
       "order": 9
     }
