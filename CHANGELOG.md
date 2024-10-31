@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2024-10-31
+
+### 🚀 Features
+
+- Refactor databricks_template_schema.json to enable conditional template initialization
+
+### 🐛 Bug Fixes
+
+- Conditional README generation, dependent on git client
+- Conditional deployment of git client files
+- Update deployable modules via Revo Modules make commands
+- Add python_only option in template
+
 ## [0.7.0] - 2024-10-31
 
 ### 🚀 Features
