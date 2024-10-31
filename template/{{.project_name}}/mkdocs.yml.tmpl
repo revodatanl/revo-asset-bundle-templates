@@ -2,12 +2,12 @@ site_name: {{.project_name}}
 
 nav:
   - Introduction: index.md
-  - Getting Started: getting_started.md
-  - Bundle Deployment: bundle_deployment.md
+  - Getting Started: getting_started.md{{if not (eq .python_only "yes")}}
+  - Bundle Deployment: bundle_deployment.md{{end}}
   - List of Commands: commands.md
   - CI/CD: cicd.md
-  - Resources:
-      - Jobs: jobs/index.md
+  - Resources:{{if not (eq .python_only "yes")}}
+      - Jobs: jobs/index.md{{end}}
       - Notebooks: notebooks/index.md
       - Package: {{.package_name}}.md
   - Tests:
@@ -16,7 +16,6 @@ nav:
       - Test Configuration: tests/test_configuration.md
   - Release: release.md
   - Coding Standards: coding_standards.md
-  - CHANGELOG: CHANGELOG.md
 
 theme:
   name: material

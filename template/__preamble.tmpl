@@ -5,14 +5,28 @@ This file only provides template directives; it is skipped for the actual output
 {{skip "__preamble"}}
 
 {{if not (eq .git_client "github")}}
-  {{skip "{{.project_name}}/.github/*"}}
+  {{skip "{{.project_name}}/.github"}}
 {{end}}
 
 {{if not (eq .git_client "azure")}}
-  {{skip "{{.project_name}}/.azuredevops/*"}}
+  {{skip "{{.project_name}}/.azuredevops"}}
 {{end}}
 
 {{if not (eq .include_dlt "yes")}}
   {{skip "{{.project_name}}/notebooks/dlt_ingest.py"}}
   {{skip "{{.project_name}}/resources/template_dlt_pipeline.yml"}}
+{{end}}
+
+{{if not (eq .python_only "no")}}
+  {{skip "{{.project_name}}/fixtures"}}
+  {{skip "{{.project_name}}/notebooks"}}
+  {{skip "{{.project_name}}/resources"}}
+  {{skip "{{.project_name}}/scratch"}}
+  {{skip "{{.project_name}}/databricks.yml"}}
+  {{skip "{{.project_name}}/docs/bundle_deployment.md"}}
+  {{skip "{{.project_name}}/docs/jobs"}}
+  {{skip "{{.project_name}}/docs/assets/make-deploy_dev.png"}}
+  {{skip "{{.project_name}}/docs/assets/make-destroy_dev.png"}}
+  {{skip "{{.project_name}}/docs/assets/make-repo.png"}}
+  {{skip "{{.project_name}}/docs/assets/make-repo-github.png"}}
 {{end}}

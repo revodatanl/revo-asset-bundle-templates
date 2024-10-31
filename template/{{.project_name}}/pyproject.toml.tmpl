@@ -11,15 +11,15 @@ packages = [{ include = "{{.package_name}}", from = "src" }]
 scripts = { "main" = "{{.package_name}}.main:main" }
 
 [tool.poetry.dependencies]
-python = "^3.10.12"  # Databricks Runtime 14.3 LTS
+python = "^3.10.12"{{if not (eq .python_only "yes")}}  # Databricks Runtime 14.3 LTS
 numpy = "1.23.5"   # Databricks Runtime 14.3 LTS
-pandas = "1.5.3"   # Databricks Runtime 14.3 LTS
+pandas = "1.5.3"   # Databricks Runtime 14.3 LTS{{end}}
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.10"
-coverage = "^7.6.1"
+coverage = "^7.6.1"{{if not (eq .python_only "yes")}}
 databricks-dlt = "^0.2.1"
-databricks-sdk = "^0.36.0"
+databricks-sdk = "^0.36.0"{{end}}
 defusedxml = "^0.7.1"
 genbadge = "^1.1.1"
 git-cliff = "^2.6.0"
@@ -36,7 +36,7 @@ pytest-mock = "^3.14.0"
 ruff = "^0.7.0"
 
 [tool.poetry.group.types.dependencies]
-pandas-stubs = "^2.2.2.240807"  # Databricks Runtime 14.3 LTS
+{{if not (eq .python_only "yes")}}pandas-stubs = "^2.2.2.240807"  # Databricks Runtime 14.3 LTS{{end}}
 
 [build-system]
 requires = ["poetry-core"]
