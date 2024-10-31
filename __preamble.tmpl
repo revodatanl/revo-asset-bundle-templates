@@ -5,7 +5,7 @@ This file only provides template directives; it is skipped for the actual output
 {{skip "__preamble"}}
 
 {{$notVSCode := not (eq .include_vscode "yes")}}
-{{$notDLT := not (eq .include_vscode "yes")}}
+{{$notDLT := not (eq .include_dlt "yes")}}
 
 
 {{if $notVSCode}}

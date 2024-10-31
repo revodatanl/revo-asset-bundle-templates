@@ -3,12 +3,16 @@
     "project_name": {
       "type": "string",
       "description": "Project name (use dashes)",
-      "order": 1
+      "order": 1,
+      "pattern": "^[A-Za-z0-9-]+$",
+      "pattern_match_failure_message": "Project name must consist of letters, numbers, and dashes."
     },
     "package_name": {
       "type": "string",
-      "description": "Package name (use underscores, no dashes)",
-      "order": 2
+      "description": "Package name (use underscores)",
+      "order": 2,
+      "pattern": "^[A-Za-z0-9_]+$",
+      "pattern_match_failure_message": "Package name must consist of letters, numbers, and underscores."
     },
     "author": {
       "type": "string",
@@ -25,26 +29,34 @@
       "description": "Description of the project",
       "order": 5
     },
-    "include_vscode": {
+    "package_manager": {
       "type": "string",
-      "default": "yes",
-      "enum": ["yes", "no"],
-      "description": "Include default VS Code settings in '{{.project_name}}{{path_separator}}.vscode'",
+      "default": "uv",
+      "enum": ["uv", "poetry"],
+      "description": "Python package manager",
       "order": 6
+    },
+    "git_client": {
+      "type": "string",
+      "default": "github",
+      "enum": ["github", "azure"],
+      "description": "Git client",
+      "order": 7
     },
     "include_dlt": {
       "type": "string",
       "default": "yes",
       "enum": ["yes", "no"],
       "description": "Include a sample Delta Live Tables pipeline in '{{.project_name}}{{path_separator}}resources'",
-      "order": 7
-    },
-    "profile_name": {
-      "type": "string",
-      "default": "DEFAULT",
-      "description": "Configured ~/.databrickscfg profile for this Bundle",
       "order": 8
+    },
+    "python_only": {
+      "type": "string",
+      "default": "no",
+      "enum": ["yes", "no"],
+      "description": "Create a python-only project (remove all Databricks Asset Bundle files)",
+      "order": 9
     }
   },
-  "success_message": "\nYour new project has been created in the '{{.project_name}}' directory."
+  "success_message": "Workspace to use: {{workspace_host}} (auto-detected, edit in '{{.project_name}}/databricks.yml')\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
 }
