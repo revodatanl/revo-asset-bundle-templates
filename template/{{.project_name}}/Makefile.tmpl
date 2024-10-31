@@ -140,22 +140,19 @@ repo:
 # Add custom RevoData modules to the project
 module:
 	@echo "Select the module to deploy:"
-	@echo "1) DLT"
-	@echo "2) Azure DevOps"
-	@echo "3) GitHub"
-	@echo "4) VSCode settings (update)"
-	@read -p "Enter the number of the module you want to deploy: " choice; \
-	case $$choice in \
-		1) $(MAKE) module_dlt;; \
-		2) $(MAKE) module_azure-devops;; \
-		3) $(MAKE) module_github;; \
-		4) $(MAKE) module_vscode;; \
-		*) echo "Invalid choice. Exiting."; exit 1;; \
+	@echo "1) Deploy Databricks Asset Bundle pipeline for GitHub"
+	@echo "2) Deploy Databricks Asset Bundle pipeline for Azure DevOps"
+	@echo "Enter the number of the module you want to deploy: "; \
+	read choice; \
+	case "$$choice" in \
+		1) $(MAKE) module_github-deploy-dab ;; \
+		2) $(MAKE) module_azure-devops-deploy-dab ;; \
+		*) echo "Invalid choice. Exiting.";; \
 	esac
 
 module_%:
-	@if [ "$*" != "dlt" ] && [ "$*" != "azure-devops" ] && [ "$*" != "github" ] && [ "$*" != "vscode" ]; then \
-		echo "Error: Invalid module. Use 'dlt', 'azure-devops', 'github', or 'vscode'."; \
+	@if [ "$*" != "github-deploy-dab" ] && [ "$*" != "azure-devops-deploy-dab" ]; then \
+		echo "Error: Invalid module. Use 'github-deploy-dab' or 'azure-devops-deploy-dab'."; \
 		exit 1; \
 	fi
 	@{ \

@@ -1,0 +1,57 @@
+name: Deploy Databricks Asset Bundle
+
+trigger:
+  branches:
+    include:
+      - main
+      - release/*
+
+pool:
+  name: ubuntu-latest
+
+variables:
+  groupName: group_name # Azure Library Group name
+  keyVaultName: key_vault_name # Azure Key Vault name
+  azureSubscription: azure_subscription_name # Azure Subscription name / Service Principal name
+
+stages:
+  - stage: deploy_dev
+    jobs:
+      - job: deploy_dev
+        displayName: Authenticate using secrets from Azure Key Vault and deploy Databricks Asset Bundle to `dev`
+        variables:
+          - group: ${{ variables.groupName }}
+        steps:
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: ${{ variables.azureSubscription }}
+              KeyVaultName: ${{ variables.keyVaultName }}
+              SecretsFilter: DATABRICKS-CLIENT-ID,DATABRICKS-CLIENT-SECRET
+            displayName: Extract secrets from Azure Key Vault
+          - script: |
+              PYTHON_VERSION=$(cat .python-version)
+              echo "##vso[task.setvariable variable=PYTHON_VERSION]$PYTHON_VERSION"
+              echo Python version: $PYTHON_VERSION
+            displayName: Read Python version from .python-version and add to environment variables
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(PYTHON_VERSION)
+            displayName: Setup Python
+          - script: |
+              curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+              databricks version
+            displayName: Install Databricks CLI
+          - script: |
+              python -m pip install --upgrade pip poetry
+              poetry build
+            displayName: Install Poetry and build the package
+          - script: |
+              envsubst < ./.azuredevops/.azure-pipelines/databricks.cfg > ~/.databrickscfg
+            env:
+              DATABRICKS_HOST: $(DATABRICKS-HOST) # from DevOps Library
+              DATABRICKS_CLIENT_ID: $(DATABRICKS-CLIENT-ID)
+              DATABRICKS_CLIENT_SECRET: $(DATABRICKS-CLIENT-SECRET)
+            displayName: Configure Databricks authentication
+          - script: |
+              databricks bundle deploy --target dev
+            displayName: Deploy bundle to `dev`
