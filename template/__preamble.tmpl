@@ -1,0 +1,18 @@
+# Preamble
+
+This file only provides template directives; it is skipped for the actual output.
+
+{{skip "__preamble"}}
+
+{{if not (eq .git_client "github")}}
+  {{skip "{{.project_name}}/.github/*"}}
+{{end}}
+
+{{if not (eq .git_client "azure")}}
+  {{skip "{{.project_name}}/.azuredevops/*"}}
+{{end}}
+
+{{if not (eq .include_dlt "yes")}}
+  {{skip "{{.project_name}}/notebooks/dlt_ingest.py"}}
+  {{skip "{{.project_name}}/resources/template_dlt_pipeline.yml"}}
+{{end}}
