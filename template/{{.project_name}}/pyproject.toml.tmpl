@@ -6,14 +6,14 @@ authors = [
     "{{.author}} <{{.email}}>",
 ]
 readme = "README.md"
-classifiers = ["Programming Language :: Python :: 3.10.12", "Operating System :: OS Independent"]
+classifiers = ["Programming Language :: Python :: 3.11", "Operating System :: OS Independent"]
 packages = [{ include = "{{.package_name}}", from = "src" }]
 scripts = { "main" = "{{.package_name}}.main:main" }
 
 [tool.poetry.dependencies]
-python = "^3.10.12"{{if not (eq .python_only "yes")}}  # Databricks Runtime 14.3 LTS
-numpy = "1.23.5"   # Databricks Runtime 14.3 LTS
-pandas = "1.5.3"   # Databricks Runtime 14.3 LTS{{end}}
+python = "^3.11.0"{{if not (eq .python_only "yes")}}  # Databricks Runtime 15.4 LTS
+numpy = "1.23.5"   # Databricks Runtime 15.4 LTS
+pandas = "1.5.3"   # Databricks Runtime 15.4 LTS{{end}}
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.10"
@@ -36,7 +36,7 @@ pytest-mock = "^3.14.0"
 ruff = "^0.7.0"
 
 [tool.poetry.group.types.dependencies]
-{{if not (eq .python_only "yes")}}pandas-stubs = "^2.2.2.240807"  # Databricks Runtime 14.3 LTS{{end}}
+{{if not (eq .python_only "yes")}}pandas-stubs = "^2.2.2.240807"  # Databricks Runtime 15.4 LTS{{end}}
 
 [build-system]
 requires = ["poetry-core"]
@@ -44,7 +44,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 src = ["src"]
-target-version = "py310"
+target-version = "py311"
 line-length = 100
 extend-include = ["*.ipynb"]
 exclude = ["scratch"]
@@ -83,7 +83,7 @@ unfixable = [
 ]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 mypy_path = ["src"]
 strict = true
 disallow_untyped_decorators = false

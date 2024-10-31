@@ -40,4 +40,4 @@ resources:
       photon: false
       development: true
 
-      channel: CURRENT
+      channel: PREVIEW
