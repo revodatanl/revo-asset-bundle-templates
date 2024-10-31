@@ -6,7 +6,8 @@
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
-
+{{if (eq .git_client "github")}}[![ci](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml/badge.svg)](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml)
+[![semantic-release](https://github.com/revodatanl/{{.project_name}}/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/{{.project_name}}/actions/workflows/semantic-release.yml){{end}}
 [![tests](docs/assets/badge-tests.svg)](docs/tests/coverage/index.html)
 [![coverage](docs/assets/badge-coverage.svg)](docs/tests/coverage/index.html)
 
