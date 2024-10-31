@@ -97,7 +97,7 @@ deploy_%:
 	.venv/bin/pre-commit run --all-files
 	poetry update
 	poetry build
-	@PROFILE_NAME="{{.profile_name}}"; \
+	@PROFILE_NAME="{{.databrickscfg_profile_name}}"; \
 	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile "$$PROFILE_NAME"; \
@@ -110,7 +110,7 @@ destroy_%:
 		echo "Error: Invalid environment. Use 'dev'or 'prd'."; \
 		exit 1; \
 	fi
-	@PROFILE_NAME="{{.profile_name}}"; \
+	@PROFILE_NAME="{{.databrickscfg_profile_name}}"; \
 	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile "$$PROFILE_NAME"; \
