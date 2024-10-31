@@ -26,7 +26,7 @@ Databricks CLI is already installed. Skipping.
 git is already installed. Skipping.
 poetry is already installed. Skipping.
 pyenv is already installed. Skipping.
-Setting up Python version 3.10.12
+Setting up Python version 3.11.0
 Pyenv configuration already exists in .zshrc. Skipping.
 Pyenv configuration already exists in .zprofile. Skipping.
 Restarting the terminal...
@@ -49,7 +49,7 @@ make setup
 ```bash
 Setting up the project...
 /Users/thomasbrouwer/.pyenv/shims/python
-Python 3.10.12
+Python 3.11.0
 Creating virtualenv {{.project_name}} in /Users/thomasbrouwer/code/{{.project_name}}/.venv
 Using virtualenv: /Users/thomasbrouwer/code/{{.project_name}}/.venv
 Updating dependencies
@@ -256,7 +256,7 @@ poetry run pytest tests --cov=src --cov-report term
 
 ====================== test session starts ======================
 
-platform darwin -- Python 3.10.12, pytest-8.3.3, pluggy-1.5.0
+platform darwin -- Python 3.11.0, pytest-8.3.3, pluggy-1.5.0
 rootdir: /Users/thomasbrouwer/code/{{.project_name}}
 configfile: pyproject.toml
 plugins: cov-5.0.0, mock-3.14.0
@@ -264,7 +264,7 @@ collected 2 items
 
 tests/default_test.py ..                                                                                                                                                                           [100%]
 
---------- coverage: platform darwin, python 3.10.12-final-0 ----------
+--------- coverage: platform darwin, python 3.11.0-final-0 -----------
 Name                   Stmts   Miss  Cover
 ------------------------------------------
 src/{{.package_name}}/__init__.py       0      0   100%
