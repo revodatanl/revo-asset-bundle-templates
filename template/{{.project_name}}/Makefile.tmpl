@@ -1,17 +1,17 @@
-.PHONY: install setup clean test deploy_% destroy_% repo module module_% tree docs
+.PHONY: install setup clean test {{if not (eq .python_only "yes")}}deploy_% destroy_% repo module module_%{{end}}tree docs
 
 install:
 	@echo "Verifying if Homebrew is installed..."
 	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
 
-	@echo "Installing required tools..."
+	{{if not (eq .python_only "yes")}}@echo "Installing required tools..."
 	@if ! command -v databricks >/dev/null 2>&1; then \
 		echo "Tapping databricks..."; \
 		brew tap databricks/tap; \
 		brew install databricks; \
 	else \
 		echo "Databricks CLI is already installed. Skipping."; \
-	fi
+	fi{{end}}
 	@for tool in git poetry pyenv; do \
 		if ! command -v $$tool >/dev/null 2>&1; then \
 			echo "Installing $$tool..."; \
@@ -89,7 +89,7 @@ test:
 	poetry install --only-root
 	poetry run pytest tests --cov=src --cov-report term
 
-deploy_%:
+{{if not (eq .python_only "yes")}}deploy_%:
 	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
 		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
 		exit 1; \
@@ -162,7 +162,7 @@ module_%:
 	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/$* 2>&1; then \
 		echo "Exiting." >&2; \
 	fi; \
-	}
+	}{{end}}
 
 tree:
 	@echo "Generating project tree..."

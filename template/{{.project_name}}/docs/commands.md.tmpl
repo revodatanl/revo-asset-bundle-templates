@@ -4,8 +4,8 @@
 
 This command verifies the presence of necessary tools and installs them if they are not already installed. The tools include:
 
-- `Homebrew`
-- `Databricks CLI`
+- `Homebrew`{{if not (eq .python_only "yes")}}
+- `Databricks CLI`{{end}}
 - `git`
 - `Poetry`
 - `pyenv`
@@ -277,7 +277,7 @@ TOTAL                      3      0   100%
 ```
 
 </details>
-
+{{if not (eq .python_only "yes")}}
 ## `deploy_%`
 
 This command deploys the bundle to a target Databricks Workspace environment. The supported environments are `dev` and `prd`.
@@ -373,17 +373,15 @@ make module
 
 ```bash
 Select the module to deploy:
-1) DLT
-2) Azure DevOps
-3) GitLab
-4) VSCode settings (update)
+1) Deploy Databricks Asset Bundle pipeline for GitHub
+2) Deploy Databricks Asset Bundle pipeline for Azure DevOps
 Enter the number of the module you want to deploy: 1
 
-Your DLT ingestion pipeline, part of the 'ingest_dataset_using_dlt' workflow, has been added to the 'resources' directory.
-```
+Your Databricks Asset Bundle deployment pipeline, has been added to the '.github/workflows' directory.
+}```
 
 </details>
-
+{{end}}
 ## `tree`
 
 This command generates a tree view of the project directory, excluding certain directories and files like `.venv`, `__pycache__`, and `.git`.

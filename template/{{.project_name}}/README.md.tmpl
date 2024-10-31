@@ -31,8 +31,8 @@ make install
 
 This will install the following prerequisites:
 
-- [Homebrew](https://brew.sh)
-- [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html)
+- [Homebrew](https://brew.sh){{if not (eq .python_only "yes")}}
+- [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html){{end}}
 - [Git](https://git-scm.com)
 - [Poetry](https://python-poetry.org/docs) >= 1.6.1
 - [pyenv](https://github.com/pyenv/pyenv)
@@ -48,9 +48,9 @@ make setup
 ```
 
 This will use [pyenv](https://github.com/pyenv/pyenv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will use [Poetry](https://python-poetry.org/docs/) to install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.
-
+{{if not (eq .python_only "yes")}}
 Note that the default project configuration matches Databricks Runtime 14.3 LTS (Python 3.10.12, Apache Spark 3.5.0, and pandas 1.5.3).
-
+{{end}}
 ![make-setup](docs/assets/make-setup.png)
 
 ## Clean up the development environment
@@ -64,7 +64,7 @@ make clean
 This command deactivates the virtual environment, removes the virtual environment and the `poetry.lock` file, and removes any caches.
 
 ![make-clean](docs/assets/make-clean.png)
-
+{{if not (eq .python_only "yes")}}
 ## RevoData Modules
 
 To add our custom modules to your project, run the following command:
@@ -96,7 +96,7 @@ To deploy the Bundle to the appropriate Databricks workspace, use the following 
 make deploy_*
 ```
 
-The `*` in the command above can be replaced with the following options: `dev` or `prod`.
+The `*` in the command above can be replaced with the following options: `dev` or `prd`.
 
 ![make-deploy_dev](docs/assets/make-deploy_dev.png)
 
@@ -108,13 +108,13 @@ To remove the Bundle from the Databricks workspace, use the following command:
 make destroy_*
 ```
 
-The `*` in the command above can be replaced with the following options: `dev` or `prod`.
+The `*` in the command above can be replaced with the following options: `dev` or `prd`.
 
 ![make-destroy_dev](docs/assets/make-destroy_dev.png)
-
+{{end}}
 ## Documentation
 
-To build the documentation for the `{{.package_name}}` project, run the following command:
+To build the documentation for the `{{.project_name}}` project, run the following command:
 
 ```bash
 make docs
