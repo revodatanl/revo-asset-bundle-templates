@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2024-10-31
+
+### 🚀 Features
+
+- *(pre-commit)* Add bandit to pre-commit checks
+- *(DLT)* Conditionally include DLT sample pipeline in template by means of a __preamble file
+
+### 🐛 Bug Fixes
+
+- *(modules)* Add databricks-dlt package to dependencies and adapt project configuration accordingly
+- *(modules)* Add __preamble.tmpl to replace certain features of modules
+- Notebook folder placement in template
+- *(deps)* Update mypy settings
+
 ## [0.6.1] - 2024-10-07
 
 ### 🐛 Bug Fixes
