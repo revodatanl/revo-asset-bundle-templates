@@ -2,6 +2,7 @@
 
 [![python](https://img.shields.io/badge/python-3.11-g)](https://www.python.org)
 [![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
@@ -33,7 +34,3 @@ databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
 This will create a new directory with the template files. You can now start developing your project.
 
 ![bundle-init](assets/bundle-init.png)
-
-## RevoData's lightning fast `uv`-powered projects
-
-If you are looking for RevoData's lightning fast `uv`-powered projects go [here](https://github.com/revodatanl/revo-asset-bundle-templates-uv)!
