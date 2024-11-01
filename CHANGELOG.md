@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2024-11-01
+
+### 🐛 Bug Fixes
+
+- Upgrade to Python 3.11 (corresponding to Databricks Runtime 15.4 LTS)
+
 ## [0.8.0] - 2024-10-31
 
 ### 🚀 Features
