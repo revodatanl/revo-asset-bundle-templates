@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2024-11-01
+
+### 🚀 Features
+
+- Add uv-support
+
 ## [0.8.1] - 2024-11-01
 
 ### 🐛 Bug Fixes
