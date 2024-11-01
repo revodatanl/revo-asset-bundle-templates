@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - .github/workflows/**
+      - src/**
+      - tests/**
+      - pyproject.toml
+
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    runs-on: ${{ "{{" }} matrix.os {{ "}}" }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run formatting checks
+        run: |
+          uv run ruff check --output-format=github .
+          uv run mypy .
+          uv run pydoclint .
+
+      - name: Build and check package
+        run: |
+          uv build
+          tar -xvzf dist/{{.package_name}}-*.tar.gz
+          diff -r -x __pycache__ src/{{.package_name}} {{.package_name}}-*/src/{{.package_name}}
+
+      - name: Run unit tests with coverage report
+        run: |
+          uv run pytest -v tests --cov=src tests --cov-report term
+        env:
+          PYTHONPATH: ${{ "{{" }} github.workspace {{ "}}" }}/src/{{.package_name}}

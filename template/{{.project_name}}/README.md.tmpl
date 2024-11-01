@@ -1,7 +1,7 @@
 # {{.project_name}}
 
-[![python](https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Blue_Python_3.11%2B_Shield_Badge.svg/184px-Blue_Python_3.11%2B_Shield_Badge.svg.png?20230617214343)](https://www.python.org)
-[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
+[![python](https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Blue_Python_3.11%2B_Shield_Badge.svg/184px-Blue_Python_3.11%2B_Shield_Badge.svg.png?20230617214343)](https://www.python.org){{if (eq .package_manager "poetry")}}[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/){{end}}
+{{if (eq .package_manager "uv")}}[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv){{end}}
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
@@ -34,9 +34,9 @@ This will install the following prerequisites:
 
 - [Homebrew](https://brew.sh){{if not (eq .python_only "yes")}}
 - [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html){{end}}
-- [Git](https://git-scm.com)
-- [Poetry](https://python-poetry.org/docs) >= 1.6.1
-- [pyenv](https://github.com/pyenv/pyenv)
+- [Git](https://git-scm.com){{if (eq .package_manager "poetry")}}- [Poetry](https://python-poetry.org/docs) >= 1.6.1
+- [pyenv](https://github.com/pyenv/pyenv){{end}}
+{{if (eq .package_manager "uv")}}- [uv](https://github.com/astral-sh/uv){{end}}
 
 ![make-install](docs/assets/make-install.png)
 
@@ -48,9 +48,9 @@ To set up a fully configured development environment for this project run the fo
 make setup
 ```
 
-This will use [pyenv](https://github.com/pyenv/pyenv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will use [Poetry](https://python-poetry.org/docs/) to install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.
-{{if not (eq .python_only "yes")}}
-Note that the default project configuration matches Databricks Runtime 15.4 LTS (Python 3.11.0, Apache Spark 3.5.0, and pandas 1.5.3).
+{{if (eq .package_manager "uv")}}This will use [uv](https://github.com/astral-sh/uv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
+{{if (eq .package_manager "poetry")}}This will use [pyenv](https://github.com/pyenv/pyenv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will use [Poetry](https://python-poetry.org/docs/) to install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
+{{if not (eq .python_only "yes")}}Note that the default project configuration matches Databricks Runtime 15.4 LTS (Python 3.11.0, Apache Spark 3.5.0, and pandas 1.5.3).
 {{end}}
 ![make-setup](docs/assets/make-setup.png)
 
@@ -62,7 +62,7 @@ The following commands are available for development:
 make clean
 ```
 
-This command deactivates the virtual environment, removes the virtual environment and the `poetry.lock` file, and removes any caches.
+This command deactivates the virtual environment, removes the virtual environment, lock file(s), and removes any caches.
 
 ![make-clean](docs/assets/make-clean.png)
 {{if not (eq .python_only "yes")}}

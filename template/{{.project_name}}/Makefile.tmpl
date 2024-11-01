@@ -1,7 +1,47 @@
 .PHONY: install setup clean test {{if not (eq .python_only "yes")}}deploy_% destroy_% repo module module_%{{end}}tree docs
 
 install:
-	@echo "Verifying if Homebrew is installed..."
+	{{if (eq .package_manager "uv")}}@CURRENT_OS=$$(uname -s); \
+	echo "Current OS: $$CURRENT_OS"; \
+	if [ "$$CURRENT_OS" = "Darwin" ]; then \
+		echo "Verifying if Homebrew is installed..."; \
+		which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"); \
+		echo "Installing git and uv using brew"; \
+		for tool in git uv; do \
+			if ! command -v $$tool >/dev/null 2>&1; then \
+				echo "Installing $$tool..."; \
+				brew install $$tool; \
+			else \
+				echo "$$tool is already installed. Skipping."; \
+			fi; \
+		done; \
+	elif [ "$$CURRENT_OS" = "Linux" ]; then \
+		echo "Installing git using apt"; \
+		if ! command -v git >/dev/null 2>&1; then \
+				echo "Installing git..."; \
+				sudo apt update && sudo apt install -y git; \
+			else \
+				echo "git is already installed. Skipping."; \
+			fi; \
+		echo "Install uv using the provided script"; \
+		if ! command -v uv >/dev/null 2>&1; then \
+			echo "Installing uv..."; \
+			curl -LsSf https://astral.sh/uv/install.sh | sh; \
+			echo "Sourcing ~/.bashrc to update shell environment..."; \
+			source ~/.bashrc || true; \
+			echo "Continuing even if sourcing ~/.bashrc failed..."; \
+		else \
+			echo "uv is already installed. Skipping."; \
+		fi; \
+	else \
+		echo "Unsupported OS. Currently supported kernels are either Darwin (macOS) or Linux (ubuntu22.04)."; \
+		exit 1; \
+	fi; \
+
+	@echo "Setting up Python..."; \
+	uv python install || true; \
+	echo "All tools installed successfully."{{end}}
+	{{if (eq .package_manager "poetry")}}@echo "Verifying if Homebrew is installed..."
 	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
 
 	{{if not (eq .python_only "yes")}}@echo "Installing required tools..."
@@ -49,16 +89,17 @@ install:
 	@echo "Restarting the terminal..."
 	@exec zsh -c "source ~/.zshrc"
 
-	@echo "All tools installed successfully."
+	@echo "All tools installed successfully."{{end}}
 
 setup:
 	@echo "Setting up the project..."
 	@which python
 	@python --version
-	@poetry config virtualenvs.in-project true --local; \
+	{{if (eq .package_manager "poetry")}}@poetry config virtualenvs.in-project true --local; \
 	poetry env use python $$PYTHON_VERSION; \
 	poetry install;
-	poetry types update;
+	poetry types update;{{end}}
+	{{if (eq .package_manager "uv")}}uv sync;{{end}}
 
 	@if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
@@ -71,7 +112,8 @@ setup:
 
 clean:
 	@echo "Cleaning up..."
-	rm -rf .venv poetry.lock
+	{{if (eq .package_manager "poetry")}}rm -rf .venv poetry.lock{{end}}
+	{{if (eq .package_manager "uv")}}rm -rf .venv uv.lock{{end}}
 	find . -type d \
 		\( -name ".pytest_cache" \
 		-o -name ".mypy_cache" \
@@ -84,10 +126,12 @@ clean:
 test:
 	@echo "Running tests..."
 	.venv/bin/pre-commit run --all-files
-	poetry update
+	{{if (eq .package_manager "poetry")}}poetry update
 	poetry build
 	poetry install --only-root
-	poetry run pytest tests --cov=src --cov-report term
+	poetry run pytest tests --cov=src --cov-report term;{{end}}
+	{{if (eq .package_manager "uv")}}uv sync;
+	uv run pytest tests --cov=src --cov-report term;{{end}}
 
 {{if not (eq .python_only "yes")}}deploy_%:
 	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
