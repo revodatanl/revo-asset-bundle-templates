@@ -29,8 +29,7 @@ dev-dependencies = [
     "pytest-mock>=3.14.0",
     "pytest>=8.3.3",
     "ruff>=0.7.0",
-]{{end}}
-{{if (eq .package_manager "poetry")}}[tool.poetry]
+]{{end}}{{if (eq .package_manager "poetry")}}[tool.poetry]
 name = "{{.package_name}}"
 version = "0.1.0"
 description = "{{.description}}"
@@ -141,7 +140,7 @@ skips = [
 exclude_dirs = [".venv", "archive", "scratch", "tests"]
 
 [tool.semantic_release]
-version_toml = ["pyproject.toml:tool.poetry.version"]
+{{if (eq .package_manager "poetry")}}version_toml = ["pyproject.toml:tool.poetry.version"]{{end}}{{if (eq .package_manager "uv")}}version_toml = ["pyproject.toml:project.version"]{{end}}
 major_on_zero = true
 branch = "main"
 commit_author = "github-actions[bot] <actions@github.com>"

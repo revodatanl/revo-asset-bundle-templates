@@ -1,4 +1,4 @@
-.PHONY: install setup clean test {{if not (eq .python_only "yes")}}deploy_% destroy_% repo module module_%{{end}}tree docs
+.PHONY: install setup clean test {{if not (eq .python_only "yes")}}deploy_% destroy_% repo module module_%{{end}} tree docs
 
 install:
 	{{if (eq .package_manager "uv")}}@CURRENT_OS=$$(uname -s); \
@@ -139,8 +139,9 @@ test:
 		exit 1; \
 	fi
 	.venv/bin/pre-commit run --all-files
-	poetry update
-	poetry build
+	{{if (eq .package_manager "poetry")}}poetry update
+	poetry build{{end}}
+	{{if (eq .package_manager "uv")}}uv sync{{end}}
 	@PROFILE_NAME="DEFAULT"; \
 	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
@@ -214,13 +215,13 @@ tree:
 
 docs:
 	@echo "Running tests and generating badges..."
-	@poetry run pytest -v tests --cov=src --cov-report html:docs/tests/coverage --junitxml=docs/tests/coverage/pytest_coverage.xml
-	@poetry run coverage xml -o docs/tests/coverage/coverage.xml
-	@poetry run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg
-	@poetry run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --cov-report html:docs/tests/coverage --junitxml=docs/tests/coverage/pytest_coverage.xml
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run coverage xml -o docs/tests/coverage/coverage.xml
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg
 	@rm -rf docs/tests/coverage/.gitignore
 	@echo "Generating HTML documentation..."
-	@poetry run pdoc --html src/{{.package_name}} -o docs/api --force
-	@poetry run pdoc --html tests -o docs/api --force
-	# @poetry run mkdocs build
-	@poetry run mkdocs serve
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html src/{{.package_name}} -o docs/api --force
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html tests -o docs/api --force
+	# @{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs build
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs serve

@@ -16,7 +16,7 @@ The appropriate version number is then automatically updated in the repository.
 
 ## Automated CHANGELOG Generation
 
-As part of the release process, we auto-generate a comprehensive [CHANGELOG](CHANGELOG.md). The CHANGELOG is automatically updated with each release, capturing all notable changes, enhancements, bug fixes, and breaking changes based on the commit messages.
+As part of the release process, we auto-generate a comprehensive `CHANGELOG`. The `CHANGELOG` is automatically updated with each release, capturing all notable changes, enhancements, bug fixes, and breaking changes based on the commit messages.
 
 ## Automated Release
 
