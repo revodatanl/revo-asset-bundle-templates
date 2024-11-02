@@ -61,10 +61,10 @@ repos:
         name: pytest-unit-tests
         entry: >
           bash -c '
-            poetry run pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml &&
-            poetry run coverage xml -o docs/tests/coverage/coverage.xml &&
-            poetry run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg &&
-            poetry run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml &&
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run coverage xml -o docs/tests/coverage/coverage.xml &&
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg &&
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg
           '
         language: system
         pass_filenames: false
