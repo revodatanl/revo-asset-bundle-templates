@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🐛 Bug Fixes
+
+- Python_only projects default to python version 3.13
+
+## [0.9.2] - 2024-11-02
+
+### 🐛 Bug Fixes
+
+- Clean up poetry references in poetry template
+
+## [0.9.1] - 2024-11-01
+
+### 🐛 Bug Fixes
+
+- Revert python version to 3.11 (rather than 3.11.0)
+
 ## [0.9.0] - 2024-11-01
 
 ### 🚀 Features
@@ -271,4 +289,3 @@ All notable changes to this project will be documented in this file.
 - Fix typo in DAB configuration
 - Update pre-commit configuration
 - Fix typo in README
-
