@@ -1,4 +1,4 @@
-.PHONY: install setup clean test {{if not (eq .python_only "yes")}}deploy_% destroy_% repo module module_%{{end}} tree docs
+.PHONY: install setup clean test{{if not (eq .python_only "yes")}} deploy_% destroy_% repo module module_%{{end}} tree docs
 
 install:
 	{{if (eq .package_manager "uv")}}@CURRENT_OS=$$(uname -s); \
@@ -40,8 +40,7 @@ install:
 
 	@echo "Setting up Python..."; \
 	uv python install || true; \
-	echo "All tools installed successfully."{{end}}
-	{{if (eq .package_manager "poetry")}}@echo "Verifying if Homebrew is installed..."
+	echo "All tools installed successfully."{{end}}{{if (eq .package_manager "poetry")}}@echo "Verifying if Homebrew is installed..."
 	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
 
 	{{if not (eq .python_only "yes")}}@echo "Installing required tools..."
@@ -93,13 +92,12 @@ install:
 
 setup:
 	@echo "Setting up the project..."
-	@which python
+	{{if (eq .package_manager "poetry")}}@which python
 	@python --version
-	{{if (eq .package_manager "poetry")}}@poetry config virtualenvs.in-project true --local; \
+	@poetry config virtualenvs.in-project true --local; \
 	poetry env use python $$PYTHON_VERSION; \
 	poetry install;
-	poetry types update;{{end}}
-	{{if (eq .package_manager "uv")}}uv sync;{{end}}
+	poetry types update;{{end}}{{if (eq .package_manager "uv")}}@uv sync;{{end}}
 
 	@if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
@@ -112,8 +110,7 @@ setup:
 
 clean:
 	@echo "Cleaning up..."
-	{{if (eq .package_manager "poetry")}}rm -rf .venv poetry.lock{{end}}
-	{{if (eq .package_manager "uv")}}rm -rf .venv uv.lock{{end}}
+	{{if (eq .package_manager "poetry")}}rm -rf .venv poetry.lock{{end}}{{if (eq .package_manager "uv")}}rm -rf .venv uv.lock{{end}}
 	find . -type d \
 		\( -name ".pytest_cache" \
 		-o -name ".mypy_cache" \
@@ -129,10 +126,9 @@ test:
 	{{if (eq .package_manager "poetry")}}poetry update
 	poetry build
 	poetry install --only-root
-	poetry run pytest tests --cov=src --cov-report term;{{end}}
-	{{if (eq .package_manager "uv")}}uv sync;
-	uv run pytest tests --cov=src --cov-report term;{{end}}
-
+	poetry run pytest tests --cov=src --cov-report term;{{end}}{{if (eq .package_manager "uv")}}@uv sync;
+	@uv run pytest tests --cov=src --cov-report term;
+	{{end}}
 {{if not (eq .python_only "yes")}}deploy_%:
 	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
 		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
@@ -207,8 +203,8 @@ module_%:
 	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/$* 2>&1; then \
 		echo "Exiting." >&2; \
 	fi; \
-	}{{end}}
-
+	}
+	{{end}}
 tree:
 	@echo "Generating project tree..."
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a

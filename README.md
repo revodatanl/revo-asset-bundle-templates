@@ -1,6 +1,6 @@
 # RevoData Asset Bundle Templates
 
-[![python](https://img.shields.io/badge/python-3.11-g)](https://www.python.org)
+[![python](https://img.shields.io/badge/python-3.11+-g)](https://www.python.org)
 [![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)

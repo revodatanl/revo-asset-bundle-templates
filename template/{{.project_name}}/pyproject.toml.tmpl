@@ -6,16 +6,15 @@ authors = [
     { name = "{{.author}}", email = "{{.email}}" },
 ]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = {{if not (eq .python_only "yes")}}">=3.11"{{else}}">=3.13"{{end}}
 dependencies = []
 
 [tool.uv]
 package = true
 dev-dependencies = [
     "bandit>=1.7.10",
-    "coverage>=7.6.1",
-    "databricks-dlt>=0.2.1",
-    "databricks-sdk>=0.36.0",
+    "coverage>=7.6.1",{{if not (eq .python_only "yes")}}"databricks-dlt>=0.2.1",
+    "databricks-sdk>=0.36.0",{{end}}
     "defusedxml>=0.7.1",
     "genbadge>=1.1.1",
     "git-cliff>=2.6.0",
@@ -37,14 +36,14 @@ authors = [
     "{{.author}} <{{.email}}>",
 ]
 readme = "README.md"
-classifiers = ["Programming Language :: Python :: 3.11", "Operating System :: OS Independent"]
+classifiers = ["Programming Language :: Python :: {{if not (eq .python_only "yes")}}3.11{{else}}3.13{{end}}", "Operating System :: OS Independent"]
 packages = [{ include = "{{.package_name}}", from = "src" }]
 scripts = { "main" = "{{.package_name}}.main:main" }
 
 [tool.poetry.dependencies]
-python = "^3.11.0"{{if not (eq .python_only "yes")}}  # Databricks Runtime 15.4 LTS
+python = {{if not (eq .python_only "yes")}}"^3.11.0"  # Databricks Runtime 15.4 LTS
 numpy = "1.23.5"   # Databricks Runtime 15.4 LTS
-pandas = "1.5.3"   # Databricks Runtime 15.4 LTS{{end}}
+pandas = "1.5.3"   # Databricks Runtime 15.4 LTS{{else}}"^3.13.0"{{end}}
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.10"
@@ -75,7 +74,7 @@ build-backend = "poetry.core.masonry.api"{{end}}
 
 [tool.ruff]
 src = ["src"]
-target-version = "py311"
+target-version = {{if not (eq .python_only "yes")}}"py311"{{else}}"py313"{{end}}
 line-length = 100
 extend-include = ["*.ipynb"]
 exclude = ["scratch"]
@@ -114,7 +113,7 @@ unfixable = [
 ]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = {{if not (eq .python_only "yes")}}"3.11"{{else}}"3.13"{{end}}
 mypy_path = ["src"]
 strict = true
 disallow_untyped_decorators = false

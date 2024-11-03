@@ -1,6 +1,6 @@
 # {{.project_name}}
 
-[![python](https://img.shields.io/badge/python-3.11-g)](https://www.python.org){{if (eq .package_manager "poetry")}}[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/){{end}}
+[![python]{{if not (eq .python_only "yes")}}(https://img.shields.io/badge/python-3.11-g){{else}}(https://img.shields.io/badge/python-3.13-g){{end}}](https://www.python.org){{if (eq .package_manager "poetry")}}[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/){{end}}
 {{if (eq .package_manager "uv")}}[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv){{end}}
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
