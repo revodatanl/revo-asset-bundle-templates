@@ -21,7 +21,7 @@ jobs:
     steps:
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: "3.11"
+          versionSpec: {{if not (eq .python_only "yes")}}"3.11"{{else}}"3.13"{{end}}
         displayName: Setup Python
       - script: |
           python -m pip install --upgrade pip
