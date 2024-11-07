@@ -1,47 +1,62 @@
 {
-  "python.terminal.activateEnvironment": true,
-  "python.terminal.activateEnvInCurrentTerminal": true,
-  "python.envFile": "${workspaceRoot}/.venv",
-  "python.analysis.extraPaths": ["${workspaceFolder}"],
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportUndefinedVariable": "none"
-  },
   "autoDocstring.docstringFormat": "numpy",
+  "files.associations": {
+    "*.sql": "sql"
+  },
+  "files.exclude": {
+    "**/*.egg-info": true,
+    "**/__pycache__": true,
+    ".pytest_cache": true
+  },
   "jupyter.interactiveWindow.cellMarker.codeRegex": "^# COMMAND ----------|^# Databricks notebook source|^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])",
   "jupyter.interactiveWindow.cellMarker.default": "# COMMAND ----------",
   "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "makefile.configureOnOpen": true,
+  "mypy-type-checker.path": ["${workspaceFolder}/.venv/bin/mypy"],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUndefinedVariable": "none"
+  },
+  "python.analysis.extraPaths": ["${workspaceFolder}"],
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.envFile": "${workspaceRoot}/.venv",
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.terminal.activateEnvironment": true,
+  "python.testing.pytestArgs": ["."],
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "sqlfluff.config": "${workspaceFolder}/pyproject.toml",
+  "sqlfluff.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",
+  "sqlfluff.ignoreLocalConfig": false,
+  "sqlfluff.ignoreParsing": true,
+  "sqlfluff.linter.run": "onType",
+  "sqlfluff.linter.diagnosticSeverity": "warning",
+  "sqlfluff.linter.lintEntireProject": true,
+  "sqlfluff.format.arguments": ["--FIX-EVEN-UNPARSABLE"],
+  "sqlfluff.format.enabled": true,
   "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
-    },
-    "editor.defaultFormatter": "charliermarsh.ruff"
+    }
   },
   "notebook.formatOnSave.enabled": true,
   "notebook.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
   },
-  "python.testing.pytestArgs": ["."],
-  "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true,
-  "mypy-type-checker.path": ["${workspaceFolder}/.venv/bin/mypy"],
-  "files.exclude": {
-    "**/*.egg-info": true,
-    "**/__pycache__": true,
-    ".pytest_cache": true
+  "[sql]": {
+    "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  },
+  "[xml]": {
+  "editor.defaultFormatter": "redhat.vscode-xml",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2
   },
   "[markdown]": {
     "editor.formatOnSave": true
-  },
-  "files.associations": {
-    "*.sql": "sql"
-  },
-  "[sql]": {
-    "editor.formatOnSave": false,
-    "editor.formatOnPaste": false
-  },
-  "makefile.configureOnOpen": true
+  }
 }
