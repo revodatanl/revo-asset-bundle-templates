@@ -96,8 +96,7 @@ setup:
 	@python --version
 	@poetry config virtualenvs.in-project true --local; \
 	poetry env use python $$PYTHON_VERSION; \
-	poetry install;
-	poetry types update;{{end}}{{if (eq .package_manager "uv")}}@uv sync;{{end}}
+	poetry install;{{end}}{{if (eq .package_manager "uv")}}@uv sync;{{end}}
 
 	@if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
