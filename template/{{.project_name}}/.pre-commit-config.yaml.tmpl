@@ -53,8 +53,11 @@ repos:
     rev: 0.5.9
     hooks:
     -   id: pydoclint
-        args:
-        -   --config=pyproject.toml
+-   repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.2.5
+    hooks:
+    -   id: sqlfluff-lint
+    -   id: sqlfluff-fix
 -   repo: local
     hooks:
     -   id: pytest-unit-tests
