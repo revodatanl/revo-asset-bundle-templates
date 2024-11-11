@@ -16,8 +16,7 @@ artifacts:
   platform:
     type: whl
     path: .
-    {{if (eq .package_manager "poetry")}}build: poetry build{{end}}
-    {{if (eq .package_manager "uv")}}build: uv build{{end}}
+    build: {{if (eq .package_manager "poetry")}}poetry{{end}}{{if (eq .package_manager "uv")}}uv{{end}} build
 
 sync:
   include:
