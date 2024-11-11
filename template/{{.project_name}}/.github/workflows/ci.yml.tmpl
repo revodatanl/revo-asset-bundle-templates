@@ -30,7 +30,7 @@ jobs:
           echo "PYTHON_VERSION=$PYTHON_VERSION" >> $GITHUB_ENV
           echo "PYTHON_VERSION=$PYTHON_VERSION"
       - name: Setup Python version ${{ "{{" }} env.PYTHON_VERSION {{ "}}" }}
-        uses: actions/setup-python@v5.2.0
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ "{{" }} env.PYTHON_VERSION {{ "}}" }}
       - name: Install Poetry
