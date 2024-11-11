@@ -51,12 +51,12 @@ jobs:
 
       # Step 6: Generate CHANGELOG
       - name: Generate CHANGELOG
-        uses: orhun/git-cliff-action@v4.2.0
+        uses: orhun/git-cliff-action@v4
         id: git-cliff-changelog
         with:
           config: pyproject.toml
         env:
-          OUTPUT: docs/CHANGELOG.md
+          OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
 
       # Step 7: Commit the CHANGELOG after it is generated (only if there are changes)
@@ -72,7 +72,7 @@ jobs:
           sed -i "s/^version = .*/version = \"$VERSION\"/" pyproject.toml
 
           # Add generated CHANGELOG and updated pyproject.toml
-          git add docs/CHANGELOG.md pyproject.toml
+          git add CHANGELOG.md pyproject.toml
 
           # Check if there are any changes to commit
           if git diff --cached --quiet; then

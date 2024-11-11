@@ -112,7 +112,7 @@ stages:
                 poetry run git-cliff --tag $NEW_VERSION -o CHANGELOG.md
 
                 # Commit and push the changes
-                git add pyproject.toml docs/CHANGELOG.md
+                git add pyproject.toml CHANGELOG.md
                 git commit -m "chore(pr): bump $BUMP version to $NEW_VERSION - PR #$(System.PullRequest.PullRequestId) [automated]"
                 git push origin HEAD:$SOURCE_BRANCH
 

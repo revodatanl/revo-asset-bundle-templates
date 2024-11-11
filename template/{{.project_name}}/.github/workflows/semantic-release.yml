@@ -30,7 +30,7 @@ jobs:
       # Step 2: Run Semantic Release to bump version and tag
       - name: Python Semantic Release
         id: semantic_release
-        uses: python-semantic-release/python-semantic-release@v9.8.8
+        uses: python-semantic-release/python-semantic-release@v9
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -49,7 +49,7 @@ jobs:
           config: pyproject.toml
           args: --github-repo ${{ github.repository }}
         env:
-          OUTPUT: docs/CHANGELOG.md
+          OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
 
       # Step 6: Commit CHANGELOG
@@ -60,7 +60,7 @@ jobs:
           git config user.email 'actions@github.com'
 
           # Add generated CHANGELOG
-          git add docs/CHANGELOG.md
+          git add CHANGELOG.md
 
           # Check if there are any changes to commit
           if git diff --cached --quiet; then

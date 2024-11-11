@@ -12,7 +12,7 @@ updates:
     directory: .
     schedule:
       interval: daily
-    {{if not (eq .python_only "yes")}}groups:
+{{if not (eq .python_only "yes")}}    groups:
       dev-deps:
         dependency-type: development
         exclude-patterns:
