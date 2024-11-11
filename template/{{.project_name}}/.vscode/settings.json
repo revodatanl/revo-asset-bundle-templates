@@ -36,6 +36,7 @@
   "sqlfluff.linter.lintEntireProject": true,
   "sqlfluff.format.arguments": ["--FIX-EVEN-UNPARSABLE"],
   "sqlfluff.format.enabled": true,
+  "sqlfluff.suppressNotifications": true,
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,

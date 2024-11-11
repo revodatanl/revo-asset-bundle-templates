@@ -25,10 +25,10 @@ Note that on **Windows** most commands need to be adjusted to function properly.
 
 ## Installation
 
-With [make](https://www.gnu.org/software/make) installed, run the following command to install the prerequisites:
+With [make](https://www.gnu.org/software/make) installed, run the following command to install the prerequisites and set up a fully configured development environment:
 
 ```bash
-make install
+make setup
 ```
 
 This will install the following prerequisites:
@@ -41,29 +41,19 @@ This will install the following prerequisites:
 
 ![make-install](docs/assets/make-install.png)
 
-## Set up the development environment
+{{if (eq .package_manager "uv")}}Subsequently, this will use [uv](https://github.com/astral-sh/uv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
+{{if (eq .package_manager "poetry")}}Subsequently, this will use [pyenv](https://github.com/pyenv/pyenv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will use [Poetry](https://python-poetry.org/docs/) to install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
+{{if not (eq .python_only "yes")}}Note that the default project configuration matches Databricks Runtime 15.4 LTS (Python 3.11.0, Apache Spark 3.5.0, and pandas 1.5.3).{{end}}
 
-To set up a fully configured development environment for this project run the following command:
-
-```bash
-make setup
-```
-
-{{if (eq .package_manager "uv")}}This will use [uv](https://github.com/astral-sh/uv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
-{{if (eq .package_manager "poetry")}}This will use [pyenv](https://github.com/pyenv/pyenv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will use [Poetry](https://python-poetry.org/docs/) to install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
-{{if not (eq .python_only "yes")}}Note that the default project configuration matches Databricks Runtime 15.4 LTS (Python 3.11.0, Apache Spark 3.5.0, and pandas 1.5.3).
-{{end}}
 ![make-setup](docs/assets/make-setup.png)
 
 ## Clean up the development environment
 
-The following commands are available for development:
+To deactivate and remove the virtual environment, lock file(s), and caches, run the following command:
 
 ```bash
 make clean
 ```
-
-This command deactivates the virtual environment, removes the virtual environment, lock file(s), and removes any caches.
 
 ![make-clean](docs/assets/make-clean.png)
 {{if not (eq .python_only "yes")}}
@@ -116,7 +106,7 @@ The `*` in the command above can be replaced with the following options: `dev` o
 {{end}}
 ## Documentation
 
-To build the documentation for the `{{.project_name}}` project, run the following command:
+To auto-generate the documentation for the `{{.project_name}}` project, run the following command:
 
 ```bash
 make docs

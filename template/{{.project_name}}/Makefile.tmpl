@@ -6,7 +6,7 @@ install:
 	if [ "$$CURRENT_OS" = "Darwin" ]; then \
 		echo "Verifying if Homebrew is installed..."; \
 		which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"); \
-		echo "Installing git and uv using brew"; \
+		echo "Installing tools..."; \
 		for tool in git uv; do \
 			if ! command -v $$tool >/dev/null 2>&1; then \
 				echo "Installing $$tool..."; \
@@ -16,14 +16,13 @@ install:
 			fi; \
 		done; \
 	elif [ "$$CURRENT_OS" = "Linux" ]; then \
-		echo "Installing git using apt"; \
+		echo "Installing tools..."; \
 		if ! command -v git >/dev/null 2>&1; then \
 				echo "Installing git..."; \
 				sudo apt update && sudo apt install -y git; \
 			else \
 				echo "git is already installed. Skipping."; \
 			fi; \
-		echo "Install uv using the provided script"; \
 		if ! command -v uv >/dev/null 2>&1; then \
 			echo "Installing uv..."; \
 			curl -LsSf https://astral.sh/uv/install.sh | sh; \
@@ -91,6 +90,16 @@ install:
 	@echo "All tools installed successfully."{{end}}
 
 setup:
+	@echo "Installing tools..."
+	@{ \
+		output=$$($(MAKE) install 2>&1); \
+		exit_code=$$?; \
+		if [ $$exit_code -ne 0 ]; then \
+			echo "$$output"; \
+			exit $$exit_code; \
+		fi; \
+	}
+	@echo "All tools installed successfully."
 	@echo "Setting up the project..."
 	{{if (eq .package_manager "poetry")}}@which python
 	@python --version
@@ -104,8 +113,8 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit..."
-	. .venv/bin/activate;
-	.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg;
+	@. .venv/bin/activate;
+	@.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg;
 
 clean:
 	@echo "Cleaning up..."
@@ -126,8 +135,8 @@ test:
 	poetry build
 	poetry install --only-root
 	poetry run pytest tests --cov=src --cov-report term;{{end}}{{if (eq .package_manager "uv")}}@uv sync;
-	@uv run pytest tests --cov=src --cov-report term;
-{{end}}
+	@uv run pytest tests --cov=src --cov-report term;{{end}}
+
 {{if not (eq .python_only "yes")}}deploy_%:
 	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
 		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
@@ -195,12 +204,12 @@ module_%:
 		exit 1; \
 	fi
 	@{ \
-	set -e; \
-	trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
-	if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-	if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/$* 2>&1; then \
-		echo "Exiting." >&2; \
-	fi; \
+		set -e; \
+		trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
+		if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
+		if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/$* 2>&1; then \
+			echo "Exiting." >&2; \
+		fi; \
 	}
 {{end}}
 tree:
