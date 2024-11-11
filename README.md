@@ -16,7 +16,7 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
 
 ## Getting started
 
-1. Install the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli) by running the following command:
+1. Install the [Databricks CLI](https://docs.databricks.com/en/dev-tools/cli/index.html) by running the following command:
 
 ```bash
 brew tap databricks/tap

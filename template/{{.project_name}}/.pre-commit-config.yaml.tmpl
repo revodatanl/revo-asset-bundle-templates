@@ -20,7 +20,7 @@ repos:
     -   id: check-json
     -   id: check-xml
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.7.1
+    rev: v0.7.3
     hooks:
     -   id: ruff
         args:
@@ -62,12 +62,12 @@ repos:
     hooks:
     -   id: pytest-unit-tests
         name: pytest-unit-tests
-        entry: >
+        entry: |
           bash -c '
-            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml &&
-            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run coverage xml -o docs/tests/coverage/coverage.xml &&
-            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg &&
-            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml;
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run coverage xml -o docs/tests/coverage/coverage.xml;
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg;
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg;
           '
         language: system
         pass_filenames: false

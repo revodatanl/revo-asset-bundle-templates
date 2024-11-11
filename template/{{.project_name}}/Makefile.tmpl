@@ -127,7 +127,7 @@ test:
 	poetry install --only-root
 	poetry run pytest tests --cov=src --cov-report term;{{end}}{{if (eq .package_manager "uv")}}@uv sync;
 	@uv run pytest tests --cov=src --cov-report term;
-	{{end}}
+{{end}}
 {{if not (eq .python_only "yes")}}deploy_%:
 	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
 		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
@@ -135,8 +135,7 @@ test:
 	fi
 	.venv/bin/pre-commit run --all-files
 	{{if (eq .package_manager "poetry")}}poetry update
-	poetry build{{end}}
-	{{if (eq .package_manager "uv")}}uv sync{{end}}
+	poetry build{{end}}{{if (eq .package_manager "uv")}}uv sync{{end}}
 	@PROFILE_NAME="DEFAULT"; \
 	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
@@ -161,7 +160,7 @@ destroy_%:
 # Create a repository in RevoData's GitHub, and adds a remote to the local git repo
 repo:
 	@printf "Creating repository in RevoData's GitHub...\n"
-	@PROJECT_NAME=$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'); \
+	@PROJECT_NAME={{if (eq .package_manager "uv")}}"{{.project_name}}"{{end}}{{if (eq .package_manager "poetry")}}$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'){{end}}; \
 	REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}'); \
 	if ! gh auth status >/dev/null 2>&1; then \
 		echo "Error: GitHub CLI is not authenticated. Please run 'gh auth login' first."; \
@@ -203,7 +202,7 @@ module_%:
 		echo "Exiting." >&2; \
 	fi; \
 	}
-	{{end}}
+{{end}}
 tree:
 	@echo "Generating project tree..."
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a
