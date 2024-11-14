@@ -6,6 +6,33 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
+- *(settings)* Virtual environment will now succesfully be activated after opening a new terminal
+- Downgrade python_only default to python version 3.12 since 3.13 was not compatible with mypy and pyenv
+
+## [0.10.0] - 2024-11-11
+
+### 🚀 Features
+
+- Add a CONTRIBUTING section
+- Add LICENSE
+
+### 🐛 Bug Fixes
+
+- *(makefile)* Simplify workflow by condensing `make install` and `make setup` into a single `make setup` command
+
+## [0.9.4] - 2024-11-11
+
+### 🐛 Bug Fixes
+
+- *(poetry)* Retire poetry-types
+- Integrate sqlfluff configuration
+- Make pre-commit configuration more resilient to auto-formatting
+- Unify CHANGELOG generation location
+
+## [0.9.3] - 2024-11-03
+
+### 🐛 Bug Fixes
+
 - Python_only projects default to python version 3.13
 
 ## [0.9.2] - 2024-11-02
