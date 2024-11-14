@@ -30,7 +30,10 @@ dev-dependencies = [
     "pytest>=8.3.3",
     "ruff>=0.7.3",
     "sqlfluff>=3.2.5",
-]{{end}}{{if (eq .package_manager "poetry")}}[tool.poetry]
+]
+
+[project.scripts]
+main = "{{.package_name}}.main:main"{{end}}{{if (eq .package_manager "poetry")}}[tool.poetry]
 name = "{{.package_name}}"
 version = "0.1.0"
 description = "{{.description}}"
