@@ -41,7 +41,6 @@ install:
 	uv python install || true; \
 	echo "All tools installed successfully."{{end}}{{if (eq .package_manager "poetry")}}@echo "Verifying if Homebrew is installed..."
 	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
-
 	{{if not (eq .python_only "yes")}}@echo "Installing required tools..."
 	@if ! command -v databricks >/dev/null 2>&1; then \
 		echo "Tapping databricks..."; \
@@ -144,7 +143,8 @@ test:
 	fi
 	.venv/bin/pre-commit run --all-files
 	{{if (eq .package_manager "poetry")}}poetry update
-	poetry build{{end}}{{if (eq .package_manager "uv")}}uv sync{{end}}
+	poetry build{{end}}{{if (eq .package_manager "uv")}}uv sync
+	uv build{{end}}
 	@PROFILE_NAME="DEFAULT"; \
 	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
