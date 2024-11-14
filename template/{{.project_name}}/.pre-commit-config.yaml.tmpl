@@ -33,7 +33,7 @@ repos:
     rev: v1.13.0
     hooks:
     -   id: mypy
-        language_version: {{if not (eq .python_only "yes")}}python3.11{{else}}python3.13{{end}}
+        language_version: {{if not (eq .python_only "yes")}}python3.11{{else}}python3.12{{end}}
         args:
         -   --config-file=pyproject.toml
         -   --ignore-missing-imports

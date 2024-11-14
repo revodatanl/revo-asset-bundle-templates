@@ -6,15 +6,16 @@ authors = [
     { name = "{{.author}}", email = "{{.email}}" },
 ]
 readme = "README.md"
-requires-python = {{if not (eq .python_only "yes")}}">=3.11"{{else}}">=3.13"{{end}}
+requires-python = {{if not (eq .python_only "yes")}}">=3.11"{{else}}">=3.12"{{end}}
 dependencies = []
 
 [tool.uv]
 package = true
 dev-dependencies = [
     "bandit>=1.7.10",
-    "coverage>=7.6.1",{{if not (eq .python_only "yes")}}"databricks-dlt>=0.2.1",
-    "databricks-sdk>=0.36.0",{{end}}
+    "coverage>=7.6.5",{{if not (eq .python_only "yes")}}
+    "databricks-dlt>=0.2.1",
+    "databricks-sdk>=0.37.0",{{end}}
     "defusedxml>=0.7.1",
     "genbadge>=1.1.1",
     "git-cliff>=2.6.0",
@@ -27,7 +28,8 @@ dev-dependencies = [
     "pytest-cov>=5.0.0",
     "pytest-mock>=3.14.0",
     "pytest>=8.3.3",
-    "ruff>=0.7.0",
+    "ruff>=0.7.3",
+    "sqlfluff>=3.2.5",
 ]{{end}}{{if (eq .package_manager "poetry")}}[tool.poetry]
 name = "{{.package_name}}"
 version = "0.1.0"
@@ -36,20 +38,20 @@ authors = [
     "{{.author}} <{{.email}}>",
 ]
 readme = "README.md"
-classifiers = ["Programming Language :: Python :: {{if not (eq .python_only "yes")}}3.11{{else}}3.13{{end}}", "Operating System :: OS Independent"]
+classifiers = ["Programming Language :: Python :: {{if not (eq .python_only "yes")}}3.11{{else}}3.12{{end}}", "Operating System :: OS Independent"]
 packages = [{ include = "{{.package_name}}", from = "src" }]
 scripts = { "main" = "{{.package_name}}.main:main" }
 
 [tool.poetry.dependencies]
 python = {{if not (eq .python_only "yes")}}"^3.11.0"  # Databricks Runtime 15.4 LTS
 numpy = "1.23.5"   # Databricks Runtime 15.4 LTS
-pandas = "1.5.3"   # Databricks Runtime 15.4 LTS{{else}}"^3.13.0"{{end}}
+pandas = "1.5.3"   # Databricks Runtime 15.4 LTS{{else}}"^3.12.0"{{end}}
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.7.10"
-coverage = "^7.6.1"{{if not (eq .python_only "yes")}}
+coverage = "^7.6.5"{{if not (eq .python_only "yes")}}
 databricks-dlt = "^0.2.1"
-databricks-sdk = "^0.36.0"{{end}}
+databricks-sdk = "^0.37.0"{{end}}
 defusedxml = "^0.7.1"
 genbadge = "^1.1.1"
 git-cliff = "^2.6.0"
@@ -75,7 +77,7 @@ build-backend = "poetry.core.masonry.api"{{end}}
 
 [tool.ruff]
 src = ["src"]
-target-version = {{if not (eq .python_only "yes")}}"py311"{{else}}"py313"{{end}}
+target-version = {{if not (eq .python_only "yes")}}"py311"{{else}}"py312"{{end}}
 line-length = 100
 extend-include = ["*.ipynb"]
 exclude = ["scratch"]
@@ -114,7 +116,7 @@ unfixable = [
 ]
 
 [tool.mypy]
-python_version = {{if not (eq .python_only "yes")}}"3.11"{{else}}"3.13"{{end}}
+python_version = {{if not (eq .python_only "yes")}}"3.11"{{else}}"3.12"{{end}}
 mypy_path = ["src"]
 strict = true
 disallow_untyped_decorators = false
