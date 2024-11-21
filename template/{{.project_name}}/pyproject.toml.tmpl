@@ -83,7 +83,7 @@ src = ["src"]
 target-version = {{if not (eq .python_only "yes")}}"py311"{{else}}"py312"{{end}}
 line-length = 100
 extend-include = ["*.ipynb"]
-exclude = ["scratch"]
+extend-exclude = ["scratch"]
 
 [tool.ruff.lint]
 pydocstyle.convention = "numpy"
