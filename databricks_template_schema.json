@@ -58,5 +58,5 @@
       "order": 9
     }
   },
-  "success_message": "Workspace to use: {{workspace_host}} (auto-detected, edit in '{{.project_name}}/databricks.yml')\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
+  "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in '{{.project_name}}/databricks.yml' and configure PROFILE_NAME in makefile)\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
 }
