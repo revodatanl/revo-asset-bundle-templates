@@ -1,121 +1,44 @@
-name: Semantic Release
-
-trigger: none
-
-pr:
+trigger:
   branches:
     include:
-      - "*"
-  paths:
-    include:
-      - .azuredevops/.azure-pipelines/**
-      - src/**
-      - resources/**
-      - pyproject.toml
-      - databricks.yml
+      - main
 
 pool:
-  name: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-stages:
-  - stage: semantic_release
-    jobs:
-      - job: bump_version
-        displayName: Bump the repository version based on PR title
-        steps:
-          - checkout: self
-            fetchDepth: 0
-            clean: true
-            persistCredentials: true
-            displayName: Checkout repository
+steps:
+  # 1. Checkout the repository and fetch all history and tags
+  - checkout: self
+    persistCredentials: true   # Ensures the OAuth token is stored for Git operations
+    ref: 'main'                # Ensure you're on the main branch
+    clean: true
+    fetchDepth: 0
+    displayName: 'Checkout repository'
 
-          - script: |
-              PYTHON_VERSION=$(cut -d. -f1,2 < .python-version)
-              echo "##vso[task.setvariable variable=PYTHON_VERSION]$PYTHON_VERSION"
-              echo Python version: $PYTHON_VERSION
-            displayName: Read Python major.minor version from .python-version and add to environment variables
+  # 2. Configure Git (so that Semantic Release’s git plugin can commit changes)
+  - script: |
+      git config --global user.name "Semantic Release Bot"
+      git config --global user.email "semantic-release[bot]@azure.com"
+    displayName: 'Configure Git'
 
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: $(PYTHON_VERSION)
-            displayName: Setup Python
+  # 3. Install Node.js
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+    displayName: 'Install Node.js'
 
-          - script: |
-              python -m pip install --upgrade pip poetry
-            displayName: Install Poetry
+  # 4. Install Semantic Release and required plugins
+  - script: |
+      npm install --no-save \
+        semantic-release \
+        @semantic-release/changelog \
+        @semantic-release/exec \
+        @semantic-release/git
+    displayName: 'Install Semantic Release'
 
-          - script: |
-              poetry install --no-root
-            displayName: Install dependencies
-
-          - task: AzureCLI@2
-            displayName: Bump version based on PR title
-            retryCountOnTaskFailure: 3
-            inputs:
-              azureSubscription: reg-dev-eu-blinformationfactorycldev (SPN)
-              scriptType: bash
-              scriptLocation: inlineScript
-              inlineScript: |
-                # Configure git
-                git config user.email "semantic-release[bot]@azure.com"
-                git config user.name "Semantic Release Bot"
-
-                # Get the source branch name
-                SOURCE_BRANCH=$(echo "$(System.PullRequest.SourceBranch)" | sed 's|^refs/heads/||')
-
-                # Fetch the latest changes from the remote feature branch
-                git fetch origin $SOURCE_BRANCH
-
-                # Rebase onto the latest remote feature branch
-                echo "Checking out $SOURCE_BRANCH branch and rebasing onto origin/$SOURCE_BRANCH"
-                git checkout $SOURCE_BRANCH
-                git rebase origin/$SOURCE_BRANCH
-
-                # Get the current and main branch versions
-                CURRENT_VERSION=$(poetry version --short)
-                MAIN_VERSION=$(git show origin/main:pyproject.toml | grep '^version =' | sed 's/version = "\(.*\)"/\1/')
-                echo "Current version: $CURRENT_VERSION"
-                echo "Main version: $MAIN_VERSION"
-                echo "Updating source branch version to main branch version"
-                poetry version $MAIN_VERSION
-
-                # Log in to Azure DevOps
-                echo $(System.AccessToken) | az devops login
-
-                # Get the PR title
-                PR_TITLE=$(az repos pr show --id $(System.PullRequest.PullRequestId) --query title -o tsv)
-                echo PR Title: $PR_TITLE
-
-                # Determine the version bump type
-                case "$PR_TITLE" in
-                  fix:*) BUMP=patch ;;
-                  feat:*) BUMP=minor ;;
-                  *!:*) BUMP=major ;;
-                  *)
-                    echo "##vso[task.logissue type=error]Error: No Conventional Commits keywords (fix:, feat:, feat!:, ...) found in PR title. Exiting."
-                    exit 1
-                    ;;
-                esac
-
-                # Perform the version bump
-                echo "Bumping $BUMP version"
-                poetry version $BUMP
-                NEW_VERSION=$(poetry version --short)
-
-                # Check if the version actually changed
-                if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then
-                  echo "##vso[task.logissue type=warning]The version has already been bumped to $NEW_VERSION. No action taken."
-                  exit 0
-                fi
-
-                # Build CHANGELOG.md with git-cliff
-                poetry run git-cliff --tag $NEW_VERSION -o CHANGELOG.md
-
-                # Commit and push the changes
-                git add pyproject.toml CHANGELOG.md
-                git commit -m "chore(pr): bump $BUMP version to $NEW_VERSION - PR #$(System.PullRequest.PullRequestId) [automated]"
-                git push origin HEAD:$SOURCE_BRANCH
-
-                # Create and push the new tag
-                git tag -a $NEW_VERSION -m "$PR_TITLE"
-                git push origin $NEW_VERSION
+  # 5. Run Semantic Release
+  - script: npx semantic-release
+    displayName: 'Run Semantic Release'
+    env:
+      # Pass the Azure DevOps OAuth token so that Git push operations are authenticated.
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)

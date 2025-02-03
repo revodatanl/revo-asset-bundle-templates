@@ -1,0 +1,115 @@
+name: Semantic Release
+
+trigger: none
+
+pr:
+  branches:
+    include:
+      - "*"
+  paths:
+    include:
+      - .azuredevops/.azure-pipelines/**
+      - src/**
+      - resources/**
+      - pyproject.toml
+      - databricks.yml
+
+pool:
+  name: ubuntu-latest
+
+stages:
+  - stage: semantic_release
+    jobs:
+      - job: bump_version
+        displayName: Bump the repository version based on PR title
+        steps:
+          - checkout: self
+            fetchDepth: 0
+            clean: true
+            persistCredentials: true
+            displayName: Checkout repository
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: {{if not (eq .python_only "yes")}}"3.11"{{else}}"3.12"{{end}}
+            displayName: Setup Python
+
+          - script: |
+              python -m pip install --upgrade pip poetry
+            displayName: Install Poetry
+
+          - script: |
+              poetry install --no-root
+            displayName: Install dependencies
+
+          - task: AzureCLI@2
+            displayName: Bump version based on PR title
+            retryCountOnTaskFailure: 3
+            inputs:
+              azureSubscription: azure_subscription_name # Azure Subscription name / Service Principal name
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                # Configure git
+                git config user.email "semantic-release[bot]@azure.com"
+                git config user.name "Semantic Release Bot"
+
+                # Get the source branch name
+                SOURCE_BRANCH=$(echo "$(System.PullRequest.SourceBranch)" | sed 's|^refs/heads/||')
+
+                # Fetch the latest changes from the remote feature branch
+                git fetch origin $SOURCE_BRANCH
+
+                # Rebase onto the latest remote feature branch
+                echo "Checking out $SOURCE_BRANCH branch and rebasing onto origin/$SOURCE_BRANCH"
+                git checkout $SOURCE_BRANCH
+                git rebase origin/$SOURCE_BRANCH
+
+                # Get the current and main branch versions
+                CURRENT_VERSION=$(poetry version --short)
+                MAIN_VERSION=$(git show origin/main:pyproject.toml | grep '^version =' | sed 's/version = "\(.*\)"/\1/')
+                echo "Current version: $CURRENT_VERSION"
+                echo "Main version: $MAIN_VERSION"
+                echo "Updating source branch version to main branch version"
+                poetry version $MAIN_VERSION
+
+                # Log in to Azure DevOps
+                echo $(System.AccessToken) | az devops login
+
+                # Get the PR title
+                PR_TITLE=$(az repos pr show --id $(System.PullRequest.PullRequestId) --query title -o tsv)
+                echo PR Title: $PR_TITLE
+
+                # Determine the version bump type
+                case "$PR_TITLE" in
+                  fix:*) BUMP=patch ;;
+                  feat:*) BUMP=minor ;;
+                  *!:*) BUMP=major ;;
+                  *)
+                    echo "##vso[task.logissue type=error]Error: No Conventional Commits keywords (fix:, feat:, feat!:, ...) found in PR title. Exiting."
+                    exit 1
+                    ;;
+                esac
+
+                # Perform the version bump
+                echo "Bumping $BUMP version"
+                poetry version $BUMP
+                NEW_VERSION=$(poetry version --short)
+
+                # Check if the version actually changed
+                if [[ "$NEW_VERSION" == "$CURRENT_VERSION" ]]; then
+                  echo "##vso[task.logissue type=warning]The version has already been bumped to $NEW_VERSION. No action taken."
+                  exit 0
+                fi
+
+                # Build CHANGELOG.md with git-cliff
+                poetry run git-cliff --tag $NEW_VERSION -o CHANGELOG.md
+
+                # Commit and push the changes
+                git add pyproject.toml CHANGELOG.md
+                git commit -m "chore(pr): bump $BUMP version to $NEW_VERSION - PR #$(System.PullRequest.PullRequestId) [automated]"
+                git push origin HEAD:$SOURCE_BRANCH
+
+                # Create and push the new tag
+                git tag -a $NEW_VERSION -m "$PR_TITLE"
+                git push origin $NEW_VERSION
