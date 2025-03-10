@@ -1,0 +1,39 @@
+{
+  "name": "Databricksruntime Development Container",
+  "dockerComposeFile": "docker-compose.yml",
+  "workspaceFolder": "/workspace",
+  "service": "databricks",
+  "remoteUser": "root",
+  "forwardPorts": [3000],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "charliermarsh.ruff",
+        "davidanson.vscode-markdownlint",
+        "dorzey.vscode-sqlfluff",
+        "esbenp.prettier-vscode",
+        "mechatroner.rainbow-csv",
+        "ms-azuretools.vscode-docker",
+        "ms-python.mypy-type-checker",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "ms-vscode.makefile-tools",
+        "njpwerner.autodocstring",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "vscode-icons-team.vscode-icons"
+      ]
+    },
+    "settings": {
+      "terminal.integrated.defaultProfile.linux": "bash",
+      "python.defaultInterpreterPath": "/databricks/python3/bin/python",
+      "python.terminal.activateEnvInCurrentTerminal": true,
+      "python.terminal.activateEnvironment": true
+    }
+  },
+  "containerEnv": {
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8"
+  }
+}

@@ -1,0 +1,2 @@
+This directory is used for {{.package_name}} documentation
+# To generate the API documentation, run `make docs`

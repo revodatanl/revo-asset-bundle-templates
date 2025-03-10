@@ -42,13 +42,13 @@
       "type": "string",
       "default": "azure",
       "enum": ["azure", "aws"],
-      "description": "Cloud provider for Databricks deployment",
+      "description": "Cloud provider",
       "order": 7
     },
     "include_template_jobs": {
       "type": "string",
       "default": "no",
-      "enum": ["yes", "no"],
+      "enum": ["no", "yes"],
       "description": "Include sample jobs (Delta Live Tables pipeline and template job) in '{{.project_name}}{{path_separator}}resources'",
       "order": 8
     },
@@ -56,7 +56,7 @@
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
-      "description": "Develop in a devcontainer (recommended for Windows users)",
+      "description": "Include devcontainer (recommended for Windows users)",
       "order": 9
     },
     "python_only": {
@@ -67,5 +67,5 @@
       "order": 10
     }
   },
-  "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in '{{.project_name}}/databricks.yml' and configure PROFILE_NAME in makefile)\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
+  "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in 'databricks.yml' and configure 'PROFILE_NAME' in the 'Makefile')\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
 }
