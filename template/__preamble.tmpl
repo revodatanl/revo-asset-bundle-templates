@@ -12,9 +12,11 @@ This file only provides template directives; it is skipped for the actual output
   {{skip "{{.project_name}}/.azuredevops"}}
 {{end}}
 
-{{if not (eq .include_dlt "yes")}}
+{{if not (eq .include_template_jobs "yes")}}
   {{skip "{{.project_name}}/notebooks/dlt_ingest.py"}}
   {{skip "{{.project_name}}/resources/template_dlt_pipeline.yml"}}
+  {{skip "{{.project_name}}/resources/template_job.yml.tmpl"}}
+  {{skip "{{.project_name}}/notebooks/hello_revodata.py"}}
 {{end}}
 
 {{if not (eq .package_manager "poetry")}}
@@ -41,4 +43,8 @@ This file only provides template directives; it is skipped for the actual output
   {{skip "{{.project_name}}/docs/assets/make-destroy_dev.png"}}
   {{skip "{{.project_name}}/docs/assets/make-repo.png"}}
   {{skip "{{.project_name}}/docs/assets/make-repo-github.png"}}
+{{end}}
+
+{{if not (eq .use_devcontainer "yes")}}
+  {{skip "{{.project_name}}/.devcontainer"}}
 {{end}}

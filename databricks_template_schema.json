@@ -19,43 +19,52 @@
       "description": "Author",
       "order": 3
     },
-    "email": {
-      "type": "string",
-      "description": "Email of author",
-      "order": 4
-    },
     "description": {
       "type": "string",
       "description": "Description of the project",
-      "order": 5
+      "order": 4
     },
     "package_manager": {
       "type": "string",
       "default": "uv",
       "enum": ["uv", "poetry"],
       "description": "Python package manager",
-      "order": 6
+      "order": 5
     },
     "git_client": {
       "type": "string",
       "default": "github",
       "enum": ["github", "azure"],
       "description": "Git client",
+      "order": 6
+    },
+    "cloud_provider": {
+      "type": "string",
+      "default": "azure",
+      "enum": ["azure", "aws"],
+      "description": "Cloud provider for Databricks deployment",
       "order": 7
     },
-    "include_dlt": {
+    "include_template_jobs": {
       "type": "string",
       "default": "yes",
       "enum": ["yes", "no"],
-      "description": "Include a sample Delta Live Tables pipeline in '{{.project_name}}{{path_separator}}resources'",
+      "description": "Include sample jobs (Delta Live Tables pipeline and template job) in '{{.project_name}}{{path_separator}}resources'",
       "order": 8
+    },
+    "use_devcontainer": {
+      "type": "string",
+      "default": "no",
+      "enum": ["no", "yes"],
+      "description": "Do you want to use devcontainer for development?",
+      "order": 9
     },
     "python_only": {
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
       "description": "Create a python-only project (remove all Databricks Asset Bundle files)",
-      "order": 9
+      "order": 10
     }
   },
   "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in '{{.project_name}}/databricks.yml' and configure PROFILE_NAME in makefile)\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
