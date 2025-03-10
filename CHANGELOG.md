@@ -1,3 +1,15 @@
+## [0.10.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.10.1...v0.10.2) (2025-03-10)
+
+
+### Bug Fixes
+
+* **deploy-dab:** debug deploy-dab pipeline for Azure and GitHub ([fdda4a8](https://github.com/revodatanl/revo-asset-bundle-templates/commit/fdda4a84bc33904f2d93c71fc8e3413130acfec4))
+* **pre-commit:** add a poetry/uv lock step to the pre-commit hook ([25b4fef](https://github.com/revodatanl/revo-asset-bundle-templates/commit/25b4feffa72c3bba0bf07228b52eda4389189f02))
+* **semantic-release:** standardize Semantic Release with the official Node.js package ([2e58efa](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2e58efa3df043c33d964ca2c17d9f282b008618a))
+* **semantic-release:** streamline semantic release pipeline for Azure DevOps ([466b350](https://github.com/revodatanl/revo-asset-bundle-templates/commit/466b3502bf7aebcc244b515822a4f1885e96a143))
+* **template:** enhance Databricks Asset Bundle template configuration ([065b939](https://github.com/revodatanl/revo-asset-bundle-templates/commit/065b939ab8cb5510a59d47710d73159ad370ec5d))
+* update Ruff configuration to once again exclude default directories (like .venv) ([4ca8d4f](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4ca8d4fc2af1235fdd87ffbc684fb3c02a4b1043))
+
 ## [0.10.1] - 2024-11-14
 
 ### 🐛 Bug Fixes
