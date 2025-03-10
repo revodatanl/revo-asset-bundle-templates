@@ -1,6 +1,12 @@
-.PHONY: install setup clean test{{if not (eq .python_only "yes")}} deploy_% destroy_% repo module module_%{{end}} tree docs
+.PHONY: install setup clean test{{if not (eq .python_only "yes")}} deploy deploy_% destroy destroy_% repo module module_%{{end}} tree docs
 
-install:
+.DEFAULT_GOAL := setup
+
+SHELL := /bin/bash
+
+PROFILE_NAME := "DEFAULT"
+
+{{if not (eq .use_devcontainer "yes")}}install:
 	{{if (eq .package_manager "uv")}}@CURRENT_OS=$$(uname -s); \
 	echo "Current OS: $$CURRENT_OS"; \
 	if [ "$$CURRENT_OS" = "Darwin" ]; then \
@@ -37,7 +43,7 @@ install:
 		exit 1; \
 	fi; \
 
-	@echo "Setting up Python..."; \
+	echo "Setting up Python..."; \
 	uv python install || true; \
 	echo "All tools installed successfully."{{end}}{{if (eq .package_manager "poetry")}}@echo "Verifying if Homebrew is installed..."
 	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
@@ -61,7 +67,7 @@ install:
 	@PYTHON_VERSION=$$(cat .python-version); \
 	echo "Setting up Python version $$PYTHON_VERSION"; \
 	pyenv install --skip-existing $$PYTHON_VERSION; \
-	pyenv local $$PYTHON_VERSION; \
+	pyenv local $$PYTHON_VERSION
 
 	@if ! grep -q '# pyenv configuration' ~/.zshrc; then \
 		echo "Adding pyenv configuration to .zshrc (for interactive shells)..."; \
@@ -86,10 +92,10 @@ install:
 	@echo "Resetting the terminal..."
 	@exec zsh -c "source ~/.zshrc"
 
-	@echo "All tools installed successfully."{{end}}
+	@echo "All tools installed successfully."{{end}}{{end}}
 
 setup:
-	@echo "Installing tools..."
+	{{if not (eq .use_devcontainer "yes")}}@echo "Installing tools..."
 	@{ \
 		output=$$($(MAKE) install 2>&1); \
 		exit_code=$$?; \
@@ -98,9 +104,39 @@ setup:
 			exit $$exit_code; \
 		fi; \
 	}
-	@echo "All tools installed successfully."
+	@echo "All tools installed successfully."{{end}}
 	@echo "Setting up the project..."
-	{{if (eq .package_manager "poetry")}}@which python
+	{{if (eq .use_devcontainer "yes")}}@command -v python > /dev/null || (echo "Python not found"; exit 1)
+	@python --version
+	{{if (eq .package_manager "poetry")}}@poetry install{{end}}{{if (eq .package_manager "uv")}}@uv sync{{end}}
+
+	@if [ ! -d ".git" ]; then \
+		echo "Setting up git..."; \
+		git init -b main > /dev/null; \
+	fi
+
+	@echo "Setting up pre-commit..."
+	@command -v pre-commit > /dev/null || { echo "Installing pre-commit..."; {{if (eq .package_manager "poetry")}}poetry add --group dev pre-commit{{end}}{{if (eq .package_manager "uv")}}uv pip install pre-commit{{end}}; }
+	@pre-commit install --hook-type pre-commit --hook-type commit-msg
+
+	@echo "Updating pre-commit hooks..."
+	@pre-commit autoupdate || true
+
+	@if git diff --name-only | grep -q ".pre-commit-config.yaml"; then \
+		echo "Committing pre-commit config updates..."; \
+		git add .pre-commit-config.yaml; \
+		git config --get user.name > /dev/null 2>&1 || git config --local user.name "Setup Script"; \
+		git config --get user.email > /dev/null 2>&1 || git config --local user.email "setup@example.com"; \
+		git commit -m "chore: update pre-commit hooks" || true; \
+	fi
+
+	@echo "Installing pre-commit environments..."
+	@pre-commit install-hooks
+
+	@echo "Running pre-commit..."
+	@pre-commit run --all-files
+
+	@echo "Setup completed successfully!"{{else}}{{if (eq .package_manager "poetry")}}@which python
 	@python --version
 	@poetry config virtualenvs.in-project true --local; \
 	poetry env use python $$PYTHON_VERSION; \
@@ -112,13 +148,15 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit..."
-	@. .venv/bin/activate;
-	@.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg;
+	@. .venv/bin/activate
+	@.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg
+
+	@echo "Setup completed successfully!"{{end}}
 
 clean:
 	@echo "Cleaning up..."
-	{{if (eq .package_manager "poetry")}}rm -rf .venv poetry.lock{{end}}{{if (eq .package_manager "uv")}}rm -rf .venv uv.lock{{end}}
-	find . -type d \
+	{{if (eq .package_manager "poetry")}}@rm -rf .venv poetry.lock{{end}}{{if (eq .package_manager "uv")}}@rm -rf .venv uv.lock{{end}}
+	@find . -type d \
 		\( -name ".pytest_cache" \
 		-o -name ".mypy_cache" \
 		-o -name ".ruff_cache" \
@@ -129,53 +167,57 @@ clean:
 
 test:
 	@echo "Running tests..."
-	.venv/bin/pre-commit run --all-files
-	{{if (eq .package_manager "poetry")}}poetry update
-	poetry build
-	poetry install --only-root
-	poetry run pytest tests --cov=src --cov-report term;{{end}}{{if (eq .package_manager "uv")}}@uv sync;
-	@uv run pytest tests --cov=src --cov-report term;{{end}}
+	{{if (eq .use_devcontainer "yes")}}@command -v pre-commit > /dev/null || { echo "Installing pre-commit..."; {{if (eq .package_manager "poetry")}}poetry add --group dev pre-commit{{end}}{{if (eq .package_manager "uv")}}uv pip install pre-commit{{end}}; }
+	@pre-commit run --all-files
+	{{if (eq .package_manager "poetry")}}@poetry run pytest tests --cov=src --cov-report term{{end}}{{if (eq .package_manager "uv")}}@uv run pytest tests --cov=src --cov-report term{{end}}{{else}}@. .venv/bin/activate
+	@.venv/bin/pre-commit run --all-files
+	{{if (eq .package_manager "poetry")}}@poetry run pytest tests --cov=src --cov-report term{{end}}{{if (eq .package_manager "uv")}}@uv run pytest tests --cov=src --cov-report term{{end}}{{end}}
+
+deploy: deploy_dev
 
 {{if not (eq .python_only "yes")}}deploy_%:
 	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
 		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
 		exit 1; \
 	fi
-	.venv/bin/pre-commit run --all-files
-	{{if (eq .package_manager "poetry")}}poetry update
-	poetry build{{end}}{{if (eq .package_manager "uv")}}uv sync
-	uv build{{end}}
-	@PROFILE_NAME="DEFAULT"; \
-	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
+	{{if (eq .use_devcontainer "yes")}}@command -v pre-commit > /dev/null || { echo "Installing pre-commit..."; {{if (eq .package_manager "poetry")}}poetry add --group dev pre-commit{{end}}{{if (eq .package_manager "uv")}}uv pip install pre-commit{{end}}; }
+	@pre-commit run --all-files
+	{{if (eq .package_manager "poetry")}}@poetry build{{end}}{{if (eq .package_manager "uv")}}@uv build{{end}}{{else}}@. .venv/bin/activate
+	@.venv/bin/pre-commit run --all-files
+	{{if (eq .package_manager "poetry")}}@poetry update
+	@poetry build{{end}}{{if (eq .package_manager "uv")}}@uv sync
+	@uv build{{end}}{{end}}
+	@output=$$(databricks auth env --profile "$(PROFILE_NAME)" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile "$$PROFILE_NAME"; \
+		databricks configure --profile "$(PROFILE_NAME)"; \
 	else \
-		databricks bundle deploy --profile "$$PROFILE_NAME" $$(if [ "$*" != "dev" ]; then echo "--target $*"; fi); \
+		databricks bundle deploy --profile "$(PROFILE_NAME)" $$(if [ "$*" != "dev" ]; then echo "--target $*"; fi); \
 	fi
+
+destroy: destroy_dev
 
 destroy_%:
 	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
 		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
 		exit 1; \
 	fi
-	@PROFILE_NAME="DEFAULT"; \
-	output=$$(databricks auth env --profile "$$PROFILE_NAME" 2>&1); \
+	@output=$$(databricks auth env --profile "$(PROFILE_NAME)" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile "$$PROFILE_NAME"; \
+		databricks configure --profile "$(PROFILE_NAME)"; \
 	else \
-		databricks bundle destroy --profile "$$PROFILE_NAME" --target $*; \
+		databricks bundle destroy --profile "$(PROFILE_NAME)" --target $*; \
 	fi
 
 # Create a repository in RevoData's GitHub, and adds a remote to the local git repo
 repo:
 	@printf "Creating repository in RevoData's GitHub...\n"
-	@PROJECT_NAME={{if (eq .package_manager "uv")}}"{{.project_name}}"{{end}}{{if (eq .package_manager "poetry")}}$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'){{end}}; \
-	REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}'); \
-	if ! gh auth status >/dev/null 2>&1; then \
+	@PROJECT_NAME={{if (eq .package_manager "uv")}}"{{.project_name}}"{{end}}{{if (eq .package_manager "poetry")}}$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'){{end}}
+	@REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}')
+	@if ! gh auth status >/dev/null 2>&1; then \
 		echo "Error: GitHub CLI is not authenticated. Please run 'gh auth login' first."; \
 		exit 1; \
-	fi; \
-	if ! gh repo view revodatanl/$$PROJECT_NAME > /dev/null 2>&1; then \
+	fi
+	@if ! gh repo view revodatanl/$$PROJECT_NAME > /dev/null 2>&1; then \
 		gh repo create revodatanl/$$PROJECT_NAME -y --private -d "$$REPO_DESCRIPTION" > /dev/null 2>&1; \
 		(git remote | grep origin || git remote add origin git@github.com:revodatanl/$$PROJECT_NAME.git) > /dev/null 2>&1; \
 		printf "Repository created at revodatanl/$$PROJECT_NAME...\n"; \
@@ -190,8 +232,8 @@ module:
 	@echo "Select the module to deploy:"
 	@echo "1) Deploy Databricks Asset Bundle pipeline for GitHub"
 	@echo "2) Deploy Databricks Asset Bundle pipeline for Azure DevOps"
-	@echo "Enter the number of the module you want to deploy: "; \
-	read choice; \
+	@echo "Enter the number of the module you want to deploy: "
+	@read choice; \
 	case "$$choice" in \
 		1) $(MAKE) module_github-deploy-dab ;; \
 		2) $(MAKE) module_azure-devops-deploy-dab ;; \
@@ -217,14 +259,22 @@ tree:
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a
 
 docs:
-	@echo "Running tests and generating badges..."
-	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --cov-report html:docs/tests/coverage --junitxml=docs/tests/coverage/pytest_coverage.xml
+	@echo "Running tests and generating coverage data..."
+	{{if (eq .use_devcontainer "yes")}}@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml
 	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run coverage xml -o docs/tests/coverage/coverage.xml
-	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge coverage -i docs/tests/coverage/coverage.xml -o docs/assets/badge-coverage.svg
-	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run genbadge tests -i docs/tests/coverage/pytest_coverage.xml -o docs/assets/badge-tests.svg
-	@rm -rf docs/tests/coverage/.gitignore
 	@echo "Generating HTML documentation..."
+	# To generate HTML coverage reports, uncomment the following lines and add --cov-report html:docs/tests/coverage to the pytest command above
+	# @{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --cov-report html:docs/tests/coverage --junitxml=docs/tests/coverage/pytest_coverage.xml
+	# @rm -rf docs/tests/coverage/.gitignore
 	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html src/{{.package_name}} -o docs/api --force
 	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html tests -o docs/api --force
-	# @{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs build
-	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs serve
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs serve{{else}}@. .venv/bin/activate
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run coverage xml -o docs/tests/coverage/coverage.xml
+	@echo "Generating HTML documentation..."
+	# To generate HTML coverage reports, uncomment the following lines and add --cov-report html:docs/tests/coverage to the pytest command above
+	# @{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src --cov-report html:docs/tests/coverage --junitxml=docs/tests/coverage/pytest_coverage.xml
+	# @rm -rf docs/tests/coverage/.gitignore
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html src/{{.package_name}} -o docs/api --force
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html tests -o docs/api --force
+	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs serve{{end}}

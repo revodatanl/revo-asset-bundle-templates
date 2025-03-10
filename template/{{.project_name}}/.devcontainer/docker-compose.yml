@@ -1,0 +1,13 @@
+services:
+  databricks:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    image: databricksruntime-development-container:latest
+    volumes:
+      # Mount the workspace directory
+      - ../:/workspace:cached
+      # Mount the local SSH directory
+      - ${HOME}/.ssh:/root/.ssh:ro
+      # Mount the local Databricks configuration file
+      - ${HOME}/.databrickscfg:/root/.databrickscfg:ro
