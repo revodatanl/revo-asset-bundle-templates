@@ -23,7 +23,7 @@ This file only provides template directives; it is skipped for the actual output
   {{skip "{{.project_name}}/poetry.toml"}}
   {{skip "{{.project_name}}/.github/workflows/ci.yml"}}
   {{skip "{{.project_name}}/.github/workflows/semantic-release.yml"}}
-{{end}}/Users/thomasbrouwer/code/revo-asset-bundle-templates-uv/template/{{.project_name}}/release.config.js
+{{end}}/Users/thomasbrouwer/code/revo-asset-bundle-templates-uv/template/{{.project_name}}/release.config.mjs
 
 {{if not (eq .package_manager "uv")}}
   {{skip "{{.project_name}}/release.config.js"}}

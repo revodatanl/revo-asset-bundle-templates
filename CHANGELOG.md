@@ -1,13 +1,10 @@
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-## [unreleased]
+## [0.10.1] - 2024-11-14
 
 ### 🐛 Bug Fixes
 
 - *(settings)* Virtual environment will now succesfully be activated after opening a new terminal
-- Downgrade python_only default to python version 3.12 since 3.13 was not compatible with mypy and pyenv
+- Downgrade python_only default version to 3.12 since 3.13 was not compatible with mypy and pyenv
+- *(uv)* Make wheel jobs executable by providing a [project.scripts] section in pyproject.toml
 
 ## [0.10.0] - 2024-11-11
 

@@ -1,72 +1,49 @@
+# This workflow does the following things:
+# 1. Analyze commit messages and determine the next version number based on conventional commits
+# 2. Generate a CHANGELOG.md file with all changes since the last release
+# 3. Update the version in pyproject.toml
+# 4. Create a new git tag with the version
+# 5. Create a GitHub release with the changelog
+# 6. Push all changes back to the repository
+
 name: Semantic Release
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
-    paths:
-      - .github/workflows/**
-      - resources/**
-      - src/**
-      - pyproject.toml
 
 jobs:
   release:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    concurrency: release
     permissions:
-      id-token: write
       contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
 
     steps:
-      # Step 1: Checkout the repository and fetch all history and tags
-      - name: Checkout code
+      - name: Checkout the repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: 'main'     # Ensure you're on the main branch
+          fetch-depth: 0  # Fetch all history and tags
 
-      # Step 2: Run Semantic Release to bump version and tag
-      - name: Python Semantic Release
-        id: semantic_release
-        uses: python-semantic-release/python-semantic-release@v9
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: 20
 
-      # Step 3: Fetch the latest tags after the release
-      - name: Fetch latest tags
-        run: git fetch --tags
-
-      # Step 5: Reset file ownership after actions
-      - name: Fix .git folder permissions
-        run: sudo chown -R $USER:$USER .git
-
-      # Step 4: Generate CHANGELOG after fetching the new tags
-      - name: Generate CHANGELOG
-        uses: orhun/git-cliff-action@v4
-        with:
-          config: pyproject.toml
-          args: --github-repo ${{ github.repository }}
-        env:
-          OUTPUT: CHANGELOG.md
-          GITHUB_REPO: ${{ github.repository }}
-
-      # Step 6: Commit CHANGELOG
-      - name: Commit CHANGELOG
+      - name: Install Semantic Release
         run: |
-          # Set up git configuration
-          git config user.name 'github-actions[bot]'
-          git config user.email 'actions@github.com'
+          npm install --no-save \
+            semantic-release \
+            @semantic-release/changelog \
+            @semantic-release/exec \
+            @semantic-release/git \
+            @semantic-release/github
 
-          # Add generated CHANGELOG
-          git add CHANGELOG.md
-
-          # Check if there are any changes to commit
-          if git diff --cached --quiet; then
-            echo "No changes to commit, skipping commit."
-          else
-            echo "Committing CHANGELOG..."
-            git commit -m "chore(pr): update CHANGELOG for PR #${{ github.event.pull_request.number }} [automated]"
-            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git ${{ github.ref_name }}
-          fi
+      - name: Run Semantic Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
