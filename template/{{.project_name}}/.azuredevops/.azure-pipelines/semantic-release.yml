@@ -1,44 +1,48 @@
+name: "Semantic Release"
+
+# This pipeline does the following things:
+# 1. Analyze commit messages; bump the version accordingly, and update CHANGELOG.md and pyproject.toml
+# 2. Tag the repo with the new version
+# 3. Push Git notes with the release information
+# Note: in order for this to fully function we need to grant `Manage Notes` permissions to the build agent `Cloud Build Service (cowmanager)`
+
 trigger:
   branches:
     include:
       - main
 
-pool:
-  vmImage: 'ubuntu-latest'
+jobs:
+  - job: semantic_release
+    displayName: "Semantic Release"
+    pool:
+      vmImage: "ubuntu-latest"
 
-steps:
-  # 1. Checkout the repository and fetch all history and tags
-  - checkout: self
-    persistCredentials: true   # Ensures the OAuth token is stored for Git operations
-    ref: 'main'                # Ensure you're on the main branch
-    clean: true
-    fetchDepth: 0
-    displayName: 'Checkout repository'
+    steps:
+        # 1. Checkout the repository and fetch all history and tags
+      - checkout: self
+        persistCredentials: true   # Ensures the OAuth token is stored for Git operations
+        clean: true
+        fetchDepth: 0
+        displayName: "Checkout repository"
 
-  # 2. Configure Git (so that Semantic Release’s git plugin can commit changes)
-  - script: |
-      git config --global user.name "Semantic Release Bot"
-      git config --global user.email "semantic-release[bot]@azure.com"
-    displayName: 'Configure Git'
+      # 2. Install Node.js
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "20.x"
+        displayName: "Install Node.js"
 
-  # 3. Install Node.js
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '20.x'
-    displayName: 'Install Node.js'
+      # 3. Install Semantic Release and required plugins
+      - script: |
+          npm install --no-save \
+            semantic-release \
+            @semantic-release/changelog \
+            @semantic-release/exec \
+            @semantic-release/git
+        displayName: "Install Semantic Release"
 
-  # 4. Install Semantic Release and required plugins
-  - script: |
-      npm install --no-save \
-        semantic-release \
-        @semantic-release/changelog \
-        @semantic-release/exec \
-        @semantic-release/git
-    displayName: 'Install Semantic Release'
-
-  # 5. Run Semantic Release
-  - script: npx semantic-release
-    displayName: 'Run Semantic Release'
-    env:
-      # Pass the Azure DevOps OAuth token so that Git push operations are authenticated.
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      # 4. Run Semantic Release
+      - script: npx semantic-release
+        displayName: "Run Semantic Release"
+        env:
+          # Pass the Azure DevOps OAuth token so that Git push operations are authenticated.
+          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
