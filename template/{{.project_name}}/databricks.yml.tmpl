@@ -7,7 +7,7 @@ variables:
     default: 15.4.x-scala2.12
   wheel_path:
     description: Path of the wheel file
-    default: /Workspace${workspace.root_path}/files/dist/{{.package_name}}-*-py3-none-any.whl
+    default: ${workspace.root_path}/files/dist/{{.package_name}}-*-py3-none-any.whl
 
 include:
   - resources/*.yml

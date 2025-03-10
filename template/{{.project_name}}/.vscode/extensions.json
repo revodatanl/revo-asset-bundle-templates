@@ -1,12 +1,10 @@
 {
   "recommendations": [
-    "bierner.markdown-mermaid",
     "charliermarsh.ruff",
     "davidanson.vscode-markdownlint",
     "dorzey.vscode-sqlfluff",
     "esbenp.prettier-vscode",
     "mechatroner.rainbow-csv",
-    "mhutchie.git-graph",
     "ms-python.mypy-type-checker",
     "ms-python.vscode-pylance",
     "ms-vscode.makefile-tools",

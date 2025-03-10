@@ -3,7 +3,7 @@ name = "{{.package_name}}"
 version = "0.1.0"
 description = "{{.description}}"
 authors = [
-    { name = "{{.author}}", email = "{{.email}}" },
+    { name = "{{.author}}", email = "notifications@example.com" },
 ]
 readme = "README.md"
 requires-python = {{if not (eq .python_only "yes")}}">=3.11"{{else}}">=3.12"{{end}}
@@ -38,7 +38,7 @@ name = "{{.package_name}}"
 version = "0.1.0"
 description = "{{.description}}"
 authors = [
-    "{{.author}} <{{.email}}>",
+    "{{.author}} <notifications@example.com>",
 ]
 readme = "README.md"
 classifiers = ["Programming Language :: Python :: {{if not (eq .python_only "yes")}}3.11{{else}}3.12{{end}}", "Operating System :: OS Independent"]

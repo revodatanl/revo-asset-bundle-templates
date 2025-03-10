@@ -11,7 +11,7 @@ resources:
 
       email_notifications:
         on_failure:
-          - {{.email}}
+          - notifications@example.com
 
       tasks:
         - task_key: notebook_task
@@ -35,5 +35,5 @@ resources:
         - job_cluster_key: job_cluster
           new_cluster:
             spark_version: ${var.spark_version}
-            node_type_id: Standard_D3_v2
+            node_type_id: "{{if (eq .cloud_provider \"azure\")}}Standard_D3_v2{{end}}{{if (eq .cloud_provider \"aws\")}}i3.xlarge{{end}}"
             num_workers: 1

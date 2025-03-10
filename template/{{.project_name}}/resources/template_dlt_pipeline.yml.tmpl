@@ -27,7 +27,7 @@ resources:
       clusters:
         - label: default
           num_workers: 1
-          node_type_id: Standard_D4s_v3
+          node_type_id: "{{if (eq .cloud_provider \"azure\")}}Standard_D4s_v3{{end}}{{if (eq .cloud_provider \"aws\")}}i3.xlarge{{end}}"
 
       configuration:
         wheel_path: ${var.wheel_path}
