@@ -157,8 +157,8 @@ setup:
 clean:
 	@echo "Uninstalling local packages..."
 	@rm -rf {{if (eq .package_manager "poetry")}}poetry.lock{{end}}{{if (eq .package_manager "uv")}}uv.lock{{end}}
-	@{{if (eq .package_manager "poetry")}}poetry env remove --all || true{{end}}{{if (eq .package_manager "uv")}}uv pip uninstall --all || true{{end}}
-	@{{if (eq .package_manager "poetry")}}poetry install --no-root{{end}}@{{if (eq .package_manager "uv")}}uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}
+	@{{if (eq .package_manager "poetry")}}poetry env remove --all || true{{end}}
+	@{{if (eq .package_manager "poetry")}}poetry install --no-root{{end}}{{if (eq .package_manager "uv")}}uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}
 
 	@echo -e "Cleaning up project artifacts..."
 	@find . \( \
@@ -180,7 +180,7 @@ test:
 	{{if (eq .package_manager "poetry")}}@poetry update{{end}}
 	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} build
 	@{{if (eq .package_manager "uv")}}uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry install --only-root{{end}}
-	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pytest -v tests/ --cov=src/ --cov-report=html
+	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pytest -v tests --cov=src --cov-report=term
 
 deploy: deploy_dev
 
@@ -265,14 +265,11 @@ tree:
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a
 
 docs:
-	@echo "Running tests and generating coverage data..."
-	{{if not (eq .use_devcontainer "yes")}}@. .venv/bin/activate{{end}}
+	@echo "Running tests and generating coverage data..."{{if not (eq .use_devcontainer "yes")}}
+	@. .venv/bin/activate{{end}}
 	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml
-	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} coverage xml -o docs/tests/coverage/coverage.xml
+	# @{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} coverage xml -o docs/tests/coverage/coverage.xml
 	@echo "Generating HTML documentation..."
-	# To generate HTML coverage reports, uncomment the following lines and add --cov-report html:docs/tests/coverage to the pytest command above
-	# @{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pytest -v tests --cov=src --cov-report html:docs/tests/coverage --junitxml=docs/tests/coverage/pytest_coverage.xml
-	# @rm -rf docs/tests/coverage/.gitignore
 	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pdoc --html src/{{.package_name}} -o docs/api --force
-	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pdoc --html tests -o docs/api --force
+	# @{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pdoc --html tests -o docs/api --force
 	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} mkdocs serve

@@ -26,7 +26,7 @@ RUN curl -sSL https://install.python-poetry.org | python - \
 
 # Configure Poetry to use the Databricks Python environment
 ENV POETRY_VIRTUALENVS_CREATE=false{{end}}
-{{if (eq .package_manager "uv")}}# Download uv
+{{if (eq .package_manager "uv")}}# Download uv installer
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
 
 # Run the installer then remove it
@@ -37,7 +37,7 @@ ENV PATH="/root/.local/bin/:$PATH"
 
 # Configure uv to use the Databricks Python environment
 ENV VIRTUAL_ENV="/databricks/python3"
-ENV UV_SYSTEM_PYTHON=1
+ENV UV_SYSTEM_PYTHON=true
 ENV UV_PYTHON="/databricks/python3/bin/python"{{end}}
 
 # Set the working directory
