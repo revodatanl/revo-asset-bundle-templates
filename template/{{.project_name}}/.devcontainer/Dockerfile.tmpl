@@ -3,6 +3,7 @@ FROM databricksruntime/standard:15.4-LTS
 
 # Install system packages: git, curl, zip, and make.
 RUN apt-get update && apt-get install -y \
+    {{if (eq .package_manager "uv")}}ca-certificates {{end}} \
     curl \
     git \
     make \
@@ -19,15 +20,28 @@ RUN curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/insta
 # Ensure the Databricks Python is used by default
 ENV PATH="/databricks/python3/bin:$PATH"
 
-# Install Poetry
+{{if (eq .package_manager "poetry")}}# Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python - \
     && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
+# Configure Poetry to use the Databricks Python environment
+ENV POETRY_VIRTUALENVS_CREATE=false{{end}}
+{{if (eq .package_manager "uv")}}# Download uv
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
+
+# Run the installer then remove it
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+
+# Ensure the installed binary is on the PATH
+ENV PATH="/root/.local/bin/:$PATH"
+
+# Configure uv to use the Databricks Python environment
+ENV VIRTUAL_ENV="/databricks/python3"
+ENV UV_SYSTEM_PYTHON=1
+ENV UV_PYTHON="/databricks/python3/bin/python"{{end}}
+
 # Set the working directory
 WORKDIR /workspace/
-
-# Configure Poetry to use the Databricks Python interpreter
-ENV POETRY_VIRTUALENVS_CREATE=false
 
 # Copy repo files to temporary directory to install dependencies (remove afterward)
 COPY . /tmp/code

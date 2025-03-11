@@ -7,7 +7,7 @@
 
 ## Running Tests
 
-To run (unit and/or integration) tests locally (including coverage), run the following command:
+Simply run the following command to run all tests:
 
 ```bash
 {{if (eq .package_manager "poetry")}}poetry{{end}}{{if (eq .package_manager "uv")}}uv{{end}} run pytest -v tests (--cov={{.package_name}})

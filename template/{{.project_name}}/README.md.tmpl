@@ -38,8 +38,7 @@ This will install the following prerequisites:
 
 ![make-install](docs/assets/make-install.png)
 
-{{if (eq .package_manager "uv")}}Subsequently, this will use [uv](https://github.com/astral-sh/uv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
-{{if (eq .package_manager "poetry")}}Subsequently, this will use [pyenv](https://github.com/pyenv/pyenv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will use [Poetry](https://python-poetry.org/docs/) to install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
+Subsequently, this will use {{if (eq .package_manager "uv")}}[uv](https://github.com/astral-sh/uv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}{{if (eq .package_manager "poetry")}}[pyenv](https://github.com/pyenv/pyenv) to configure the correct [Python](https://www.python.org/) version specified in the `.python-version` file. Subsequently it will use [Poetry](https://python-poetry.org/docs/) to install the dependencies, set up a virtual environment, activate it, and install the pre-commit hooks.{{end}}
 {{if not (eq .python_only "yes")}}Note that the default project configuration matches Databricks Runtime 15.4 LTS (Python 3.11.0, Apache Spark 3.5.0, and pandas 1.5.3).{{end}}
 
 ![make-setup](docs/assets/make-setup.png)
