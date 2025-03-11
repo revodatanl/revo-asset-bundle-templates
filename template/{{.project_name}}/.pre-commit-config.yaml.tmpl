@@ -13,8 +13,7 @@ repos:
 {{if (eq .package_manager "uv")}}-   repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.5.26
     hooks:
-      - id: uv-lock{{end}}
-{{if (eq .package_manager "poetry")}}-   repo: https://github.com/python-poetry/poetry
+    -   id: uv-lock{{end}}{{if (eq .package_manager "poetry")}}-   repo: https://github.com/python-poetry/poetry
     rev: 2.0.1
     hooks:
     -   id: poetry-lock{{end}}
@@ -69,6 +68,6 @@ repos:
     hooks:
     -   id: pytest-unit-tests
         name: pytest-unit-tests
-        entry: {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests --cov=src
+        entry: {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests/unit --cov=src
         language: system
         pass_filenames: false

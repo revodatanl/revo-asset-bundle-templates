@@ -48,8 +48,8 @@ jobs:
           poetry build
           tar -xvzf dist/{{.package_name}}-*.tar.gz
           diff -r -x __pycache__ src/{{.package_name}} {{.package_name}}-*/src/{{.package_name}}
-      - name: Run unit tests with coverage report
+      - name: Run tests with coverage report
         run: |
-          poetry run pytest -v tests --cov=src tests --cov-report term
+          poetry run pytest -v tests --cov=src --cov-report term
         env:
           PYTHONPATH: ${{ "{{" }} github.workspace {{ "}}" }}/src/{{.package_name}}
