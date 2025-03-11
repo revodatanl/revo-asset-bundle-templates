@@ -53,6 +53,37 @@ make clean
 ```
 
 ![make-clean](docs/assets/make-clean.png)
+
+## Testing
+
+The project has a structured testing approach with two types of tests:
+
+### Unit Tests
+
+Unit tests are located in the `tests/unit` directory and focus on testing individual functions and components without external dependencies like Spark. These tests:
+
+- Run during pre-commit hooks
+- Are fast and lightweight
+- Should be the primary type of test for most functionality
+
+### Integration Tests
+
+Integration tests are located in the `tests/integration` directory and focus on testing functionality that requires Spark operations. These tests:
+
+- Are not run during pre-commit hooks
+- Require a local Spark session
+- Test data processing pipelines and Spark-specific functionality
+
+### Running Tests
+
+To run all tests (both unit and integration):
+
+```bash
+make test
+```
+
+In CI environments, both unit and integration tests are executed.
+
 {{if not (eq .python_only "yes")}}
 ## RevoData Modules
 
