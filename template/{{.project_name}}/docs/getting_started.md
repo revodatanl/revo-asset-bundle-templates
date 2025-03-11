@@ -4,7 +4,7 @@
 
 This project heavily depends on the provided `Makefile` for various tasks. Without [`make`](https://www.gnu.org/software/make) installed, you will need to run the commands described in the `Makefile` manually.
 
-Note that on **Windows** we recommend using the DevContainer approach instead of trying to set up the environment manually. See [DevContainer Instructions](devcontainer_instructions.md) for more information.
+Note that on **Windows** we recommend using the DevContainer approach instead of trying to set up the environment manually. See [DevContainer Instructions](devcontainer.md) for more information.
 
 ## Installation
 
@@ -55,7 +55,7 @@ make clean
 
 For Windows users, we strongly recommend using the DevContainer approach instead of manual setup. The DevContainer provides a consistent development environment that works across operating systems with minimal setup requirements.
 
-Please refer to the [DevContainer Instructions](devcontainer_instructions.md) for detailed setup steps.
+Please refer to the [DevContainer Instructions](devcontainer.md) for detailed setup steps.
 
 Using DevContainers offers several advantages:
 
