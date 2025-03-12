@@ -1,5 +1,5 @@
 services:
-  databricks:
+  databricks_container:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
@@ -9,5 +9,7 @@ services:
       - ../:/workspace:cached
       # Mount the local SSH directory
       - ${HOME}/.ssh:/root/.ssh:ro
+      # - ${USERPROFILE}/.ssh:/root/.ssh:ro  # Windows
       # Mount the local Databricks configuration file
       - ${HOME}/.databrickscfg:/root/.databrickscfg:ro
+      # - ${USERPROFILE}/.databrickscfg:/root/.databrickscfg:ro  # Windows

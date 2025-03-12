@@ -1,15 +1,15 @@
 # Use the Databricks Runtime image as the base image.
 FROM databricksruntime/standard:15.4-LTS
 
-# Install system packages: git, curl, zip, and make.
+# Install system packages
 RUN apt-get update && apt-get install -y \
-    {{if (eq .package_manager "uv")}}ca-certificates {{end}} \
     curl \
     git \
     make \
     nano \
     tree \
-    zip
+    zip{{if (eq .package_manager "uv")}} \
+    ca-certificates{{end}}
 
 # Set the default editor to nano
 ENV EDITOR=nano
