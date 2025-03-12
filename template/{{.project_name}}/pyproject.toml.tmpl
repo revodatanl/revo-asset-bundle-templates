@@ -15,9 +15,8 @@ dependencies = [{{if not (eq .python_only "yes")}}{{if not (eq .use_devcontainer
 {{if (eq .package_manager "uv")}}[tool.uv]
 package = true
 dev-dependencies = [
-    "bandit>=1.8.3",
-    "coverage>=7.6.12",
-    {{if not (eq .python_only "yes")}}"databricks-dlt==0.2.1",  # Pinned at 0.2.1 since higher versions depend on databricks-connect 11.3+
+    "bandit>=1.8.3",{{if not (eq .python_only "yes")}}
+    "databricks-dlt==0.2.1",  # Pinned at 0.2.1 since higher versions depend on databricks-connect 11.3+
     "databricks-sdk>=0.45.0",{{end}}
     "mkdocs-material>=9.6.7",
     "mkdocs>=1.6.1",
@@ -35,17 +34,14 @@ dev-dependencies = [
 [project.scripts]
 main = "{{.package_name}}.main:main"{{else}}[tool.poetry]
 classifiers = ["Programming Language :: Python :: {{if not (eq .python_only "yes")}}3.11{{else}}3.12{{end}}", "Operating System :: OS Independent"]
-packages = [
-    { include = "{{.package_name}}", from = "src" },
-]
+packages = [{ include = "{{.package_name}}", from = "src" }]
 
 [tool.poetry.scripts]
 main = "{{.package_name}}.main:main"
 
 [tool.poetry.group.dev.dependencies]
-bandit = "^1.7.10"
-coverage = "^7.6.5"
-{{if not (eq .python_only "yes")}}databricks-dlt = "0.2.1"  # Pinned at 0.2.1 since higher versions depend on databricks-connect 11.3+
+bandit = "^1.7.10"{{if not (eq .python_only "yes")}}
+databricks-dlt = "0.2.1"  # Pinned at 0.2.1 since higher versions depend on databricks-connect 11.3+
 databricks-sdk = "^0.45.0"{{end}}
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.6.7"
