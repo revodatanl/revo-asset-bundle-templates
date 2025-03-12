@@ -1,0 +1,70 @@
+{
+  "autoDocstring.docstringFormat": "numpy",
+  "files.associations": {
+    "*.sql": "sql"
+  },
+  "files.exclude": {
+    "**/*.egg-info": true,
+    "**/__pycache__": true,
+    ".pytest_cache": true
+  },
+  "github.copilot.enable": {
+    "markdown": true
+  },
+  "jupyter.interactiveWindow.cellMarker.codeRegex": "^# COMMAND ----------|^# Databricks notebook source|^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])",
+  "jupyter.interactiveWindow.cellMarker.default": "# COMMAND ----------",
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "makefile.configureOnOpen": true,{{if not (eq .use_devcontainer "yes")}}
+  "mypy-type-checker.path": ["${workspaceFolder}/.venv/bin/mypy"],{{end}}
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUndefinedVariable": "none"
+  },
+  "python.analysis.extraPaths": ["${workspaceFolder}"],
+  "python.analysis.stubPath": ".vscode",
+  "python.defaultInterpreterPath": {{if not (eq .use_devcontainer "yes")}}"${workspaceFolder}/.venv/bin/python"{{else}}"/databricks/python3/bin/python"{{end}},
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.terminal.activateEnvironment": true,
+  "python.testing.pytestArgs": ["."],
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "sqlfluff.config": "${workspaceFolder}/pyproject.toml",{{if not (eq .use_devcontainer "yes")}}
+  "sqlfluff.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",{{end}}
+  "sqlfluff.ignoreLocalConfig": false,
+  "sqlfluff.ignoreParsing": true,
+  "sqlfluff.linter.run": "onType",
+  "sqlfluff.linter.diagnosticSeverity": "warning",
+  "sqlfluff.linter.lintEntireProject": true,
+  "sqlfluff.format.arguments": ["--FIX-EVEN-UNPARSABLE"],
+  "sqlfluff.format.enabled": true,
+  "sqlfluff.suppressNotifications": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+  "notebook.formatOnSave.enabled": true,
+  "notebook.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  },
+  "[xml]": {
+  "editor.defaultFormatter": "redhat.vscode-xml",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
+}
