@@ -2,7 +2,7 @@
   "name": "{{.project_name}}",
   "dockerComposeFile": "docker-compose.yml",
   "workspaceFolder": "/workspace",
-  "service": "databricks",
+  "service": "databricks_container",
   "remoteUser": "root",
   "forwardPorts": [3000],
   "customizations": {
@@ -31,9 +31,5 @@
       "python.terminal.activateEnvInCurrentTerminal": true,
       "python.terminal.activateEnvironment": true
     }
-  },
-  "containerEnv": {
-    "LANG": "en_US.UTF-8",
-    "LC_ALL": "en_US.UTF-8"
   }
 }
