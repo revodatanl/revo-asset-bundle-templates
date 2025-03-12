@@ -1,3 +1,17 @@
+# [0.11.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.10.2...v0.11.0) (2025-03-12)
+
+
+### Bug Fixes
+
+* **package-manager:** minimize uv/poetry redundancy ([9725958](https://github.com/revodatanl/revo-asset-bundle-templates/commit/97259585d0ff383e6a186f0d0d1121e235516086))
+* **pyproject:** migrate pyproject.toml to Poetry 2.0 configuration ([757c4ca](https://github.com/revodatanl/revo-asset-bundle-templates/commit/757c4ca465968a739a31c9cad5fedf4ef19f0a24))
+
+
+### Features
+
+* **devcontainer:** add Databricks Runtime development environment container ([27f1059](https://github.com/revodatanl/revo-asset-bundle-templates/commit/27f105958e49ebd8e7c7f3f8a1e9c5d1e8848002))
+* **tests:** add integration (Spark) vs. unit tests ([b11ef6f](https://github.com/revodatanl/revo-asset-bundle-templates/commit/b11ef6f12cf384da0558d1a14066f28cd1f9570d))
+
 ## [0.10.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.10.1...v0.10.2) (2025-03-10)
 
 
