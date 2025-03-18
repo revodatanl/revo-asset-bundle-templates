@@ -1,3 +1,13 @@
+## [0.11.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.0...v0.11.1) (2025-03-18)
+
+
+### Bug Fixes
+
+* **devcontainer:** enhance entrypoint validation ([07d134b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/07d134b1b192dacfc5ea1ef0c5c34f911156caf7))
+* **pyproject:** relaxed some linting exceptions to pyproject.toml template ([979ff89](https://github.com/revodatanl/revo-asset-bundle-templates/commit/979ff8993ce88c44563599920b96e884d79f3721))
+* **semantic-release:** update regex for version replacement ([8b5f1d2](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8b5f1d2023cf2993406702178889aa2250d05574))
+* **settings:** re-add (parameterized) settings.json for VS Code ([712844e](https://github.com/revodatanl/revo-asset-bundle-templates/commit/712844eba1921214b8f9ea5bbff8a59d6b3fd01c))
+
 # [0.11.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.10.2...v0.11.0) (2025-03-12)
 
 
