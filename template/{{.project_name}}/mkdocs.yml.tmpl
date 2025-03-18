@@ -3,7 +3,8 @@ site_name: {{.project_name}}
 nav:
   - Introduction: index.md
   - Getting Started: getting_started.md{{if (eq .use_devcontainer "yes")}}
-  - Development Container: devcontainer.md{{end}}{{if not (eq .python_only "yes")}}
+  - Development Container: devcontainer.md
+  - WSL Setup: wsl.md{{end}}{{if not (eq .python_only "yes")}}
   - Bundle Deployment: bundle_deployment.md{{end}}
   - List of Commands: commands.md
   - CI/CD: cicd.md

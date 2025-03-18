@@ -47,16 +47,35 @@ You need these tools installed on your system:
    git config --list
    ```
 
-3. **Clone Repo**
+3. **Configure Databricks Authentication with a Personal Access Token**
 
-   Create a dedicated folder in your root folder and clone your projects there. There are multiple ways to do this, using the UI or the terminal. To use the terminal, to create a `code` folder and enter it, run:
+   You will need to have the Databricks CLI installed. Run the following commands:
 
    ```bash
-   mkdir ~/code
-   cd ~/code
+   winget search databricks
+   winget install Databricks.DatabricksCLI
    ```
 
-   Clone your project by running:
+   <img src="docs/images/winget-databricks.png" width="800" alt="winget-databricks">
+
+   Confirm whether the Databricks CLI is installed correctly by running:
+
+   ```bash
+   databricks --version
+   ```
+
+   Next, follow the instructions in the [official Databricks documentation](https://docs.databricks.com/aws/en/dev-tools/auth/pat#databricks-personal-access-tokens-for-workspace-users) to create a Personal Access Token (PAT). Once you have the token, update your configuration by running:
+
+   ```bash
+   databricks configure
+   ```
+
+   This silently creates a `.databrickscfg` file in your home directory to authenticate the user. Note that the profile name is `DEFAULT` in this example. If you give it any other name, you will need to update it in the `Makefile`.
+
+
+4. **Clone Repo**
+
+   Create a dedicated folder in your root folder and clone your project by running:
 
    ```bash
    git clone <your-repository-url>
@@ -64,47 +83,6 @@ You need these tools installed on your system:
 
    There might be a question about the authenticity of the RSA key fingerprint you have just created; just type `yes` to continue.
 
-4. **Windows Users: Configuration Adjustment**
-
-   If you're using Windows, you'll need to manually modify the `.devcontainer/docker-compose.yml` file to ensure proper configuration of SSH and Databricks settings:
-
-   a. Open `.devcontainer/docker-compose.yml`
-
-   b. Find the following lines:
-
-   ```yaml
-   # Mount SSH keys for Databricks authentication
-   - ${HOME}/.ssh:/root/.ssh:ro
-   # - ${USERPROFILE}/.ssh:/root/.ssh:ro  # Windows
-   # Mount the local Databricks configuration file
-   - ${HOME}/.databrickscfg:/root/.databrickscfg:ro
-   # - ${USERPROFILE}/.databrickscfg:/root/.databrickscfg:ro  # Windows
-   ```
-
-   c. Delete the Unix/Mac lines and uncomment the Windows lines:
-
-   ```yaml
-   # Mount SSH keys for Databricks authentication
-   - ${USERPROFILE}/.ssh:/root/.ssh:ro  # Windows
-   # Mount the local Databricks configuration file
-   - ${USERPROFILE}/.databrickscfg:/root/.databrickscfg:ro  # Windows
-   ```
-
-5. **Configure Databricks Authentication with a Personal Access Token**
-
-   Follow the instructions in the [official Databricks documentation](https://docs.databricks.com/aws/en/dev-tools/auth/pat#databricks-personal-access-tokens-for-workspace-users). Once you have created the Personal Access Token (PAT), you need to create a `.databrickscfg` file in your home directory and add the token to it as described [here](https://docs.databricks.com/aws/en/dev-tools/auth/pat#perform-databricks-personal-access-token-authentication).
-
-   The `.databrickscfg` file will look like this:
-
-   ```toml
-   [DEFAULT]
-   host = https://<databricks-instance>
-   token = <your-personal-access-token>
-   ```
-
-   Replace `<databricks-instance>` with your Databricks workspace URL and `<your-personal-access-token>` with your actual PAT.
-
-   Note that the profile name is `DEFAULT` in this example. If you give it any other name, you will need to update it in the `Makefile`.
 
 6. **Build and Start the Dev Container**
 
@@ -129,31 +107,20 @@ The container automatically mounts:
 - Your local SSH keys (from `~/.ssh`)
 - Your Databricks configuration (from `~/.databrickscfg`)
 
-**Important**: These configurations are required for the container to start properly. The `entrypoint` script will check for these configurations and exit with errors if they are missing or misconfigured:
-
-- SSH keys must exist in `~/.ssh`
-- The Databricks configuration file must exist at `~/.databrickscfg`
-
-If the container fails to start, check the error messages which will indicate what configuration is missing.
-
-### Validation
+**Important**: These configurations are **_required_** for the container to start properly. The `entrypoint` script will check for these configurations and exit with errors if they are missing or misconfigured. If the container fails to start, check the error messages which will indicate what configuration is missing.
 
 Once your container is configured and running, you can:
 
-- Interact with repositories using `git` commands
-- Run `make test` to run tests
-- Deploy to Databricks using the `make deploy_dev` (or `make deploy_prd`) commands
+- Interact with Azure Repos using `git` commands
+- Run (`PySpark`) tests using the `make test` command
+- Deploy to Databricks using the `make deploy` command
+- Destroy Databricks resources using the `make destroy` command
 
-### Troubleshooting
+## Troubleshooting
 
 If you encounter issues:
 
 1. Make sure Docker Desktop is running
 2. Check that your SSH keys are properly configured
-   - Ensure the `~/.ssh` directory (or `%USERPROFILE%\.ssh` on Windows) exists and contains your SSH keys
-   - The container will explicitly check for this and exit if missing
-3. Verify your Databricks configuration is present in `~/.databrickscfg` (or `%USERPROFILE%\.databrickscfg` on Windows)
-   - This file must exist and be properly configured
-   - The container will explicitly check for this and exit if missing
-   - If the file exists but was created as a directory by Docker, you'll need to remove the directory and create a proper configuration file
+3. Verify your Databricks configuration is present in `~/.databrickscfg`
 4. Try rebuilding the container (without cache) if you experience dependency issues

@@ -47,6 +47,17 @@ WORKDIR /workspace/
 COPY . /tmp/code
 RUN cd /tmp/code && make setup && rm -rf /tmp/code
 
+# Clean all caches and temporary files
+RUN rm -rf /var/lib/apt/lists/* \
+    && rm -rf ~/.cache/pre-commit \
+    {{if (eq .package_manager "uv")}}&& rm -rf ~/.cache/uv{{end}}{{if (eq .package_manager "poetry")}}&& rm -rf ~/.cache/pypoetry{{end}} \
+    && rm -rf ~/.cache/pip \
+    && rm -rf /root/.cache/* \
+    && find /databricks/python3 -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true \
+    && find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true \
+    && rm -rf /tmp/* \
+    && apt-get clean
+
 # Copy entrypoint script into the container
 COPY .devcontainer/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
