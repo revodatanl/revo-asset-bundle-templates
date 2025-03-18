@@ -57,6 +57,8 @@ For Windows users, we strongly recommend using the DevContainer approach instead
 
 Please refer to the [DevContainer Instructions](devcontainer.md) for detailed setup steps.
 
+Alternatively, if you prefer using Windows Subsystem for Linux (WSL), we also provide detailed [WSL Setup Instructions](wsl.md).
+
 Using DevContainers offers several advantages:
 
 - Consistent environment across all operating systems (Windows, macOS, Linux)
