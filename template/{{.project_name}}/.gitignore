@@ -180,7 +180,7 @@ pyrightconfig.json
 .DS_Store
 
 # Ignore VSCode settings
-.vscode/
+# .vscode/
 
 # Ignore simulated Spark warehouse
 spark-warehouse/

@@ -97,25 +97,6 @@ Setup completed successfully!
 
 </details>
 
-## `types`
-
-{{if (eq .package_manager "poetry")}}This command updates the Poetry-specific type stubs for Python packages using the `poetry-types` plugin. This plugin provides type information for packages that do not include their own type stubs.{{end}}
-{{if (eq .package_manager "uv")}}This command is not available with uv as it doesn't need a separate types plugin.{{end}}
-
-<details>
-  <summary>Usage</summary>
-
-```bash
-make types
-```
-
-```bash
-{{if (eq .package_manager "poetry")}}python -m poetry types update;{{end}}
-{{if (eq .package_manager "uv")}}Command not available with uv.{{end}}
-```
-
-</details>
-
 ## `clean`
 
 This command cleans up your development environment by removing virtual environments, caches, and lock files.
