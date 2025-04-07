@@ -12,23 +12,11 @@ This file only provides template directives; it is skipped for the actual output
   {{skip "{{.project_name}}/.azuredevops"}}
 {{end}}
 
-{{if not (eq .include_template_jobs "yes")}}
+{{if not (eq .include_example_jobs "yes")}}
   {{skip "{{.project_name}}/notebooks/dlt_ingest.py"}}
-  {{skip "{{.project_name}}/resources/template_dlt_pipeline.yml"}}
-  {{skip "{{.project_name}}/resources/template_job.yml.tmpl"}}
   {{skip "{{.project_name}}/notebooks/hello_revodata.py"}}
-{{end}}
-
-{{if not (eq .package_manager "poetry")}}
-  {{skip "{{.project_name}}/poetry.toml"}}
-  {{skip "{{.project_name}}/.github/workflows/ci.yml"}}
-  {{skip "{{.project_name}}/.github/workflows/semantic-release.yml"}}
-{{end}}/Users/thomasbrouwer/code/revo-asset-bundle-templates-uv/template/{{.project_name}}/release.config.mjs
-
-{{if not (eq .package_manager "uv")}}
-  {{skip "{{.project_name}}/release.config.js"}}
-  {{skip "{{.project_name}}/.github/workflows/ci-uv.yml"}}
-  {{skip "{{.project_name}}/.github/workflows/semantic-release-uv.yml"}}
+  {{skip "{{.project_name}}/resources/template_dlt_pipeline.yml"}}
+  {{skip "{{.project_name}}/resources/template_job.yml"}}
 {{end}}
 
 {{if not (eq .python_only "no")}}
