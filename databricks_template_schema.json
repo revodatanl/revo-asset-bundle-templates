@@ -45,11 +45,11 @@
       "description": "Cloud provider",
       "order": 7
     },
-    "include_template_jobs": {
+    "include_example_jobs": {
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
-      "description": "Include sample jobs (Delta Live Tables pipeline and template job) in '{{.project_name}}{{path_separator}}resources'",
+      "description": "Include example jobs (Delta Live Tables pipeline and example job) in '{{.project_name}}{{path_separator}}resources{{path_separator}}example'",
       "order": 8
     },
     "use_devcontainer": {
