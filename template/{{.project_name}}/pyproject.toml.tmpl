@@ -1,5 +1,5 @@
 [project]
-name = "{{.package_name}}"
+name = "{{.project_name}}"
 version = "0.1.0"
 description = "{{.description}}"
 authors = [
@@ -7,6 +7,8 @@ authors = [
 ]
 readme = "README.md"
 requires-python = {{if not (eq .python_only "yes")}}">=3.11,<4.0"{{else}}">=3.12,<4.0"{{end}}
+scripts = { "main" = "{{.package_name}}.main:main" }
+classifiers = ["Programming Language :: Python :: {{if not (eq .python_only "yes")}}3.11{{else}}3.12{{end}}", "Operating System :: OS Independent"]
 dependencies = [{{if not (eq .python_only "yes")}}{{if not (eq .use_devcontainer "yes")}}"numpy==1.23.5",  # Databricks Runtime 15.4 LTS
     "pandas==1.5.3",  # Databricks Runtime 15.4 LTS{{end}}
     "pyspark==3.5.0",  # Databricks Runtime 15.4 LTS{{end}}
@@ -16,7 +18,7 @@ dependencies = [{{if not (eq .python_only "yes")}}{{if not (eq .use_devcontainer
 package = true
 dev-dependencies = [
     "bandit>=1.8.3",{{if not (eq .python_only "yes")}}
-    "databricks-dlt==0.2.1",  # Pinned at 0.2.1 since higher versions depend on databricks-connect 11.3+
+    "databricks-dlt==0.2.1",  # Pinned at 0.2.1 since higher versions depend on databricks-connect
     "databricks-sdk>=0.45.0",{{end}}
     "mkdocs-material>=9.6.7",
     "mkdocs>=1.6.1",
@@ -30,18 +32,12 @@ dev-dependencies = [
     "ruff>=0.9.10",
     "sqlfluff>=3.3.1",
 ]
-
-[project.scripts]
-main = "{{.package_name}}.main:main"{{else}}[tool.poetry]
-classifiers = ["Programming Language :: Python :: {{if not (eq .python_only "yes")}}3.11{{else}}3.12{{end}}", "Operating System :: OS Independent"]
+{{end}}{{if (eq .package_manager "poetry")}}[tool.poetry]
 packages = [{ include = "{{.package_name}}", from = "src" }]
-
-[tool.poetry.scripts]
-main = "{{.package_name}}.main:main"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.10"{{if not (eq .python_only "yes")}}
-databricks-dlt = "0.2.1"  # Pinned at 0.2.1 since higher versions depend on databricks-connect 11.3+
+databricks-dlt = "0.2.1"  # Pinned at 0.2.1 since higher versions depend on databricks-connect
 databricks-sdk = "^0.45.0"{{end}}
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.6.7"

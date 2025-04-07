@@ -68,6 +68,6 @@ repos:
     hooks:
     -   id: pytest-unit-tests
         name: pytest-unit-tests
-        entry: {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests/unit --cov=src
+        entry: {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests/unit
         language: system
         pass_filenames: false
