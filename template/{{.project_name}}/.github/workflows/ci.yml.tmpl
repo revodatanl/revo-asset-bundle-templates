@@ -25,6 +25,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       {{if (eq .package_manager "poetry")}}
       - name: Read Python version from .python-version and add as environment variable
         run: |
@@ -59,6 +64,8 @@ jobs:
           {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} build
           tar -xvzf dist/{{.package_name}}-*.tar.gz
           diff -r -x __pycache__ src/{{.package_name}} {{.package_name}}-*/src/{{.package_name}}
+
+
 
       - name: Run tests with coverage report
         run: |
