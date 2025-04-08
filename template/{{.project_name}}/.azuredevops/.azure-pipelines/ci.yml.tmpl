@@ -19,7 +19,7 @@ jobs:
     pool:
       vmImage: $(imageName)
     steps:
-      - task: UsePythonVersion@0
+      {{if (eq .package_manager "poetry")}}- task: UsePythonVersion@0
         inputs:
           versionSpec: {{if not (eq .python_only "yes")}}"3.11"{{else}}"3.12"{{end}}
         displayName: Setup Python
@@ -27,15 +27,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
         displayName: Install Poetry
+      {{end}}
+      {{if (eq .package_manager "uv")}}
       - script: |
-          poetry install --no-root
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+        displayName: Install uv
+      {{end}}
+      - script: |
+          {{if (eq .package_manager "uv")}}uv sync{{end}}{{if (eq .package_manager "poetry")}}poetry install --no-root{{end}}
         displayName: Install dependencies
       - script: |
-          poetry run ruff check --output-format=github .
-          poetry run mypy .
+          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run ruff check --output-format=github .
+          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mypy .
         displayName: Run formatting checks
       - script: |
-          poetry run pytest -v tests
+          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests
         displayName: Run unit tests
         env:
           PYTHONPATH: $(Build.SourcesDirectory)/src/{{.package_name}}
@@ -44,7 +50,7 @@ jobs:
         inputs:
           targetType: inline
           script: |
-            poetry build
+            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} build
             tar -xvzf dist/{{.package_name}}-*.tar.gz
             diff -r -x __pycache__ src/{{.package_name}}/ {{.package_name}}-*/src/{{.package_name}}
         displayName: Build and validate package
