@@ -1,4 +1,4 @@
-.PHONY: install setup clean test{{if not (eq .python_only "yes")}} deploy deploy_% destroy destroy_% repo module module_%{{end}} tree docs
+.PHONY: install setup clean test{{if not (eq .python_only "yes")}} deploy destroy{{end}} tree docs
 
 .DEFAULT_GOAL := setup
 
@@ -182,13 +182,7 @@ test:
 	@{{if (eq .package_manager "uv")}}uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry install --only-root{{end}}
 	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pytest -v tests --cov=src --cov-report=term
 
-deploy: deploy_dev
-
-{{if not (eq .python_only "yes")}}deploy_%:
-	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
-		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
-		exit 1; \
-	fi
+{{if not (eq .python_only "yes")}}deploy:
 	@pre-commit run --all-files
 	{{if (eq .package_manager "poetry")}}@poetry update{{end}}
 	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} build
@@ -196,68 +190,16 @@ deploy: deploy_dev
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile "$(PROFILE_NAME)"; \
 	else \
-		databricks bundle deploy --profile "$(PROFILE_NAME)" $$(if [ "$*" != "dev" ]; then echo "--target $*"; fi); \
+		databricks bundle deploy --profile "$(PROFILE_NAME)" --target dev; \
 	fi
 
-destroy: destroy_dev
-
-destroy_%:
-	@if [ "$*" != "dev" ] && [ "$*" != "prd" ]; then \
-		echo "Error: Invalid environment. Use 'dev' or 'prd'."; \
-		exit 1; \
-	fi
+destroy:
 	@output=$$(databricks auth env --profile "$(PROFILE_NAME)" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile "$(PROFILE_NAME)"; \
 	else \
-		databricks bundle destroy --profile "$(PROFILE_NAME)" --target $*; \
+		databricks bundle destroy --profile "$(PROFILE_NAME)" --target dev; \
 	fi
-
-# Create a repository in RevoData's GitHub, and adds a remote to the local git repo
-repo:
-	@printf "Creating repository in RevoData's GitHub...\n"
-	@PROJECT_NAME={{if (eq .package_manager "uv")}}"{{.project_name}}"{{end}}{{if (eq .package_manager "poetry")}}$$(grep 'name =' pyproject.toml | awk -F'"' '{print $$2}'){{end}}
-	@REPO_DESCRIPTION=$$(grep 'description =' pyproject.toml | awk -F'"' '{print $$2}')
-	@if ! gh auth status >/dev/null 2>&1; then \
-		echo "Error: GitHub CLI is not authenticated. Please run 'gh auth login' first."; \
-		exit 1; \
-	fi
-	@if ! gh repo view revodatanl/$$PROJECT_NAME > /dev/null 2>&1; then \
-		gh repo create revodatanl/$$PROJECT_NAME -y --private -d "$$REPO_DESCRIPTION" > /dev/null 2>&1; \
-		(git remote | grep origin || git remote add origin git@github.com:revodatanl/$$PROJECT_NAME.git) > /dev/null 2>&1; \
-		printf "Repository created at revodatanl/$$PROJECT_NAME...\n"; \
-		printf "Publishing project...\n"; \
-		printf "Repository published.\n"; \
-	else \
-		printf "Repository revodatanl/$$PROJECT_NAME already exists.\n"; \
-	fi
-
-# Add custom RevoData modules to the project
-module:
-	@echo "Select the module to deploy:"
-	@echo "1) Deploy Databricks Asset Bundle pipeline for GitHub"
-	@echo "2) Deploy Databricks Asset Bundle pipeline for Azure DevOps"
-	@echo "Enter the number of the module you want to deploy: "
-	@read choice; \
-	case "$$choice" in \
-		1) $(MAKE) module_github-deploy-dab ;; \
-		2) $(MAKE) module_azure-devops-deploy-dab ;; \
-		*) echo "Invalid choice. Exiting.";; \
-	esac
-
-module_%:
-	@if [ "$*" != "github-deploy-dab" ] && [ "$*" != "azure-devops-deploy-dab" ]; then \
-		echo "Error: Invalid module. Use 'github-deploy-dab' or 'azure-devops-deploy-dab'."; \
-		exit 1; \
-	fi
-	@{ \
-		set -e; \
-		trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
-		if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-		if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/$* 2>&1; then \
-			echo "Exiting." >&2; \
-		fi; \
-	}
 {{end}}
 
 tree:
@@ -265,11 +207,8 @@ tree:
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a
 
 docs:
-	@echo "Running tests and generating coverage data..."{{if not (eq .use_devcontainer "yes")}}
-	@. .venv/bin/activate{{end}}
-	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pytest -v tests --cov=src --junitxml=docs/tests/coverage/pytest_coverage.xml
-	# @{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} coverage xml -o docs/tests/coverage/coverage.xml
 	@echo "Generating HTML documentation..."
-	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pdoc --html src/{{.package_name}} -o docs/api --force
-	# @{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pdoc --html tests -o docs/api --force
-	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} mkdocs serve
+	@. .venv/bin/activate{{end}}
+	# @{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html src/{{.package_name}} -o docs/api --force
+	# @{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html tests -o docs/api --force
+	@{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs serve
