@@ -31,6 +31,7 @@ This file only provides template directives; it is skipped for the actual output
   {{skip "{{.project_name}}/docs/assets/make-destroy_dev.png"}}
   {{skip "{{.project_name}}/docs/assets/make-repo.png"}}
   {{skip "{{.project_name}}/docs/assets/make-repo-github.png"}}
+  {{skip "{{.project_name}}/.vscode/__builtins__.pyi"}}
 {{end}}
 
 {{if not (eq .use_devcontainer "yes")}}
