@@ -1,3 +1,13 @@
+## [0.11.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.1...v0.11.2) (2025-04-09)
+
+
+### Bug Fixes
+
+* **azure-pipelines:** add uv support in CI pipeline ([5770b0e](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5770b0e5867290fb24471156cc877dffec37ddb4))
+* **github-action:** add gitleaks support in CI pipeline ([b39fd7b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/b39fd7b26e6e05e96d33eda6d0ea8b6a71291997))
+* **template:** debug example job deployment ([132f477](https://github.com/revodatanl/revo-asset-bundle-templates/commit/132f477f97827afab9c3eb5fdf875a4fa8b1fd3f))
+* **template:** do not deploy __builtins__.pyi in a python-only project ([074263c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/074263cb760f16252eb5704e3587f027539a13c8))
+
 ## [0.11.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.0...v0.11.1) (2025-03-18)
 
 
