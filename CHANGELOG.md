@@ -1,3 +1,10 @@
+# [0.12.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.2...v0.12.0) (2025-05-08)
+
+
+### Features
+
+* **devcontainers:** include generalized devcontainers configuration ([2e07b1e](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2e07b1ee09a24888d71b3c80e6178854d522cbdd))
+
 ## [0.11.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.1...v0.11.2) (2025-04-09)
 
 
