@@ -19,7 +19,8 @@ package = true
 dev-dependencies = [
     "bandit>=1.8.3",{{if not (eq .python_only "yes")}}
     "databricks-dlt==0.2.1",  # Pinned at 0.2.1 since higher versions depend on databricks-connect
-    "databricks-sdk>=0.45.0",{{end}}
+    "databricks-sdk>=0.45.0",
+    "databricks-connect>=15.4.3",{{end}}
     "mkdocs-material>=9.6.7",
     "mkdocs>=1.6.1",
     "mypy>=1.15.0",
@@ -38,7 +39,8 @@ packages = [{ include = "{{.package_name}}", from = "src" }]
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.10"{{if not (eq .python_only "yes")}}
 databricks-dlt = "0.2.1"  # Pinned at 0.2.1 since higher versions depend on databricks-connect
-databricks-sdk = "^0.45.0"{{end}}
+databricks-sdk = "^0.45.0",
+databricks-connect>=15.4.3,{{end}}
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.6.7"
 mypy = "^1.13.0"
@@ -65,7 +67,7 @@ target-version = {{if not (eq .python_only "yes")}}"py311"{{else}}"py312"{{end}}
 line-length = 100
 extend-include = ["*.ipynb"]
 extend-exclude = ["scratch"]
-builtins = ["dbutils", "display", "spark"]
+builtins = ["dbutils", "display", "spark", "dlt"]
 
 [tool.ruff.lint]
 pydocstyle.convention = "numpy"
@@ -114,7 +116,7 @@ disallow_untyped_decorators = false
 exclude = "scratch"
 
 [[tool.mypy.overrides]]
-module = ["dbutils", "display", "spark"]
+module = ["dbutils", "display", "spark", "dlt"]
 ignore_missing_imports = true
 disable_error_code = "name-defined"
 
