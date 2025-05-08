@@ -8,6 +8,6 @@ services:
       # Mount the workspace directory
       - ../:/workspace:cached
       # Mount the local SSH directory
-      - ~/.ssh:/root/.ssh:ro
+      - ~/.ssh:/root/.ssh
       # Mount the local Databricks configuration file
       - ~/.databrickscfg:/root/.databrickscfg:ro
