@@ -208,7 +208,7 @@ tree:
 
 docs:
 	@echo "Generating HTML documentation..."
-	@. .venv/bin/activate{{end}}
+	@. .venv/bin/activate
 	# @{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html src/{{.package_name}} -o docs/api --force
 	# @{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html tests -o docs/api --force
 	@{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs serve

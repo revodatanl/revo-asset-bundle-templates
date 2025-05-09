@@ -13,6 +13,7 @@
     "redhat.vscode-xml",
     "redhat.vscode-yaml",
     "tamasfe.even-better-toml",
-    "vscode-icons-team.vscode-icons"
+    "vscode-icons-team.vscode-icons",
+    "databricks.databricks",
   ]
 }
