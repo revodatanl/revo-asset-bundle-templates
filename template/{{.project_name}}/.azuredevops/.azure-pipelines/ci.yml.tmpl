@@ -37,8 +37,17 @@ jobs:
           {{if (eq .package_manager "uv")}}uv sync{{end}}{{if (eq .package_manager "poetry")}}poetry install --no-root{{end}}
         displayName: Install dependencies
       - script: |
-          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run ruff check --output-format=github .
-          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mypy .
+          echo "Running ruff"
+          uv run ruff check --output-format=github .
+          echo "Running mypy"
+          uv run mypy .
+          echo "Running pydoclint"
+          uv run pydoclint .
+          echo "Running bandit"
+          uv run bandit --configfile=pyproject.toml --severity-level=medium -r .
+          echo "Running sqlfluff"
+          uv run sqlfluff lint .
+          echo "Formatting checks passed ✅"
         displayName: Run formatting checks
       - script: |
           {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests

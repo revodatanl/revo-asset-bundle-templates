@@ -55,9 +55,17 @@ jobs:
 
       - name: Run formatting checks
         run: |
-          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run ruff check --output-format=github .
-          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mypy .
-          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pydoclint .
+          echo "Running ruff"
+          uv run ruff check --output-format=github .
+          echo "Running mypy"
+          uv run mypy .
+          echo "Running pydoclint"
+          uv run pydoclint .
+          echo "Running bandit"
+          uv run bandit --configfile=pyproject.toml --severity-level=medium -r .
+          echo "Running sqlfluff"
+          uv run sqlfluff lint .
+          echo "Formatting checks passed ✅"
 
       - name: Build and check package
         run: |
