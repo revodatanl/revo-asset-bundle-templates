@@ -1,4 +1,4 @@
-.PHONY: install setup clean test{{if not (eq .python_only "yes")}} deploy destroy{{end}} tree docs
+.PHONY: install setup clean test{{if not (eq .python_only "yes")}} deploy destroy{{end}} tree docs lint
 
 .DEFAULT_GOAL := setup
 
@@ -7,7 +7,7 @@ SHELL := /bin/bash
 PROFILE_NAME := "DEFAULT"
 
 {{if not (eq .use_devcontainer "yes")}}install:
-	{{if (eq .package_manager "uv")}}@CURRENT_OS=$$(uname -s); \
+	@CURRENT_OS=$$(uname -s); \
 	echo "Current OS: $$CURRENT_OS"; \
 	if [ "$$CURRENT_OS" = "Darwin" ]; then \
 		echo "Verifying if Homebrew is installed..."; \
@@ -45,54 +45,8 @@ PROFILE_NAME := "DEFAULT"
 
 	echo "Setting up Python..."; \
 	uv python install || true; \
-	echo "All tools installed successfully."{{end}}{{if (eq .package_manager "poetry")}}@echo "Verifying if Homebrew is installed..."
-	@which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
-	{{if not (eq .python_only "yes")}}@echo "Installing required tools..."
-	@if ! command -v databricks >/dev/null 2>&1; then \
-		echo "Tapping databricks..."; \
-		brew tap databricks/tap; \
-		brew install databricks; \
-	else \
-		echo "Databricks CLI is already installed. Skipping."; \
-	fi{{end}}
-	@for tool in git poetry pyenv; do \
-		if ! command -v $$tool >/dev/null 2>&1; then \
-			echo "Installing $$tool..."; \
-			brew install $$tool; \
-		else \
-			echo "$$tool is already installed. Skipping."; \
-		fi; \
-	done
-
-	@PYTHON_VERSION=$$(cat .python-version); \
-	echo "Setting up Python version $$PYTHON_VERSION"; \
-	pyenv install --skip-existing $$PYTHON_VERSION; \
-	pyenv local $$PYTHON_VERSION
-
-	@if ! grep -q '# pyenv configuration' ~/.zshrc; then \
-		echo "Adding pyenv configuration to .zshrc (for interactive shells)..."; \
-		printf '\n# pyenv configuration (added on %s)\n' "$$(date +"%Y-%m-%d %H:%M:%S")" >> ~/.zshrc; \
-		echo 'export PYENV_ROOT="$$HOME/.pyenv"' >> ~/.zshrc; \
-		echo '[[ -d $$PYENV_ROOT/bin ]] && export PATH="$$PYENV_ROOT/bin:$$PATH"' >> ~/.zshrc; \
-		echo 'eval "$$(pyenv init -)"' >> ~/.zshrc; \
-	else \
-		echo "Pyenv configuration already exists in .zshrc. Skipping."; \
-	fi
-
-	@if ! grep -q '# pyenv configuration' ~/.zprofile; then \
-		echo "Adding pyenv configuration to .zprofile (for login shells)..."; \
-		printf '\n# pyenv configuration (added on %s)\n' "$$(date +"%Y-%m-%d %H:%M:%S")" >> ~/.zprofile; \
-		echo 'export PYENV_ROOT="$$HOME/.pyenv"' >> ~/.zprofile; \
-		echo '[[ -d $$PYENV_ROOT/bin ]] && export PATH="$$PYENV_ROOT/bin:$$PATH"' >> ~/.zprofile; \
-		echo 'eval "$$(pyenv init --path)"' >> ~/.zprofile; \
-	else \
-		echo "Pyenv configuration already exists in .zprofile. Skipping."; \
-	fi
-
-	@echo "Resetting the terminal..."
-	@exec zsh -c "source ~/.zshrc"
-
-	@echo "All tools installed successfully."{{end}}{{end}}
+	echo "All tools installed successfully."
+{{end}}
 
 setup:
 	{{if not (eq .use_devcontainer "yes")}}@echo "Installing tools..."
@@ -109,8 +63,8 @@ setup:
 	{{if (eq .use_devcontainer "yes")}}@command -v python > /dev/null || (echo "Python not found"; exit 1)
 	@python --version
 	@echo "Installing dependencies..."
-	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} lock
-	@{{if (eq .package_manager "uv")}}uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry install{{end}}
+	@uv lock
+	@uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}
 
 	@if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
@@ -137,11 +91,9 @@ setup:
 	@echo "Running pre-commit..."
 	@pre-commit run --all-files
 	{{else}}
-	{{if (eq .package_manager "poetry")}}@which python
+	@which python
 	@python --version
-	@poetry config virtualenvs.in-project true --local; \
-	poetry env use python $$PYTHON_VERSION; \
-	poetry install;{{end}}{{if (eq .package_manager "uv")}}@uv sync;{{end}}
+	@uv sync;
 
 	@if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
@@ -156,9 +108,8 @@ setup:
 
 clean:
 	@echo "Uninstalling local packages..."
-	@rm -rf {{if (eq .package_manager "poetry")}}poetry.lock{{end}}{{if (eq .package_manager "uv")}}uv.lock{{end}}
-	@{{if (eq .package_manager "poetry")}}poetry env remove --all || true{{end}}
-	@{{if (eq .package_manager "poetry")}}poetry install --no-root{{end}}{{if (eq .package_manager "uv")}}uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}
+	@rm -rf uv.lock
+	@uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}
 
 	@echo -e "Cleaning up project artifacts..."
 	@find . \( \
@@ -177,15 +128,13 @@ clean:
 test:
 	@echo "Running tests..."
 	{{if not (eq .use_devcontainer "yes")}}@. .venv/bin/activate{{end}}
-	{{if (eq .package_manager "poetry")}}@poetry update{{end}}
-	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} build
-	@{{if (eq .package_manager "uv")}}uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry install --only-root{{end}}
-	@{{if (eq .package_manager "uv")}}uv run{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry run{{end}} pytest -v tests --cov=src --cov-report=term
+	@uv build
+	@uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}
+	@uv run{{if (eq .use_devcontainer "yes")}} --active{{end}} pytest -v tests --cov=src --cov-report=term
 
 {{if not (eq .python_only "yes")}}deploy:
 	@pre-commit run --all-files
-	{{if (eq .package_manager "poetry")}}@poetry update{{end}}
-	@{{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} build
+	@uv build
 	@output=$$(databricks auth env --profile "$(PROFILE_NAME)" 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile "$(PROFILE_NAME)"; \
@@ -208,7 +157,19 @@ tree:
 
 docs:
 	@echo "Generating HTML documentation..."
-	@. .venv/bin/activate
-	# @{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html src/{{.package_name}} -o docs/api --force
-	# @{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pdoc --html tests -o docs/api --force
-	@{{if (eq .package_manager "uv")}}uv{{if (eq .use_devcontainer "yes")}} --active{{end}}{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run mkdocs serve
+	{{if not (eq .use_devcontainer "yes")}}@. .venv/bin/activate{{end}}
+	@uv run{{if (eq .use_devcontainer "yes")}} --active{{end}} mkdocs serve
+
+lint:
+	@echo "Linting the project..."
+	@uv sync
+	@uv build
+	@echo "Running ruff..."
+	@uv run ruff check .
+	@echo "Running mypy..."
+	@uv run mypy .
+	@echo "Running pydoclint..."
+	@uv run pydoclint .
+	@echo "Running bandit..."
+	@uv run bandit --configfile=pyproject.toml --severity-level=medium -r .
+	@echo "Linting completed successfully!"

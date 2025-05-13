@@ -18,19 +18,19 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
 
 1. Install the [Databricks CLI](https://docs.databricks.com/en/dev-tools/cli/index.html) by running the following command:
 
-```bash
-brew tap databricks/tap
-brew install databricks
-```
+    ```bash
+    brew tap databricks/tap
+    brew install databricks
+    ```
 
-Make sure to add your [configuration profile](https://docs.databricks.com/en/dev-tools/cli/profiles.html) to the `.databrickscfg` file. You will need the name of your profile to initialize a new project.
+    Make sure to add your [configuration profile](https://docs.databricks.com/en/dev-tools/cli/profiles.html) to the `.databrickscfg` file. You will need the name of your profile to initialize a new project.
 
 2. Initialize a new project using the template:
 
-```bash
-databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
-```
+    ```bash
+    databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
+    ```
 
-This will create a new directory with the template files. You can now start developing your project.
+    This will create a new directory with the template files. You can now start developing your project.
 
-![bundle-init](assets/bundle-init.png)
+    ![bundle-init](assets/bundle-init.png)
