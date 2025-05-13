@@ -1,3 +1,15 @@
+# [0.13.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.12.0...v0.13.0) (2025-05-13)
+
+
+### Bug Fixes
+
+* {{end}} line error in makefile ([3b50054](https://github.com/revodatanl/revo-asset-bundle-templates/commit/3b5005492e3cf4aedc38e8ff5ed5fa51f8839280))
+
+
+### Features
+
+* add databricks connect and dlt builtins ([dd7afbf](https://github.com/revodatanl/revo-asset-bundle-templates/commit/dd7afbfd49b537388eef1a5175dfa2119a0cbe80))
+
 # [0.12.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.2...v0.12.0) (2025-05-08)
 
 
