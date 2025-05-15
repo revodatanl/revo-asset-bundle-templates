@@ -7,64 +7,57 @@
       "pattern": "^[A-Za-z0-9-]+$",
       "pattern_match_failure_message": "Project name must consist of letters, numbers, and dashes."
     },
-    "company_name": {
-      "type": "string",
-      "description": "Company name (use dashes and lowercase)",
-      "order": 2,
-      "pattern": "^[a-z0-9-]+$",
-      "pattern_match_failure_message": "Company name must consist of lowercase letters, numbers, and dashes."
-    },
     "package_name": {
       "type": "string",
       "description": "Package name (use underscores)",
-      "order": 3,
+      "order": 2,
       "pattern": "^[A-Za-z0-9_]+$",
       "pattern_match_failure_message": "Package name must consist of letters, numbers, and underscores."
     },
     "author": {
       "type": "string",
       "description": "Author",
-      "order": 4
+      "order": 3
     },
     "email": {
       "type": "string",
       "description": "Email address of the author",
       "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
       "pattern_match_failure_message": "Invalid email address.",
-      "order": 5
+      "order": 4
     },
     "description": {
       "type": "string",
       "description": "Description of the project",
-      "order": 6
+      "order": 5
     },
     "git_client": {
       "type": "string",
       "default": "github",
       "enum": ["github", "azure"],
       "description": "Git client",
-      "order": 5
+      "order": 6
     },
     "cloud_provider": {
       "type": "string",
       "default": "azure",
       "enum": ["azure", "aws"],
       "description": "Cloud provider",
-      "order": 6
+      "order": 7
     },
     "include_example_jobs": {
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
       "description": "Include example jobs (Delta Live Tables pipeline and example job) in '{{.project_name}}{{path_separator}}resources{{path_separator}}example'",
-      "order": 7
+      "order": 8
     },
     "use_devcontainer": {
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
       "description": "Include devcontainer (recommended for Windows users)",
-      "order": 8
+      "order": 9
     }
   },
   "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in 'databricks.yml' and configure 'PROFILE_NAME' in the 'Makefile')\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
