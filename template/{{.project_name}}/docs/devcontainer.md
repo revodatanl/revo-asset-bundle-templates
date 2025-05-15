@@ -92,11 +92,11 @@ You need these tools installed on your system:
    - Click the `Notifications` button in the bottom-right corner
    - Select "Reopen in Container"
 
-   ![reopen-in-container](assets/reopen-in-container.png)
+   ![reopen-in-container](images/reopen-in-container.png)
 
    The first time you do this, VS Code will build the container (this might take a few minutes). Note that `Docker Desktop` is supposed to be running. When the container is running, you will see it in the bottom-left corner of VS Code:
 
-   ![opened-in-container](assets/opened-in-container.png)
+   ![opened-in-container](images/opened-in-container.png)
 
 ## Using the Development Environment
 

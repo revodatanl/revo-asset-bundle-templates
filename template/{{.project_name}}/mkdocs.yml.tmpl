@@ -2,22 +2,12 @@ site_name: {{.project_name}}
 
 nav:
   - Introduction: index.md
-  - Getting Started: getting_started.md{{if (eq .use_devcontainer "yes")}}
-  - Development Container: devcontainer.md
-  - WSL Setup: wsl.md{{end}}{{if not (eq .python_only "yes")}}
-  - Bundle Deployment: bundle_deployment.md{{end}}
-  - List of Commands: commands.md
-  - CI/CD: cicd.md
-  - Resources:{{if not (eq .python_only "yes")}}
-      - Jobs: jobs/index.md{{end}}
-      - Notebooks: notebooks/index.md
-      - Package: {{.package_name}}.md
-  - Tests:
-      - Tests: tests/tests.md
-      - Test Coverage: tests/coverage_report.md
-      - Test Configuration: tests/test_configuration.md
-  - Release: release.md
+  - Getting Started: getting_started.md{{if not (eq .use_devcontainer "yes")}}
+    - DevContainer: devcontainer.md{{end}}
+    - WSL: wsl.md
+  - Bundle Deployment: bundle_deployment.md
   - Coding Standards: coding_standards.md
+  - Command Reference: commands.md
 
 theme:
   name: material
