@@ -1,11 +1,10 @@
 # Setting up a Development Environment with WSL
 
-This document explains how to set up a consistent development environment for Databricks Asset Bundles using Windows Subsystem for Linux (WSL). This approach provides a Linux-like environment that works well with Python, poetry, pyenv, Make, and other development tools.
+This document explains how to set up a consistent development environment for Databricks Asset Bundles using Windows Subsystem for Linux (WSL).
 
 ### Why Not Native Windows?
 
-- Setting up managed versions of `Python`, `poetry`, and specifically `pyenv` on Windows natively can be complicated. In addition, on Windows there is no access to tools that make your life easy, such as `Make`.
-- **WSL (Ubuntu)** provides a more consistent, Linux-like environment that works well with `Python`, `poetry`, `pyenv`, `Make`, and other CLI tools.
+Setting up managed versions of `Python` and other development tools on Windows natively can be complicated. In addition, on Windows there is no access to tools that make your life easy, such as `Make`. **WSL (Ubuntu)** provides a more consistent, Linux-like environment that works well with `Python`, `uv`, `Make`, and other CLI tools.
 
 ## Prerequisites
 
@@ -28,6 +27,7 @@ You need these tools installed on your system:
    Reboot if prompted. After reboot, open a new terminal and choose an Ubuntu terminal.
 
    > **Note**: If you forgot your Ubuntu password, reset it by opening PowerShell as Administrator and running:
+   >
    > ```powershell
    > wsl --user root
    > passwd <username>
@@ -55,6 +55,9 @@ You need these tools installed on your system:
 
    # Install Java for Spark
    sudo apt install openjdk-21-jre-headless
+
+   # Install uv
+   curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
 
 3. **Authenticate your local machine**
@@ -123,7 +126,7 @@ You need these tools installed on your system:
    make setup
    ```
 
-   This will set up the correct versions of Python, poetry, pyenv, git, and the Databricks CLI, and create your virtual environment.
+   This will set up the correct versions of `Python`, `uv`, `git`, and the Databricks CLI, and create your virtual environment.
 
 ## Using the Development Environment
 
