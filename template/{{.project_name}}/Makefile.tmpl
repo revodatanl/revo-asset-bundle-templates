@@ -1,19 +1,20 @@
-.PHONY: install setup clean test{{if not (eq .python_only "yes")}} deploy destroy{{end}} tree docs lint
+.PHONY: install setup clean test deploy destroy tree docs lint
 
 .DEFAULT_GOAL := setup
 
 SHELL := /bin/bash
 
-PROFILE_NAME := "DEFAULT"
+PROFILE_NAME := DEFAULT  # .databrickscfg profile name
 
-{{if not (eq .use_devcontainer "yes")}}install:
+{{if (eq .use_devcontainer "no")}}
+install:
 	@CURRENT_OS=$$(uname -s); \
 	echo "Current OS: $$CURRENT_OS"; \
 	if [ "$$CURRENT_OS" = "Darwin" ]; then \
 		echo "Verifying if Homebrew is installed..."; \
 		which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"); \
 		echo "Installing tools..."; \
-		for tool in git uv; do \
+		for tool in git uv tree; do \
 			if ! command -v $$tool >/dev/null 2>&1; then \
 				echo "Installing $$tool..."; \
 				brew install $$tool; \
@@ -23,18 +24,20 @@ PROFILE_NAME := "DEFAULT"
 		done; \
 	elif [ "$$CURRENT_OS" = "Linux" ]; then \
 		echo "Installing tools..."; \
-		if ! command -v git >/dev/null 2>&1; then \
-				echo "Installing git..."; \
-				sudo apt update && sudo apt install -y git; \
+		sudo apt update
+		for tool in git tree; do \
+			if ! command -v $$tool >/dev/null 2>&1; then \
+				echo "Installing $$tool..."; \
+				 sudo apt install -y $$tool; \
 			else \
-				echo "git is already installed. Skipping."; \
+				echo "$$tool is already installed. Skipping."; \
 			fi; \
+		done; \
 		if ! command -v uv >/dev/null 2>&1; then \
 			echo "Installing uv..."; \
 			curl -LsSf https://astral.sh/uv/install.sh | sh; \
 			echo "Sourcing ~/.bashrc to update shell environment..."; \
 			source ~/.bashrc || true; \
-			echo "Continuing even if sourcing ~/.bashrc failed..."; \
 		else \
 			echo "uv is already installed. Skipping."; \
 		fi; \
@@ -42,14 +45,10 @@ PROFILE_NAME := "DEFAULT"
 		echo "Unsupported OS. Currently supported kernels are either Darwin (macOS) or Linux (ubuntu22.04)."; \
 		exit 1; \
 	fi; \
-
-	echo "Setting up Python..."; \
-	uv python install || true; \
 	echo "All tools installed successfully."
-{{end}}
 
 setup:
-	{{if not (eq .use_devcontainer "yes")}}@echo "Installing tools..."
+	@echo "Installing tools..."
 	@{ \
 		output=$$($(MAKE) install 2>&1); \
 		exit_code=$$?; \
@@ -58,41 +57,10 @@ setup:
 			exit $$exit_code; \
 		fi; \
 	}
-	@echo "All tools installed successfully."{{end}}
+	@echo "All tools installed successfully."
+
 	@echo "Setting up the project..."
-	{{if (eq .use_devcontainer "yes")}}@command -v python > /dev/null || (echo "Python not found"; exit 1)
-	@python --version
-	@echo "Installing dependencies..."
-	@uv lock
-	@uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}
-
-	@if [ ! -d ".git" ]; then \
-		echo "Setting up git..."; \
-		git init -b main > /dev/null; \
-	fi
-
-	@echo "Setting up pre-commit..."
-	@pre-commit install --hook-type pre-commit --hook-type commit-msg
-
-	@echo "Updating pre-commit hooks..."
-	@pre-commit autoupdate || true
-
-	@if git diff --name-only | grep -q ".pre-commit-config.yaml"; then \
-		echo "Committing pre-commit config updates..."; \
-		git add .pre-commit-config.yaml; \
-		git config --get user.name > /dev/null 2>&1 || git config --local user.name "Setup Script"; \
-		git config --get user.email > /dev/null 2>&1 || git config --local user.email "setup@example.com"; \
-		git commit -m "chore: update pre-commit hooks" || true; \
-	fi
-
-	@echo "Installing pre-commit environments..."
-	@pre-commit install-hooks
-
-	@echo "Running pre-commit..."
-	@pre-commit run --all-files
-	{{else}}
-	@which python
-	@python --version
+	@uv lock;
 	@uv sync;
 
 	@if [ ! -d ".git" ]; then \
@@ -101,55 +69,88 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit..."
-	@. .venv/bin/activate
-	@.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg
-	{{end}}
-	@echo "Setup completed successfully!"
+	@uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
 
+	@echo "Setup completed successfully!"
+{{end}}
+{{if (eq .use_devcontainer "yes")}}
+build: setup
+	@echo "Updating pre-commit hooks..."
+	@uv run pre-commit autoupdate || true
+	@if git diff --name-only | grep -q ".pre-commit-config.yaml"; then \
+		echo "Committing pre-commit config updates..."; \
+		git add .pre-commit-config.yaml; \
+		git config --get user.name > /dev/null 2>&1 || git config --local user.name "Setup Script"; \
+		git config --get user.email > /dev/null 2>&1 || git config --local user.email "setup@example.com"; \
+		git commit -m "chore: update pre-commit hooks" || true; \
+	fi
+	@echo "Installing pre-commit environments..."
+	@uv run pre-commit install-hooks
+
+	@echo "Running pre-commit..."
+	@uv run pre-commit run --all-files
+
+	@echo "Build completed successfully!"
+
+setup:
+	@echo "Setting up the project..."
+	@uv lock;
+	@uv sync --inexact;
+
+	@if [ ! -d ".git" ]; then \
+		echo "Setting up git..."; \
+		git init -b main > /dev/null; \
+	fi
+
+	@echo "Setting up pre-commit..."
+	@uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
+
+	@echo "Setup completed successfully!"
+{{end}}
 clean:
 	@echo "Uninstalling local packages..."
 	@rm -rf uv.lock
-	@uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}
-
 	@echo -e "Cleaning up project artifacts..."
 	@find . \( \
-		-name ".pytest_cache" -o \
-		-name ".mypy_cache" -o \
-		-name ".ruff_cache" -o \
-		-name "dist" -o \
 		-name "__pycache__" -o \
 		-name ".ipynb_checkpoints" \) \
+		-name ".mypy_cache" -o \
+		-name ".pytest_cache" -o \
+		-name ".ruff_cache" -o \
+		-name ".venv" -o \
+		-name "dist" -o \
 		-type d -exec rm -rf {} + 2>/dev/null || true
 	@find . -name ".coverage" -type f -delete 2>/dev/null || true
 
+	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
 	@echo "Cleanup completed."
-	{{if not (eq .use_devcontainer "yes")}}@reset{{end}}
+	@reset
 
 test:
 	@echo "Running tests..."
-	{{if not (eq .use_devcontainer "yes")}}@. .venv/bin/activate{{end}}
+	@uv run pre-commit run --all-files
 	@uv build
-	@uv sync{{if (eq .use_devcontainer "yes")}} --active{{end}}
-	@uv run{{if (eq .use_devcontainer "yes")}} --active{{end}} pytest -v tests --cov=src --cov-report=term
+	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
+	@uv run pytest -v tests --cov=src --cov-report=term
 
-{{if not (eq .python_only "yes")}}deploy:
-	@pre-commit run --all-files
-	@uv build
-	@output=$$(databricks auth env --profile "$(PROFILE_NAME)" 2>&1); \
+deploy:
+	@echo "Deploying resources..."
+	@uv run pre-commit run --all-files
+	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile "$(PROFILE_NAME)"; \
+		databricks configure --profile $(PROFILE_NAME); \
 	else \
-		databricks bundle deploy --profile "$(PROFILE_NAME)" --target dev; \
+		databricks bundle deploy --profile $(PROFILE_NAME) --target dev; \
 	fi
 
 destroy:
-	@output=$$(databricks auth env --profile "$(PROFILE_NAME)" 2>&1); \
+	@echo "Destroying resources..."
+	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile "$(PROFILE_NAME)"; \
+		databricks configure --profile $(PROFILE_NAME); \
 	else \
-		databricks bundle destroy --profile "$(PROFILE_NAME)" --target dev; \
+		databricks bundle destroy --profile $(PROFILE_NAME) --target dev; \
 	fi
-{{end}}
 
 tree:
 	@echo "Generating project tree..."
@@ -157,15 +158,14 @@ tree:
 
 docs:
 	@echo "Generating HTML documentation..."
-	{{if not (eq .use_devcontainer "yes")}}@. .venv/bin/activate{{end}}
-	@uv run{{if (eq .use_devcontainer "yes")}} --active{{end}} mkdocs serve
+	@uv run mkdocs serve
 
 lint:
 	@echo "Linting the project..."
 	@uv sync
 	@uv build
 	@echo "Running ruff..."
-	@uv run ruff check .
+	@uv run ruff check --output-format=concise .
 	@echo "Running mypy..."
 	@uv run mypy .
 	@echo "Running pydoclint..."

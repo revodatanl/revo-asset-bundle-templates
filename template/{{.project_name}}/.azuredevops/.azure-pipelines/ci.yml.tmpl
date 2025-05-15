@@ -1,42 +1,27 @@
 name: CI
 
-pr:
-  branches:
-    include:
-      - "*"
+trigger: none
+
+pool:
+  name: ubuntu-latest
 
 jobs:
   - job: ci
     displayName: CI
-    strategy:
-      matrix:
-        ubuntu:
-          imageName: ubuntu-latest
-        macos:
-          imageName: macos-latest
-        windows:
-          imageName: windows-latest
-    pool:
-      vmImage: $(imageName)
     steps:
-      {{if (eq .package_manager "poetry")}}- task: UsePythonVersion@0
-        inputs:
-          versionSpec: {{if not (eq .python_only "yes")}}"3.11"{{else}}"3.12"{{end}}
-        displayName: Setup Python
-      - script: |
-          python -m pip install --upgrade pip
-          pip install poetry
-        displayName: Install Poetry
-      {{end}}
-      {{if (eq .package_manager "uv")}}
+      # Install uv
       - script: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
         displayName: Install uv
-      {{end}}
+
+      # Install dev dependencies
       - script: |
-          {{if (eq .package_manager "uv")}}uv sync{{end}}{{if (eq .package_manager "poetry")}}poetry install --no-root{{end}}
-        displayName: Install dependencies
+          uv sync --group dev
+        displayName: Install dev dependencies
+
+      # Run formatting checks
       - script: |
+          cd $(Build.Repository.Name)
           echo "Running ruff"
           uv run ruff check --output-format=github .
           echo "Running mypy"
@@ -49,17 +34,25 @@ jobs:
           uv run sqlfluff lint .
           echo "Formatting checks passed ✅"
         displayName: Run formatting checks
+
+      # Build and validate package
       - script: |
-          {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} run pytest -v tests
+          echo "Building package"
+          uv build
+          echo "Unpacking package"
+          tar -xvzf dist/{{.package_name}}-*.tar.gz
+          echo "Validating package"
+          diff -r -x __pycache__ src {{.package_name}}-*/src
+          echo "Package validated ✅"
+        displayName: Build and validate package
+
+      # Run unit tests (authenticate the Databricks SDK via environment variables)
+      - script: |
+          cd $(Build.Repository.Name)
+          uv run pytest -v tests --cov=src/calving_alert --cov-report=term
+          echo "Unit tests passed ✅"
         displayName: Run unit tests
         env:
-          PYTHONPATH: $(Build.SourcesDirectory)/src/{{.package_name}}
-      # Running in a bash shell is necessary to use the `diff` on Windows
-      - task: Bash@3
-        inputs:
-          targetType: inline
-          script: |
-            {{if (eq .package_manager "uv")}}uv{{end}}{{if (eq .package_manager "poetry")}}poetry{{end}} build
-            tar -xvzf dist/{{.package_name}}-*.tar.gz
-            diff -r -x __pycache__ src/{{.package_name}}/ {{.package_name}}-*/src/{{.package_name}}
-        displayName: Build and validate package
+          PYTHONPATH: $(Build.SourcesDirectory)/src
+          DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+          DATABRICKS_HOST: $(DATABRICKS_HOST)
