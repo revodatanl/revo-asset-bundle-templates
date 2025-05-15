@@ -1,0 +1,42 @@
+parameters:
+  - name: azureSubscription
+    type: string
+    default: ""
+  - name: deployTarget
+    type: string
+    default: ""
+
+steps:
+  - checkout: self
+    displayName: Checkout repository
+
+  - task: AzureKeyVault@2
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      KeyVaultName: $(KEYVAULT-NAME)  # from DevOps Library
+      SecretsFilter: DATABRICKS-CLIENT-ID,DATABRICKS-CLIENT-SECRET
+    displayName: Extract secrets from Azure Key Vault
+
+  - script: |
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+      uv build
+    displayName: Install uv and build the package
+
+  - script: |
+      curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+      databricks version
+    displayName: Install Databricks CLI
+
+  - script: |
+      envsubst < ./.azuredevops/.azure-pipelines/databricks.cfg > ~/.databrickscfg
+      echo Databricks configuration:
+      cat ~/.databrickscfg
+    env:
+      DATABRICKS_HOST: $(DATABRICKS-HOST) # from DevOps Library
+      DATABRICKS_CLIENT_ID: $(DATABRICKS-CLIENT-ID) # from KeyVault
+      DATABRICKS_CLIENT_SECRET: $(DATABRICKS-CLIENT-SECRET) # from KeyVault
+    displayName: Authenticate Databricks
+
+  - script: |
+      databricks bundle deploy --target ${{ parameters.deployTarget }}
+    displayName: Deploy bundle to `${{ parameters.deployTarget }}`

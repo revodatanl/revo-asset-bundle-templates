@@ -24,10 +24,10 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
           databricks version
 
-      - name: Install Poetry and build the package
+      - name: Install uv and build the package
         run: |
-          python -m pip install --upgrade pip poetry
-          poetry build
+          python -m pip install --upgrade pip uv
+          uv build
 
       - name: Configure Databricks authentication
         run: |
