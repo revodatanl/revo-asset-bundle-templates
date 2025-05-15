@@ -1,0 +1,54 @@
+name: Deploy Databricks Asset Bundle
+
+trigger:
+  branches:
+    include:
+      - main
+      - release/*
+
+pool:
+  name: ubuntu-latest
+
+variables:
+  groupName: group_name # Azure Library Group name
+  environmentName: environment_name # Azure DevOps Environment name
+  keyVaultName: key_vault_name # Azure Key Vault name
+  azureSubscription: azure_subscription_name # Service Principal name
+
+stages:
+  - stage: deploy_test
+    displayName: Deploy Databricks Asset Bundle to test environment
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/main/')
+    jobs:
+      - deployment: deploy_Databricks_Asset_Bundle_test
+        displayName: Deploy Databricks Asset Bundle to `test`
+        variables:
+          - group: ${{ variables.groupName }}_test
+        environment: ${{ variables.environmentName }}_test
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deploy-dab-template.yml
+                  parameters:
+                    azureSubscription: ${{ variables.azureSubscription }}_test
+                    deployTarget: test
+
+  - stage: deploy_prd
+    displayName: Deploy Databricks Asset Bundle to prd environment
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
+    dependsOn: deploy_acc
+    jobs:
+      - deployment: deploy_Databricks_Asset_Bundle_prd
+        displayName: Deploy Databricks Asset Bundle to `prd`
+        variables:
+          - group: ${{ variables.groupName }}_prd
+        environment: ${{ variables.environmentName }}_prd
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deploy-dab-template.yml
+                  parameters:
+                    azureSubscription: ${{ variables.azureSubscription }}_prd
+                    deployTarget: prd

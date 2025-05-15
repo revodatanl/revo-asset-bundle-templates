@@ -1,11 +1,10 @@
-.PHONY: install setup clean test deploy destroy tree docs lint
+.PHONY: install setup clean test validate deploy destroy tree docs lint
 
 .DEFAULT_GOAL := setup
 
 SHELL := /bin/bash
 
 PROFILE_NAME := DEFAULT  # .databrickscfg profile name
-
 {{if (eq .use_devcontainer "no")}}
 install:
 	@CURRENT_OS=$$(uname -s); \
@@ -24,7 +23,7 @@ install:
 		done; \
 	elif [ "$$CURRENT_OS" = "Linux" ]; then \
 		echo "Installing tools..."; \
-		sudo apt update
+		sudo apt update; \
 		for tool in git tree; do \
 			if ! command -v $$tool >/dev/null 2>&1; then \
 				echo "Installing $$tool..."; \
@@ -113,12 +112,12 @@ clean:
 	@echo -e "Cleaning up project artifacts..."
 	@find . \( \
 		-name "__pycache__" -o \
-		-name ".ipynb_checkpoints" \) \
+		-name ".ipynb_checkpoints" -o \
 		-name ".mypy_cache" -o \
 		-name ".pytest_cache" -o \
 		-name ".ruff_cache" -o \
 		-name ".venv" -o \
-		-name "dist" -o \
+		-name "dist" \) \
 		-type d -exec rm -rf {} + 2>/dev/null || true
 	@find . -name ".coverage" -type f -delete 2>/dev/null || true
 
@@ -129,9 +128,22 @@ clean:
 test:
 	@echo "Running tests..."
 	@uv run pre-commit run --all-files
-	@uv build
+	@echo "Building the project..."
+	@uv build > /dev/null 2>&1
+	@echo "Syncing the project..."
 	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
+	@echo "Running tests..."
 	@uv run pytest -v tests --cov=src --cov-report=term
+
+validate:
+	@echo "Deploying resources..."
+	@uv run pre-commit run --all-files
+	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
+	if [[ $$output == *"Error: resolve:"* ]]; then \
+		databricks configure --profile $(PROFILE_NAME); \
+	else \
+		databricks bundle validate --profile $(PROFILE_NAME) --target dev; \
+	fi
 
 deploy:
 	@echo "Deploying resources..."

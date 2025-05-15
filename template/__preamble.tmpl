@@ -13,10 +13,10 @@ This file only provides template directives; it is skipped for the actual output
 {{end}}
 
 {{if not (eq .include_example_jobs "yes")}}
-  {{skip "{{.project_name}}/notebooks/dlt_ingest.py"}}
-  {{skip "{{.project_name}}/notebooks/hello_revodata.py"}}
-  {{skip "{{.project_name}}/resources/template_dlt_pipeline.yml"}}
-  {{skip "{{.project_name}}/resources/template_job.yml"}}
+  {{skip "{{.project_name}}/notebooks/example_notebook.py"}}
+  {{skip "{{.project_name}}/notebooks/example_dlt_pipeline_notebook.py"}}
+  {{skip "{{.project_name}}/resources/example-workflow.yml"}}
+  {{skip "{{.project_name}}/resources/example-dlt-pipeline-workflow.yml"}}
 {{end}}
 
 {{if not (eq .use_devcontainer "yes")}}
