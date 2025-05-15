@@ -6,64 +6,37 @@ authors = [
     { name = "{{.author}}", email = "notifications@example.com" },
 ]
 readme = "README.md"
-requires-python = {{if not (eq .python_only "yes")}}">=3.11,<4.0"{{else}}">=3.12,<4.0"{{end}}
+requires-python = ">=3.11,<4.0"
 scripts = { "main" = "{{.package_name}}.main:main" }
-classifiers = ["Programming Language :: Python :: {{if not (eq .python_only "yes")}}3.11{{else}}3.12{{end}}", "Operating System :: OS Independent"]
-dependencies = [{{if not (eq .python_only "yes")}}{{if not (eq .use_devcontainer "yes")}}"numpy==1.23.5",  # Databricks Runtime 15.4 LTS
-    "pandas==1.5.3",  # Databricks Runtime 15.4 LTS{{end}}
-    "pyspark==3.5.0",  # Databricks Runtime 15.4 LTS{{end}}
+classifiers = ["Programming Language :: Python :: 3.11", "Operating System :: OS Independent"]
+dependencies = [
+    "pyspark==3.5.0",  # Databricks Runtime 15.4 LTS
 ]
 
-{{if (eq .package_manager "uv")}}[tool.uv]
-package = true
-dev-dependencies = [
-    "bandit>=1.8.3",{{if not (eq .python_only "yes")}}
-    "databricks-dlt==0.2.1",  # Pinned at 0.2.1 since higher versions depend on databricks-connect
+[dependency-groups]
+dev = [
+    "bandit>=1.8.3",
+    "databricks-connect>=15.4.3",
+    "databricks-dlt>=0.2.1",
     "databricks-sdk>=0.45.0",
-    "databricks-connect>=15.4.3",{{end}}
     "mkdocs-material>=9.6.7",
     "mkdocs>=1.6.1",
     "mypy>=1.15.0",
     "pdoc3>=0.11.5",
     "pre-commit>=4.1.0",
-    "pydoclint>=0.5.8",
+    "pydoclint>=0.6.6",
     "pytest-cov>=6.0.0",
     "pytest-mock>=3.14.0",
     "pytest>=8.3.5",
-    "ruff>=0.9.10",
+    "ruff>=0.11.9",
     "sqlfluff>=3.3.1",
 ]
-{{end}}{{if (eq .package_manager "poetry")}}[tool.poetry]
-packages = [{ include = "{{.package_name}}", from = "src" }]
 
-[tool.poetry.group.dev.dependencies]
-bandit = "^1.7.10"{{if not (eq .python_only "yes")}}
-databricks-dlt = "0.2.1"  # Pinned at 0.2.1 since higher versions depend on databricks-connect
-databricks-sdk = "^0.45.0",
-databricks-connect>=15.4.3,{{end}}
-mkdocs = "^1.6.1"
-mkdocs-material = "^9.6.7"
-mypy = "^1.13.0"
-pdoc3 = "^0.11.1"
-pre-commit = "^4.0.1"
-pydoclint = "^0.5.8"
-pytest = "^8.3.5"
-pytest-cov = "^6.0.0"
-pytest-mock = "^3.14.0"
-ruff = "^0.9.10"
-sqlfluff = "^3.2.5"
-
-{{if not (eq .python_only "yes")}}
-[tool.poetry.group.types.dependencies]
-pandas-stubs = "^2.2.2.240807"  # Databricks Runtime 15.4 LTS
-{{end}}
-{{end}}
-{{if (eq .package_manager "poetry")}}[build-system]
-requires = ["poetry-core>=2.0"]
-build-backend = "poetry.core.masonry.api"{{end}}
+[tool.uv]
+package = true
 
 [tool.ruff]
-target-version = {{if not (eq .python_only "yes")}}"py311"{{else}}"py312"{{end}}
+target-version = "py311"
 line-length = 100
 extend-include = ["*.ipynb"]
 extend-exclude = ["scratch"]
@@ -109,7 +82,7 @@ unfixable = [
 
 [tool.mypy]
 packages = ["src"]
-python_version = {{if not (eq .python_only "yes")}}"3.11"{{else}}"3.12"{{end}}
+python_version = "3.11"
 strict = true
 disallow_untyped_decorators = false
 exclude = "scratch"

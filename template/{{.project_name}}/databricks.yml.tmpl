@@ -16,7 +16,7 @@ artifacts:
   platform:
     type: whl
     path: .
-    build: {{if (eq .package_manager "poetry")}}poetry{{end}}{{if (eq .package_manager "uv")}}uv{{end}} build
+    build: uv build
 
 sync:
   include:
@@ -32,6 +32,7 @@ targets:
     # - The 'development' mode is used for Delta Live Tables pipelines
     mode: development
     default: true
+
   # The 'prod' target, used for production deployment.
   prod:
     # We use 'mode: production' to indicate this is a production deployment.

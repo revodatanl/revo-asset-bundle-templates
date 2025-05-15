@@ -11,15 +11,13 @@ updates:
   - package-ecosystem: pip
     directory: .
     schedule:
-      interval: daily{{if not (eq .python_only "yes")}}
+      interval: daily
       groups:
       dev-deps:
         dependency-type: development
         exclude-patterns:
-          - pandas* # Fixed at Databricks Runtime 15.4 LTS
-          - numpy* # Fixed at Databricks Runtime 15.4 LTS
+          - pyspark* # Fixed at Databricks Runtime 15.4 LTS
       prod-deps:
         dependency-type: production
         exclude-patterns:
-          - pandas* # Fixed at Databricks Runtime 15.4 LTS
-          - numpy* # Fixed at Databricks Runtime 15.4 LTS{{end}}
+          - pyspark* # Fixed at Databricks Runtime 15.4 LTS
