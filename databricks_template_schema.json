@@ -43,28 +43,28 @@
       "default": "github",
       "enum": ["github", "azure"],
       "description": "Git client",
-      "order": 5
+      "order": 7
     },
     "cloud_provider": {
       "type": "string",
       "default": "azure",
       "enum": ["azure", "aws"],
       "description": "Cloud provider",
-      "order": 6
+      "order": 8
     },
     "include_example_jobs": {
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
       "description": "Include example jobs (Delta Live Tables pipeline and example job) in '{{.project_name}}{{path_separator}}resources{{path_separator}}example'",
-      "order": 7
+      "order": 9
     },
     "use_devcontainer": {
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
       "description": "Include devcontainer (recommended for Windows users)",
-      "order": 8
+      "order": 10
     }
   },
   "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in 'databricks.yml' and configure 'PROFILE_NAME' in the 'Makefile')\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
