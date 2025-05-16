@@ -40,7 +40,7 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
     | `package_name` | Name of the package. Import functions from the package with `from <company_name>.<package_name> import <function_name>` | `revo_dabs` |
     | `author` | Name of the author | `Thomas Brouwer` |
     | `email` | Email address of the author | `thomas.brouwer@revodata.nl` |
-    | `project_description` | Brief description of the project | `This project contains out own RevoData Asset Bundle Templates.` |
+    | `project_description` | Brief description of the project | `This project is generated using our own RevoData Asset Bundle Templates.` |
     | `git_client` | Git client | `github/azure` |
     | `cloud_provider` | Cloud provider | `azure/aws` |
     | `include_example_jobs` | Whether to include example DLT pipeline and jobs | `yes/no` |

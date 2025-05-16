@@ -24,7 +24,7 @@ install:
 		done; \
 	elif [ "$$CURRENT_OS" = "Linux" ]; then \
 		echo "Installing tools..."; \
-		sudo apt update
+		sudo apt update; \
 		for tool in git tree; do \
 			if ! command -v $$tool >/dev/null 2>&1; then \
 				echo "Installing $$tool..."; \
