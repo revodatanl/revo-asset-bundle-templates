@@ -8,7 +8,8 @@ jobs:
   deploy_dev:
     runs-on: ubuntu-latest
     env:
-      BRANCH_NAME: ${{ github.head_ref }}
+      # BRANCH_NAME: ${{ github.head_ref }}
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
     steps:
       - name: Checkout repository
@@ -47,10 +48,17 @@ jobs:
           EOF
           cat init_params.json
 
+      - name: Debug GitHub context
+        run: |
+          echo "github.ref: ${{ github.ref }}"
+          echo "github.ref_name: ${{ github.ref_name }}"
+          echo "github.head_ref: ${{ github.head_ref }}"
+          echo "github.event_name: ${{ github.event_name }}"
+
       - name: Initialize Databricks Asset Bundle
         run: |
           echo "Using branch: $BRANCH_NAME"
-          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
+          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch feat/bye-bye-poetry --config-file init_params.json
 
       - name: Build and test bundle
         run: |
