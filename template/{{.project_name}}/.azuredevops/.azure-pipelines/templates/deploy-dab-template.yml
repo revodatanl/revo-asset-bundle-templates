@@ -28,9 +28,13 @@ steps:
     displayName: Install Databricks CLI
 
   - script: |
-      envsubst < ./.azuredevops/.azure-pipelines/databricks.cfg > ~/.databrickscfg
-      echo Databricks configuration:
-      cat ~/.databrickscfg
+      cat > ~/.databrickscfg << EOF
+      [DEFAULT]
+      host = $DATABRICKS_HOST
+      client_id = $DATABRICKS_CLIENT_ID
+      client_secret = $DATABRICKS_CLIENT_SECRET
+      EOF
+      chmod 600 ~/.databrickscfg
     env:
       DATABRICKS_HOST: $(DATABRICKS-HOST) # from DevOps Library
       DATABRICKS_CLIENT_ID: $(DATABRICKS-CLIENT-ID) # from KeyVault

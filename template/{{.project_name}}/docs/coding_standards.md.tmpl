@@ -29,9 +29,9 @@ Ensure that the [`pre-commit`](https://pre-commit.com) hook defined in `.pre-com
 
 This `CI` pipeline is triggered upon a pull request to any branch. It runs continuous integration tasks: setting up the environment, installing dependencies, running formatting checks with `ruff`, `mypy`, `pydoclint`, `bandit`, and `sqlfluff`, executing unit tests with coverage reporting, and finally building and validating the package to ensure consistency between source and built files.
 
-For more information, see [CI]{{if (eq .git_client "azure")}}(../.azuredevops/.azure-pipelines/ci.yml){{end}}{{if (eq .git_client "github")}}(../.github/workflows/ci.yml){{end}}.
+The pipeline configuration can be found here: {{if (eq .cicd_provider "azure")}}`.azuredevops/.azure-pipelines/ci.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/ci.yml`{{end}}`.
 
-{{if (eq .git_client "github")}}### Dependabot
+{{if (eq .cicd_provider "github")}}### Dependabot
 
 We use GitHub's Dependabot to automatically check for updates to GitHub Actions and Python dependencies. It performs daily checks and groups dependencies as follows:
 

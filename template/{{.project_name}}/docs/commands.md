@@ -39,6 +39,18 @@ Prior to running the test suite, it updates dependencies, builds the package, an
 ![make-test](images/make-test.png)
 </details>
 
+### `make validate`
+
+**Validates the bundle resources.**
+
+Prior to validation, it updates dependencies, builds the package, and runs pre-commit hooks over all files - to mimic functionality during CI.
+
+<details>
+<summary>example output</summary>
+
+![make-validate](images/make-validate.png)
+</details>
+
 ### `make deploy`
 
 **Deploys bundle resources to the default Databricks environment.**

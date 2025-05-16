@@ -1,12 +1,12 @@
 resources:
   jobs:
-    template_dlt_pipeline:
-      name: template_dlt_pipeline
+    example-dlt-workflow:
+      name: example-dlt-workflow
 
       tasks:
-        - task_key: dlt_task
+        - task_key: example-dlt-pipeline-task
           pipeline_task:
-            pipeline_id: ${resources.pipelines.dlt_ingest.id}
+            pipeline_id: ${resources.pipelines.example-dlt-pipeline.id}
 
       max_concurrent_runs: 1
 
@@ -16,8 +16,8 @@ resources:
         timezone_id: Europe/Amsterdam
 
   pipelines:
-    dlt_ingest:
-      name: dlt_ingest
+    example-dlt-pipeline:
+      name: example-dlt-pipeline
       target: dlt
       catalog: main  # or: ${bundle.environment}
       libraries:

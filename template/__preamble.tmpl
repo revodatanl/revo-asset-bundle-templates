@@ -4,11 +4,11 @@ This file only provides template directives; it is skipped for the actual output
 
 {{skip "__preamble"}}
 
-{{if not (eq .git_client "github")}}
+{{if not (eq .cicd_provider "github")}}
   {{skip "{{.project_name}}/.github"}}
 {{end}}
 
-{{if not (eq .git_client "azure")}}
+{{if not (eq .cicd_provider "azure")}}
   {{skip "{{.project_name}}/.azuredevops"}}
 {{end}}
 
@@ -21,5 +21,4 @@ This file only provides template directives; it is skipped for the actual output
 
 {{if not (eq .use_devcontainer "yes")}}
   {{skip "{{.project_name}}/.devcontainer"}}
-  {{skip "{{.project_name}}/docs/devcontainer.md"}}
 {{end}}

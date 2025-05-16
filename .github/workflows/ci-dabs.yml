@@ -1,0 +1,154 @@
+name: CI DABs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ci-dabs:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Default configurations for both OSs
+          - os: macos-latest
+            cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
+            include_devcontainer: no
+          - os: ubuntu-latest
+            cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
+            include_devcontainer: no
+          # Non-default configuration for Ubuntu only
+          - os: ubuntu-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+            include_devcontainer: yes
+
+    env:
+      BRANCH_NAME: ${{ github.head_ref }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+          databricks version
+
+      - name: Create init parameters JSON
+        run: |
+          cat > init_params.json << EOF
+          {
+            "project_name": "revo-dabs-test-project",
+            "package_name": "revo_dabs",
+            "author": "Thomas Brouwer",
+            "email": "thomas.brouwer@revodata.nl",
+            "description": "This project is generated using our own RevoData Asset Bundle Templates.",
+            "cicd_provider": "${{ matrix.cicd_provider }}",
+            "cloud_provider": "${{ matrix.cloud_provider }}",
+            "include_example_jobs": "${{ matrix.include_example_jobs }}",
+            "include_devcontainer": "${{ matrix.include_devcontainer }}"
+          }
+          EOF
+          cat init_params.json
+
+      - name: Create dummy .databrickscfg file (note that these are fake credentials)
+        run: |
+          cat > ~/.databrickscfg << EOF
+          [DEFAULT]
+          host = https://adb-workspace.azuredatabricks.net  # fake host
+          token = dapi123456789abcdef0123456789abcdef       # fake token
+          EOF
+          chmod 600 ~/.databrickscfg
+
+      - name: Initialize Databricks Asset Bundle
+        run: |
+          echo "Using branch: $BRANCH_NAME"
+          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
+
+      - name: Build and Test Bundle with Makefile
+        run: |
+          cd revo-dabs-test-project
+          echo ""
+          echo "=================================================================="
+          echo "=============== BUILD PROJECT (WITH DEFAULT TARGET) =============="
+          echo "=================================================================="
+          make
+
+          echo ""
+          echo "=================================================================="
+          echo "=============== RE-INSTALL DEPENDENCIES ========================="
+          echo "=================================================================="
+          make install
+
+          echo ""
+          echo "=================================================================="
+          echo "=============== RE-BUILD PROJECT (WITH SETUP TARGET) ============="
+          echo "=================================================================="
+          make setup
+
+          echo ""
+          echo "=================================================================="
+          echo "======================== GENERATE TREE ==========================="
+          echo "=================================================================="
+          make tree
+
+          echo ""
+          echo "=================================================================="
+          echo "======================== LINT PROJECT ============================"
+          echo "=================================================================="
+          make lint
+
+          echo ""
+          echo "=================================================================="
+          echo "========================= RUN TESTS =============================="
+          echo "=================================================================="
+          make test
+
+          echo ""
+          echo "=================================================================="
+          echo "======================== GENERATE DOCS ==========================="
+          echo "=================================================================="
+          uv run mkdocs build
+
+          echo ""
+          echo "=================================================================="
+          echo "======================== CLEAN PROJECT ==========================="
+          echo "=================================================================="
+          make clean
+
+          echo ""
+          echo "=================================================================="
+          echo "=========== REBUILD PROJECT (AFTER CLEAN) ========================"
+          echo "=================================================================="
+          make
+
+          # TODO: enable after valid authenication to Databricks
+          # echo ""
+          # echo "=================================================================="
+          # echo "======================== VALIDATE BUNDLE ========================="
+          # echo "=================================================================="
+          # make validate
+
+          # echo ""
+          # echo "=================================================================="
+          # echo "======================== DEPLOY BUNDLE ==========================="
+          # echo "=================================================================="
+          # make deploy
+
+          # echo ""
+          # echo "=================================================================="
+          # echo "======================== DESTROY BUNDLE =========================="
+          # echo "=================================================================="
+          # make destroy

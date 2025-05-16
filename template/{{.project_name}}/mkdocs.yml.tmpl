@@ -2,9 +2,7 @@ site_name: {{.project_name}}
 
 nav:
   - Introduction: index.md
-  - Getting Started: getting_started.md{{if not (eq .use_devcontainer "yes")}}
-    - DevContainer: devcontainer.md{{end}}
-    - WSL: wsl.md
+  - Getting Started: getting_started.md
   - Bundle Deployment: bundle_deployment.md
   - Coding Standards: coding_standards.md
   - Command Reference: commands.md
