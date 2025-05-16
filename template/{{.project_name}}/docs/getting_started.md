@@ -2,7 +2,14 @@
 
 ## Prerequisites
 
-This project heavily depends on the provided `Makefile` for various tasks. Without [`make`](https://www.gnu.org/software/make) installed, you will need to run the commands described in the `Makefile` manually. Note that on **Windows** we recommend using the DevContainer approach instead of trying to set up the environment manually. See [DevContainer Instructions](devcontainer.md) for more information.
+This project heavily depends on the provided `Makefile` for various tasks. Without [`make`](https://www.gnu.org/software/make) installed, you will need to run the commands described in the `Makefile` manually.
+
+### Installation on Windows
+
+The project is natively built for **Linux** or **macOS**. For **Windows** we suggest developing in a DevContainer or setting up a Windows Subsystem for Linux (WSL) environment. Specific instructions can be found in the following documents:
+
+#### ‣ [DevContainer](devcontainer.md) (recommended)
+#### ‣ [WSL](wsl.md)
 
 ## Installation
 
@@ -25,7 +32,7 @@ Subsequently it sets up the development environment by:
 - Initializing a `git` repository if not already present
 - Installing, updating and running the `pre-commit` hooks
 
-![make-setup](images/make-install.png)
+![make-setup](images/make-setup.png)
 
 ## Cleaning Up
 
@@ -36,9 +43,3 @@ make clean
 ```
 
 ![make-clean](images/make-clean.png)
-
-## Installation on Windows
-
-For Windows users, we strongly recommend using the DevContainer approach instead of manual setup. The DevContainer provides a consistent development environment that works across operating systems with minimal setup requirements.
-
-Please refer to the [DevContainer Instructions](devcontainer.md) for detailed setup steps. Alternatively, if you prefer using Windows Subsystem for Linux (WSL), we also provide detailed [WSL Setup Instructions](wsl.md).

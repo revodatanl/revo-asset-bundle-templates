@@ -16,13 +16,12 @@ dependencies = [
 [dependency-groups]
 dev = [
     "bandit>=1.8.3",
-    "databricks-connect>=16.4.0",
+    # "databricks-connect==15.4.*",
     "databricks-dlt==0.2.1",
     "databricks-sdk>=0.45.0",
     "mkdocs-material>=9.6.7",
     "mkdocs>=1.6.1",
     "mypy>=1.15.0",
-    "pdoc3>=0.11.5",
     "pre-commit>=4.1.0",
     "pydoclint>=0.6.6",
     "pytest-cov>=6.0.0",
@@ -47,6 +46,7 @@ pydocstyle.convention = "numpy"
 external = ["DOC"]
 select = ["ALL"]
 ignore = [
+    "COM812",   # "Checks for the absence of trailing commas." Redundant when used in tandem with the formatter.
     "D203",     # "One blank line required before class docstring." Should be disabled by default.
     "D213",     # "Multi-line docstring summary should start at the second line." Should be disabled by default.
     "E501",     # "Line too long." Sometimes my comments are a bit longer.
@@ -86,6 +86,10 @@ python_version = "3.11"
 strict = true
 disallow_untyped_decorators = false
 exclude = "scratch"
+
+[[tool.mypy.overrides]]
+module = "dlt"
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

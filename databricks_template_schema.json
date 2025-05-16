@@ -31,11 +31,11 @@
       "description": "Description of the project",
       "order": 5
     },
-    "git_client": {
+    "cicd_provider": {
       "type": "string",
       "default": "github",
       "enum": ["github", "azure"],
-      "description": "Git client",
+      "description": "CI/CD provider",
       "order": 6
     },
     "cloud_provider": {

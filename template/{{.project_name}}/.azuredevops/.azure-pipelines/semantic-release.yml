@@ -1,4 +1,4 @@
-name: "Semantic Release"
+name: Semantic Release
 
 # This pipeline does the following things:
 # 1. Analyze commit messages; bump the version accordingly, and update CHANGELOG.md and pyproject.toml
@@ -13,9 +13,9 @@ trigger:
 
 jobs:
   - job: semantic_release
-    displayName: "Semantic Release"
+    displayName: Semantic Release
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: ubuntu-latest
 
     steps:
         # 1. Checkout the repository and fetch all history and tags
@@ -23,13 +23,13 @@ jobs:
         persistCredentials: true   # Ensures the OAuth token is stored for Git operations
         clean: true
         fetchDepth: 0
-        displayName: "Checkout repository"
+        displayName: Checkout repository
 
       # 2. Install Node.js
       - task: NodeTool@0
         inputs:
-          versionSpec: "20.x"
-        displayName: "Install Node.js"
+          versionSpec: 20.x
+        displayName: Install Node.js
 
       # 3. Install Semantic Release and required plugins
       - script: |
@@ -38,11 +38,11 @@ jobs:
             @semantic-release/changelog \
             @semantic-release/exec \
             @semantic-release/git
-        displayName: "Install Semantic Release"
+        displayName: Install Semantic Release
 
       # 4. Run Semantic Release
       - script: npx semantic-release
-        displayName: "Run Semantic Release"
+        displayName: Run Semantic Release
         env:
           # Pass the Azure DevOps OAuth token so that Git push operations are authenticated.
           SYSTEM_ACCESSTOKEN: $(System.AccessToken)

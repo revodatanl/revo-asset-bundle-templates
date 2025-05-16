@@ -29,9 +29,15 @@ jobs:
           python -m pip install --upgrade pip uv
           uv build
 
-      - name: Configure Databricks authentication
+      - name: Authenticate Databricks
         run: |
-          envsubst < ./.azuredevops/.azure-pipelines/databricks.cfg > ~/.databrickscfg
+          cat > ~/.databrickscfg << EOF
+          [DEFAULT]
+          host = $DATABRICKS_HOST
+          client_id = $DATABRICKS_CLIENT_ID
+          client_secret = $DATABRICKS_CLIENT_SECRET
+          EOF
+          chmod 600 ~/.databrickscfg
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS-HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS-CLIENT-ID }}

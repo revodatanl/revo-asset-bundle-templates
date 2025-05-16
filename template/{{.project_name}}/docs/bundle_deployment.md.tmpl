@@ -39,4 +39,4 @@ make destroy
 
 ### Deploying the Databricks Asset Bundle to `test` and `prd`
 
-Deploying the bundle to `test` and `prd` is handled by a dedicated CI/CD pipeline called `deploy-dab`. For more information, see [deploy-dab]{{if (eq .git_client "azure")}}(../.azuredevops/.azure-pipelines/deploy-dab.yml){{end}}{{if (eq .git_client "github")}}(../.github/workflows/deploy-dab.yml){{end}}.
+Deploying the bundle to `test` and `prd` is handled by a dedicated CI/CD pipeline called `deploy-dab` which can be found here: {{if (eq .cicd_provider "azure")}}`.azuredevops/.azure-pipelines/deploy-dab.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/deploy-dab.yml`{{end}}`.

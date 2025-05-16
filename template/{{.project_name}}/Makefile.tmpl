@@ -117,13 +117,13 @@ clean:
 		-name ".pytest_cache" -o \
 		-name ".ruff_cache" -o \
 		-name ".venv" -o \
-		-name "dist" \) \
+		-name "dist" -o \
+		-name "site" \) \
 		-type d -exec rm -rf {} + 2>/dev/null || true
 	@find . -name ".coverage" -type f -delete 2>/dev/null || true
-
+	@echo "Rebuilding the project..."
 	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
 	@echo "Cleanup completed."
-	@reset
 
 test:
 	@echo "Running tests..."
@@ -175,7 +175,8 @@ docs:
 lint:
 	@echo "Linting the project..."
 	@uv sync
-	@uv build
+	@echo "Building the project..."
+	@uv build > /dev/null 2>&1
 	@echo "Running ruff..."
 	@uv run ruff check --output-format=concise .
 	@echo "Running mypy..."
