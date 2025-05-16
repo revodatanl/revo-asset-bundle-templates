@@ -1,0 +1,38 @@
+# Databricks notebook source
+# MAGIC %md
+# MAGIC # Example
+
+# COMMAND ----------
+
+# MAGIC dbutils.widgets.text(
+# MAGIC     "wheel_path",
+# MAGIC     "/Workspace/Users/{{.email}}/.bundle/{{.project_name}}/dev/files/dist/*.whl",
+# MAGIC )
+
+# COMMAND ----------
+
+# MAGIC %pip install --no-deps --force-reinstall {dbutils.widgets.get("wheel_path")}
+
+# COMMAND ----------
+
+from {{.package_name}}.main import main
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Run imported function
+
+# COMMAND ----------
+
+result = main()
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Assert equality
+
+# COMMAND ----------
+expected: bool = True
+assert expected == result
+
+print("Notebook task is successfully completed.")

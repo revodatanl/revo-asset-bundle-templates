@@ -1,4 +1,3 @@
-# The example DLT pipeline for the {{.project_name}} project
 resources:
   jobs:
     template_dlt_pipeline:
@@ -23,7 +22,7 @@ resources:
       catalog: main  # or: ${bundle.environment}
       libraries:
         - notebook:
-            path: ../notebooks/dlt_ingest.py
+            path: ../notebooks/example_dlt_pipeline_notebook.py
 
       clusters:
         - label: default
