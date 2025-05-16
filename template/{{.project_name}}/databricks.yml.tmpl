@@ -18,10 +18,6 @@ artifacts:
     path: .
     build: uv build
 
-sync:
-  include:
-    - dist/{{.package_name}}-*-py3-none-any.whl
-
 # Use the host mapping with configured profiles in your .databrickscfg file to authenticate
 targets:
   # The 'dev' target, for development purposes. This target is the default.

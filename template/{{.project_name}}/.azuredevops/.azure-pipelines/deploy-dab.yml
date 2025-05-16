@@ -15,7 +15,6 @@ variables:
   keyVaultName: key_vault_name # Azure Key Vault name
   azureSubscription: azure_subscription_name # Service Principal name
 
-
 stages:
   - stage: deploy_test
     displayName: Deploy Databricks Asset Bundle to test environment
