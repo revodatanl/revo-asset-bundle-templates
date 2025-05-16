@@ -40,6 +40,7 @@ autoloader_path = spark.conf.get("autoloader_path")
 
 # COMMAND ----------
 
+# since main() returns `True` this condition only serves as an example on how to import functions from the package
 if main():
 
     @dlt.table(

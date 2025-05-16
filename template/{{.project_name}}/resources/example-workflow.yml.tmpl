@@ -1,8 +1,7 @@
-# The main job for the {{.project_name}} project
 resources:
   jobs:
-    template_job:
-      name: template_job
+    example-workflow:
+      name: example-workflow
 
       schedule:
         # Run every day at 8:37 AM
@@ -17,7 +16,7 @@ resources:
         - task_key: notebook_task
           job_cluster_key: job_cluster
           notebook_task:
-            notebook_path: ../notebooks/hello_revodata.py
+            notebook_path: ../notebooks/example_notebook.py
         - task_key: wheel_task
           depends_on:
             - task_key: notebook_task
