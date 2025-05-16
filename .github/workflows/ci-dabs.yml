@@ -1,0 +1,62 @@
+name: CI DABs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - "*"
+
+jobs:
+  deploy_dev:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: ${{ github.head_ref }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Make
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make
+          make --version
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+          databricks version
+
+      - name: Create init parameters JSON
+        run: |
+          cat > init_params.json << EOF
+          {
+            "project_name": "revo-dabs-test-project",
+            "package_name": "revo_dabs",
+            "author": "Thomas Brouwer",
+            "email": "thomas.brouwer@revodata.nl",
+            "description": "This project is generated using our own RevoData Asset Bundle Templates.",
+            "git_client": "github",
+            "cloud_provider": "azure",
+            "include_examples": "yes",
+            "include_devcontainer": "no"
+          }
+          EOF
+          cat init_params.json
+
+      - name: Initialize Databricks Asset Bundle
+        run: |
+          echo "Using branch: $BRANCH_NAME"
+          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
+
+      - name: Build and test bundle
+        run: |
+          cd revo-dabs-test-project
+          make
+          make test
