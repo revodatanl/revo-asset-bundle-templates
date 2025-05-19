@@ -36,11 +36,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
-
       - name: Install Databricks CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
@@ -54,7 +49,7 @@ jobs:
             "package_name": "revo_dabs",
             "author": "Thomas Brouwer",
             "email": "thomas.brouwer@revodata.nl",
-            "description": "This project is generated using our own RevoData Asset Bundle Templates.",
+            "project_description": "This project is generated using our own RevoData Asset Bundle Templates.",
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
             "include_example_jobs": "${{ matrix.include_example_jobs }}",
@@ -130,7 +125,7 @@ jobs:
 
           echo ""
           echo "=================================================================="
-          echo "=========== REBUILD PROJECT (AFTER CLEAN) ========================"
+          echo "=========== RE-BUILD PROJECT (AFTER CLEAN) ======================="
           echo "=================================================================="
           make
 

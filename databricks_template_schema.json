@@ -26,7 +26,7 @@
       "pattern_match_failure_message": "Invalid email address.",
       "order": 4
     },
-    "description": {
+    "project_description": {
       "type": "string",
       "description": "Description of the project",
       "order": 5
