@@ -136,7 +136,7 @@ test:
 	@uv run pytest -v tests --cov=src --cov-report=term
 
 validate:
-	@echo "Deploying resources..."
+	@echo "Validating resources..."
 	@uv run pre-commit run --all-files
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
