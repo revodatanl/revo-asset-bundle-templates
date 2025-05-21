@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "charliermarsh.ruff",
+    "databricks.databricks",
     "davidanson.vscode-markdownlint",
     "dorzey.vscode-sqlfluff",
     "esbenp.prettier-vscode",
@@ -13,7 +14,6 @@
     "redhat.vscode-xml",
     "redhat.vscode-yaml",
     "tamasfe.even-better-toml",
-    "vscode-icons-team.vscode-icons",
-    "databricks.databricks",
+    "vscode-icons-team.vscode-icons"
   ]
 }

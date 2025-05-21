@@ -7,7 +7,7 @@ variables:
     default: 15.4.x-scala2.12
   wheel_path:
     description: Path of the wheel file
-    default: ${workspace.root_path}/files/dist/{{.package_name}}-*-py3-none-any.whl
+    default: ${workspace.root_path}/artifacts/.internal/*.whl
 
 include:
   - resources/*.yml
@@ -18,6 +18,10 @@ artifacts:
     path: .
     build: uv build
     dynamic_version: true
+
+sync:
+  include:
+    - dist/*.whl
 
 # Use the host mapping with configured profiles in your .databrickscfg file to authenticate
 targets:

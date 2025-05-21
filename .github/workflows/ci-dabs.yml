@@ -17,23 +17,22 @@ jobs:
             cloud_provider: azure
             include_example_jobs: yes
             include_devcontainer: no
-          # - os: macos-latest
-          #   cicd_provider: github
-          #   cloud_provider: azure
-          #   include_example_jobs: yes
-          #   include_devcontainer: no
-
-          # # Non-default configuration
-          # - os: ubuntu-latest
-          #   cicd_provider: azure
-          #   cloud_provider: aws
-          #   include_example_jobs: no
-          #   include_devcontainer: yes
-          # - os: macos-latest
-          #   cicd_provider: azure
-          #   cloud_provider: aws
-          #   include_example_jobs: no
-          #   include_devcontainer: yes
+          - os: macos-latest
+            cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
+            include_devcontainer: no
+          # Non-default configuration
+          - os: ubuntu-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+            include_devcontainer: yes
+          - os: macos-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+            include_devcontainer: yes
 
     env:
       BRANCH_NAME: ${{ github.head_ref }}
@@ -61,7 +60,7 @@ jobs:
           EOF
           cat init_params.json
 
-      - name: Initialize Databricks Asset Bundle
+      - name: Initialize Databricks Asset Bundle from template
         run: |
           echo "Using branch: $BRANCH_NAME"
           databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
@@ -70,7 +69,7 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-      - name: Build and test Bundle with Makefile
+      - name: Build and test Databricks Asset Bundle with Makefile
         run: |
           cd revo-dabs-test-project
           echo ""
@@ -137,7 +136,7 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-      - name: Deploy and Destroy Bundle (for default configuration only)
+      - name: Deploy Databricks Asset Bundle (using default runner only)
         if: |
           matrix.os == 'ubuntu-latest' &&
           matrix.cicd_provider == 'github' &&
@@ -151,7 +150,129 @@ jobs:
           echo "======================== DEPLOY BUNDLE ==========================="
           echo "=================================================================="
           databricks bundle deploy
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
+      - name: Upload project artifact
+        if: |
+          matrix.os == 'ubuntu-latest' &&
+          matrix.cicd_provider == 'github' &&
+          matrix.cloud_provider == 'azure' &&
+          matrix.include_example_jobs == 'yes' &&
+          matrix.include_devcontainer == 'no'
+        uses: actions/upload-artifact@v4
+        with:
+          name: revo-dabs-test-project
+          path: revo-dabs-test-project
+          retention-days: 1
+
+
+# Run example workflow in parallel with the example DLT pipeline workflow
+  run-example-workflow:
+    needs: ci-dabs
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download project artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: revo-dabs-test-project
+          path: revo-dabs-test-project
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+          databricks version
+
+      - name: Run Example Workflow
+        run: |
+          cd revo-dabs-test-project
+          echo ""
+          echo "=================================================================="
+          echo "==================== RUN EXAMPLE WORKFLOW ========================"
+          echo "=================================================================="
+          echo "Starting 'example-workflow'... (this may take a while)"
+          EXAMPLE_WORKFLOW_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-workflow")) | .job_id')
+          echo "Example workflow ID: $EXAMPLE_WORKFLOW_ID"
+          RESULT_STATE=$(databricks jobs run-now $EXAMPLE_WORKFLOW_ID | jq -r '.state.result_state')
+          echo "Workflow result state: $RESULT_STATE"
+
+          if [[ "$RESULT_STATE" == "SUCCESS" ]]; then
+            echo "Workflow completed successfully!"
+          else
+            echo "Workflow failed with status: $RESULT_STATE"
+            exit 1
+          fi
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+
+
+# Run example DLT pipeline workflow in parallel with the example workflow
+  run-example-dlt-workflow:
+    needs: ci-dabs
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download project artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: revo-dabs-test-project
+          path: revo-dabs-test-project
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+          databricks version
+
+      - name: Run example DLT pipeline workflow
+        run: |
+          cd revo-dabs-test-project
+          echo ""
+          echo "=================================================================="
+          echo "=============== RUN EXAMPLE DLT PIPELINE WORKFLOW ================"
+          echo "=================================================================="
+          echo "Starting 'example-dlt-pipeline-workflow'... (this may take a while)"
+          DLT_PIPELINE_WORKFLOW_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-dlt-pipeline-workflow")) | .job_id')
+          echo "Example DLT pipeline ID: $DLT_PIPELINE_WORKFLOW_ID"
+          DLT_PIPELINE_WORKFLOW_RESULT_STATE=$(databricks jobs run-now $DLT_PIPELINE_WORKFLOW_ID | jq -r '.state.result_state')
+          echo "DLT pipeline result state: $DLT_PIPELINE_WORKFLOW_RESULT_STATE"
+
+          if [[ "$DLT_PIPELINE_WORKFLOW_RESULT_STATE" == "SUCCESS" ]]; then
+            echo "DLT pipeline completed successfully!"
+          else
+            echo "DLT pipeline failed with status: $DLT_PIPELINE_RESULT_STATE"
+            exit 1
+          fi
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+
+
+# Destroy bundle regardless of the outcome of the other workflows
+  destroy-bundle:
+    needs: [run-example-workflow, run-example-dlt-workflow]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download project artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: revo-dabs-test-project
+          path: revo-dabs-test-project
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+          databricks version
+
+      - name: Destroy Bundle
+        run: |
+          cd revo-dabs-test-project
           echo ""
           echo "=================================================================="
           echo "======================== DESTROY BUNDLE =========================="
@@ -161,8 +282,3 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-
-          # template the Ci pipeline
-          # - name: Template CI pipeline
-          #   run: |
-          #     databricks pipelines update --name "ci-dabs" --pipeline-config-path "pipeline.json"

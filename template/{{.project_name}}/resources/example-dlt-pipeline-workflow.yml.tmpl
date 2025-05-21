@@ -1,33 +1,26 @@
 resources:
   jobs:
-    example-dlt-workflow:
-      name: example-dlt-workflow
+    example-dlt-pipeline-workflow:
+      name: example-dlt-pipeline-workflow
 
       tasks:
         - task_key: example-dlt-pipeline-task
           pipeline_task:
             pipeline_id: ${resources.pipelines.example-dlt-pipeline.id}
 
-      max_concurrent_runs: 1
-
-      schedule:
-        # Run every day at 8:37 AM
-        quartz_cron_expression: 44 37 8 * * ?
-        timezone_id: Europe/Amsterdam
-
   pipelines:
     example-dlt-pipeline:
       name: example-dlt-pipeline
-      target: dlt
-      catalog: main  # or: ${bundle.environment}
+      # catalog: main  # configure catalog in Unity Catalog
+      target: {{.package_name}}_${bundle.environment}
       libraries:
         - notebook:
             path: ../notebooks/example_dlt_pipeline_notebook.py
 
       clusters:
-        - label: default
-          num_workers: 1
-          node_type_id: {{if (eq .cloud_provider "azure")}}Standard_D4s_v3{{end}}{{if (eq .cloud_provider "aws")}}i3.xlarge{{end}}
+       - label: default
+         num_workers: 1
+         node_type_id: {{if (eq .cloud_provider "azure")}}Standard_D4s_v3{{end}}{{if (eq .cloud_provider "aws")}}i3.xlarge{{end}}
 
       configuration:
         wheel_path: ${var.wheel_path}
