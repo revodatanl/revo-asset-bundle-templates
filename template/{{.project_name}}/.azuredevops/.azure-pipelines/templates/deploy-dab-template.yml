@@ -19,8 +19,8 @@ steps:
 
   - script: |
       curl -LsSf https://astral.sh/uv/install.sh | sh
-      uv build
-    displayName: Install uv and build the package
+      uv --version
+    displayName: Install uv
 
   - script: |
       curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh

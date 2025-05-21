@@ -7,7 +7,7 @@ The project contains a `Makefile` with several commands to simplify common devel
 **Sets up the project development environment.**
 
 
-The command installs [`Homebrew`](https://brew.sh), [`Git`](https://git-scm.com), [`uv`](https://github.com/astral-sh/uv), and the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html), configures Python, sets up a virtual environment, and installs pre-commit hooks. The project configuration matches Databricks Runtime `15.4 LTS` (Python `3.11.11`, Apache Spark `3.5.0`).
+The command installs [`Homebrew`](https://brew.sh), [`Git`](https://git-scm.com), [`uv`](https://github.com/astral-sh/uv), and the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html), configures Python, sets up a virtual environment, and installs pre-commit hooks. The project configuration matches Databricks Runtime `15.4-LTS` (Python `3.11.11`, Apache Spark `3.5.0`).
 
 Can also be triggered by running `make setup`.
 

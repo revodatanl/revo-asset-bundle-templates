@@ -46,4 +46,4 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
     | `include_example_jobs` | Whether to include example DLT pipeline and jobs | `yes/no` |
     | `use_devcontainer` | Whether to develop in a DevContainer (recommended for Windows users) | `yes/no` |
 
-    ![bundle-init](docs/images/bundle-init.png)
+    ![bundle-init](images/bundle-init.png)

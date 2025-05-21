@@ -53,5 +53,3 @@ jobs:
           echo "Unit tests passed ✅"
         env:
           PYTHONPATH: ${{ "{{" }} github.workspace {{ "}}" }}/src/{{.package_name}}
-          # DATABRICKS_TOKEN: ${{ "{{" }} secrets.DATABRICKS_TOKEN {{ "}}" }}
-          # DATABRICKS_HOST: ${{ "{{" }} secrets.DATABRICKS_HOST {{ "}}" }}
