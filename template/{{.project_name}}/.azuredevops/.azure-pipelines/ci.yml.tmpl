@@ -46,13 +46,11 @@ jobs:
           echo "Package validated ✅"
         displayName: Build and validate package
 
-      # Run unit tests (authenticate the Databricks SDK via environment variables)
+      # Run unit tests
       - script: |
           cd $(Build.Repository.Name)
-          uv run pytest -v tests --cov=src/calving_alert --cov-report=term
+          uv run pytest -v tests --cov=src --cov-report=term
           echo "Unit tests passed ✅"
         displayName: Run unit tests
         env:
           PYTHONPATH: $(Build.SourcesDirectory)/src
-          DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
-          DATABRICKS_HOST: $(DATABRICKS_HOST)

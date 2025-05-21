@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Default configurations for both OSs
+          # Default configurations
           - os: macos-latest
             cicd_provider: github
             cloud_provider: azure
@@ -22,7 +22,12 @@ jobs:
             cloud_provider: azure
             include_example_jobs: yes
             include_devcontainer: no
-          # Non-default configuration for Ubuntu only
+          # Non-default configuration
+          - os: macos-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+            include_devcontainer: yes
           - os: ubuntu-latest
             cicd_provider: azure
             cloud_provider: aws
