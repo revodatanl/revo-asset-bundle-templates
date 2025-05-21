@@ -12,6 +12,10 @@ resources:
         on_failure:
           - notifications@example.com
 
+      parameters:
+        - name: wheel_path
+          default: ${var.wheel_path}
+
       tasks:
         - task_key: notebook_task
           job_cluster_key: job_cluster
