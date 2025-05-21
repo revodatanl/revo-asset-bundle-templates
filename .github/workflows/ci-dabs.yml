@@ -12,35 +12,33 @@ jobs:
       matrix:
         include:
           # Default configurations
-          - os: macos-latest
-            cicd_provider: github
-            cloud_provider: azure
-            include_example_jobs: yes
-            include_devcontainer: no
           - os: ubuntu-latest
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
             include_devcontainer: no
-          # Non-default configuration
-          - os: macos-latest
-            cicd_provider: azure
-            cloud_provider: aws
-            include_example_jobs: no
-            include_devcontainer: yes
-          - os: ubuntu-latest
-            cicd_provider: azure
-            cloud_provider: aws
-            include_example_jobs: no
-            include_devcontainer: yes
+          # - os: macos-latest
+          #   cicd_provider: github
+          #   cloud_provider: azure
+          #   include_example_jobs: yes
+          #   include_devcontainer: no
+
+          # # Non-default configuration
+          # - os: ubuntu-latest
+          #   cicd_provider: azure
+          #   cloud_provider: aws
+          #   include_example_jobs: no
+          #   include_devcontainer: yes
+          # - os: macos-latest
+          #   cicd_provider: azure
+          #   cloud_provider: aws
+          #   include_example_jobs: no
+          #   include_devcontainer: yes
 
     env:
       BRANCH_NAME: ${{ github.head_ref }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       - name: Install Databricks CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
@@ -63,21 +61,16 @@ jobs:
           EOF
           cat init_params.json
 
-      - name: Create dummy .databrickscfg file (note that these are fake credentials)
-        run: |
-          cat > ~/.databrickscfg << EOF
-          [DEFAULT]
-          host = https://adb-workspace.azuredatabricks.net  # fake host
-          token = dapi123456789abcdef0123456789abcdef       # fake token
-          EOF
-          chmod 600 ~/.databrickscfg
-
       - name: Initialize Databricks Asset Bundle
         run: |
           echo "Using branch: $BRANCH_NAME"
           databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-      - name: Build and Test Bundle with Makefile
+      - name: Build and test Bundle with Makefile
         run: |
           cd revo-dabs-test-project
           echo ""
@@ -134,21 +127,42 @@ jobs:
           echo "=================================================================="
           make
 
-          # TODO: enable after valid authenication to Databricks
-          # echo ""
-          # echo "=================================================================="
-          # echo "======================== VALIDATE BUNDLE ========================="
-          # echo "=================================================================="
-          # make validate
+          echo ""
+          echo "=================================================================="
+          echo "======================== VALIDATE BUNDLE ========================="
+          echo "=================================================================="
+          databricks bundle validate
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-          # echo ""
-          # echo "=================================================================="
-          # echo "======================== DEPLOY BUNDLE ==========================="
-          # echo "=================================================================="
-          # make deploy
+      - name: Deploy and Destroy Bundle (for default configuration only)
+        if: |
+          matrix.os == 'ubuntu-latest' &&
+          matrix.cicd_provider == 'github' &&
+          matrix.cloud_provider == 'azure' &&
+          matrix.include_example_jobs == 'yes' &&
+          matrix.include_devcontainer == 'no'
+        run: |
+          cd revo-dabs-test-project
+          echo ""
+          echo "=================================================================="
+          echo "======================== DEPLOY BUNDLE ==========================="
+          echo "=================================================================="
+          databricks bundle deploy
 
-          # echo ""
-          # echo "=================================================================="
-          # echo "======================== DESTROY BUNDLE =========================="
-          # echo "=================================================================="
-          # make destroy
+          echo ""
+          echo "=================================================================="
+          echo "======================== DESTROY BUNDLE =========================="
+          echo "=================================================================="
+          databricks bundle destroy --auto-approve
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+
+          # template the Ci pipeline
+          # - name: Template CI pipeline
+          #   run: |
+          #     databricks pipelines update --name "ci-dabs" --pipeline-config-path "pipeline.json"
