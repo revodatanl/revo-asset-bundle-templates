@@ -1,7 +1,6 @@
 name: CI DABs
 
 on:
-  push:
   pull_request:
     types: [opened, synchronize, reopened]
 
