@@ -1,3 +1,15 @@
+# [0.14.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.13.0...v0.14.0) (2025-05-22)
+
+
+### Bug Fixes
+
+* **configuration:** update mypy configuration and Makefile redundancies ([a86237b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a86237bce931f15840bcb298bcd6f701a06095c3))
+
+
+### Features
+
+* **gitmoji:** add this very important hook to the template ([514f635](https://github.com/revodatanl/revo-asset-bundle-templates/commit/514f635b2b4ce71d5333cdf9195df44f8e00d130))
+
 # [0.13.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.12.0...v0.13.0) (2025-05-13)
 
 
