@@ -46,38 +46,37 @@ pydocstyle.convention = "numpy"
 external = ["DOC"]
 select = ["ALL"]
 ignore = [
-    "COM812",   # "Checks for the absence of trailing commas." Redundant when used in tandem with the formatter.
-    "D203",     # "One blank line required before class docstring." Should be disabled by default.
-    "D213",     # "Multi-line docstring summary should start at the second line." Should be disabled by default.
-    "E501",     # "Line too long." Sometimes my comments are a bit longer.
-    "E731",     # "Do not assign a lambda expression, use a def." Needed for spark UDFs.
-    "ERA001",   # "Found commented out code."
-    "FBT001",   # "Boolean positional arg in function definition.
-    "FBT002",   # "Boolean default value in function definition."
-    "FBT003",   # "Boolean positional value in function call." This is common in spark.
-    "ISC001",   # "Implicit string concatenation." Ignored since it conflicts with the formatter.
-    "N812",     # "Lowercase `functions` imported as non-lowercase." Pretty standard for spark programming.
-    "T201",     # "`print` found."
+    "COM812",   # "Checks for the absence of trailing commas" - redundant when used in tandem with the formatter
+    "D203",     # "One blank line required before class docstring" - should be disabled by default
+    "D213",     # "Multi-line docstring summary should start at the second line" - should be disabled by default
+    "E501",     # "Line too long"
+    "ERA001",   # "Found commented out code"
+    "FBT001",   # "Boolean positional arg in function definition"
+    "FBT002",   # "Boolean default value in function definition"
+    "FBT003",   # "Boolean positional value in function call"
+    "ISC001",   # "Implicit string concatenation" - conflicts with the formatter
+    "N812",     # "Lowercase `functions` imported as non-lowercase"
+    "T201",     # "`print` found"
     # Nitpicky exceptions - comment out when productionalizing your code
-    "BLE001",   # Do not catch blind exception: `Exception`
-    "D400",     # First line should end with a period
-    "D401",     # First line of docstring should be in imperative mood
-    "PD901",    # Avoid using the generic variable name `df` for DataFrames
-    "PLR2004",  # "Magic value used in comparison, consider replacing with a constant variable."
-    "TRY003"    #  Avoid specifying long messages outside the exception class
+    "BLE001",   # "Do not catch blind exception: `Exception`"
+    "D400",     # "First line should end with a period"
+    "D401",     # "First line of docstring should be in imperative mood"
+    "PD901",    # "Avoid using the generic variable name `df` for DataFrames"
+    "PLR2004",  # "Magic value used in comparison, consider replacing with a constant variable"
+    "TRY003"    # "Avoid specifying long messages outside the exception class"
 ]
 unfixable = [
-    "F401",     # "Unused import." Disabled since it makes linting/formatting notebooks messy and impossible.
+    "F401",     # "Unused import" - disabled since it makes linting/formatting Jupyter notebooks messy
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "notebooks/**/*.py" = [
-    "D100",     # "Missing docstring in public module." Not needed for Databricks notebooks.
-    "INP001",   # "Part of an implicit namespace package. Add an `__init__.py`." Not needed for Databricks notebooks.
+    "D100",     # "Missing docstring in public module" - not needed for Databricks notebooks
+    "INP001",   # "Part of an implicit namespace package. Add an `__init__.py`" - not needed for Databricks notebooks
 ]
 "tests/*.py" = [
-    "PLR2004",  # "Magic value used in comparison, consider replacing with a constant variable."
-    "S101",     # "Use of `assert` detected."
+    "PLR2004",  # "Magic value used in comparison, consider replacing with a constant variable"
+    "S101",     # "Use of `assert` detected"
 ]
 
 [tool.mypy]
@@ -111,8 +110,8 @@ templater = "jinja"
 max_line_length = 120
 ignore = "parsing"
 exclude_rules = [
-    "LT01",     # "Expected single whitespace between magic start and magic line."
     "AM04",     # "Query produces an unknown number of result columns."
+    "LT01",     # "Expected single whitespace between magic start and magic line."
 ]
 
 [tool.sqlfluff.indentation]
