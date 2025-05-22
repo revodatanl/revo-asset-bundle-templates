@@ -26,7 +26,7 @@ resources:
             - task_key: notebook_task
           job_cluster_key: job_cluster
           python_wheel_task:
-            package_name: {{.package_name}}
+            package_name: {{ .project_name | split "-" | join "_" }}
             entry_point: main
           libraries:
             # By default we just include the .whl file generated for the {{.package_name}} package.
