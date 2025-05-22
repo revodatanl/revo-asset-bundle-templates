@@ -10,10 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Install uv
         run: |
@@ -25,6 +23,7 @@ jobs:
 
       - name: Run formatting checks
         run: |
+          set -e
           echo "Running ruff"
           uv run ruff check --output-format=github .
           echo "Running mypy"
@@ -39,6 +38,7 @@ jobs:
 
       - name: Build and validate package
         run: |
+          set -e
           echo "Building package"
           uv build
           echo "Unpacking package"
@@ -49,6 +49,7 @@ jobs:
 
       - name: Run unit tests
         run: |
+          set -e
           uv run pytest -v tests --cov=src/{{.package_name}} --cov-report=term
           echo "Unit tests passed ✅"
         env:
