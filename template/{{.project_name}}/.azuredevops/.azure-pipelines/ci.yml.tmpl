@@ -40,9 +40,9 @@ jobs:
           echo "Building package"
           uv build
           echo "Unpacking package"
-          tar -xvzf dist/{{.package_name}}-*.tar.gz
+          tar -xvzf dist/{{replace .project_name "-" "_"}}-*.tar.gz
           echo "Validating package"
-          diff -r -x __pycache__ src {{.package_name}}-*/src
+          diff -r -x __pycache__ src {{replace .project_name "-" "_"}}-*/src
           echo "Package validated ✅"
         displayName: Build and validate package
 
