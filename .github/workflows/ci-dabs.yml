@@ -196,6 +196,13 @@ jobs:
           echo "Starting 'example-workflow'... (this may take a while)"
           EXAMPLE_WORKFLOW_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-workflow")) | .job_id')
           echo "Example workflow ID: $EXAMPLE_WORKFLOW_ID"
+
+          if [ -z "$EXAMPLE_WORKFLOW_ID" ]; then
+            echo "Error: Could not find example-workflow"
+            databricks jobs list --output text
+            exit 1
+          fi
+
           RESULT_STATE=$(databricks jobs run-now $EXAMPLE_WORKFLOW_ID | jq -r '.state.result_state')
           echo "Workflow result state: $RESULT_STATE"
 
@@ -238,10 +245,17 @@ jobs:
           echo "Starting 'example-dlt-pipeline-workflow'... (this may take a while)"
           DLT_PIPELINE_WORKFLOW_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-dlt-pipeline-workflow")) | .job_id')
           echo "Example DLT pipeline ID: $DLT_PIPELINE_WORKFLOW_ID"
-          DLT_PIPELINE_WORKFLOW_RESULT_STATE=$(databricks jobs run-now $DLT_PIPELINE_WORKFLOW_ID | jq -r '.state.result_state')
-          echo "DLT pipeline result state: $DLT_PIPELINE_WORKFLOW_RESULT_STATE"
 
-          if [[ "$DLT_PIPELINE_WORKFLOW_RESULT_STATE" == "SUCCESS" ]]; then
+          if [ -z "$DLT_PIPELINE_WORKFLOW_ID" ]; then
+            echo "Error: Could not find example-dlt-pipeline-workflow"
+            databricks jobs list --output text
+            exit 1
+          fi
+
+          DLT_PIPELINE_RESULT_STATE=$(databricks jobs run-now $DLT_PIPELINE_WORKFLOW_ID | jq -r '.state.result_state')
+          echo "DLT pipeline result state: $DLT_PIPELINE_RESULT_STATE"
+
+          if [[ "$DLT_PIPELINE_RESULT_STATE" == "SUCCESS" ]]; then
             echo "DLT pipeline completed successfully!"
           else
             echo "DLT pipeline failed with status: $DLT_PIPELINE_RESULT_STATE"
