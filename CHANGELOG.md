@@ -4,6 +4,10 @@
 ### Bug Fixes
 
 * **ci-dabs:** improve error handling for missing workflows in CI pipeline ([fa911ae](https://github.com/revodatanl/revo-asset-bundle-templates/commit/fa911ae41490b029de1fbfeb861fa4cbba32052d))
+* include default_task_config in example workflow ([20fd550](https://github.com/revodatanl/revo-asset-bundle-templates/commit/20fd550))
+* setup proper error handling in CI pipeline templates ([727e977](https://github.com/revodatanl/revo-asset-bundle-templates/commit/727e977))
+* package_name issues ([6502e82](https://github.com/revodatanl/revo-asset-bundle-templates/commit/6502e82))
+* template initialization for the python_wheel_job ([83cbcea](https://github.com/revodatanl/revo-asset-bundle-templates/commit/83cbcea))
 
 ## [0.14.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.0...v0.14.1) (2025-05-22)
 
@@ -18,11 +22,18 @@
 ### Bug Fixes
 
 * **configuration:** update mypy configuration and Makefile redundancies ([a86237b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a86237bce931f15840bcb298bcd6f701a06095c3))
+* **ci-dabs:** deploy and run example workflows ([302f1fd](https://github.com/revodatanl/revo-asset-bundle-templates/commit/302f1fd))
+* **mypy:** defined mypy_path for more robustness ([4bfec8c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4bfec8c))
+* **ci-dabs:** clean the pipeline of redundancies ([7b62fed](https://github.com/revodatanl/revo-asset-bundle-templates/commit/7b62fed))
+* **ci:** debug GitHub CI pipeline ([c6c92c9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/c6c92c9))
 
 
 ### Features
 
 * **gitmoji:** add this very important hook to the template ([514f635](https://github.com/revodatanl/revo-asset-bundle-templates/commit/514f635b2b4ce71d5333cdf9195df44f8e00d130))
+* **ci-dabs:** introduce a CI pipeline to test the deployability of the DABs template ([a112cdd](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a112cdd))
+* **modules:** integrate deploy-dab pipeline by default in template, effectively making revodata modules redundant ([1331cef](https://github.com/revodatanl/revo-asset-bundle-templates/commit/1331cef))
+* **uv:** remove package_manager option from template, default to uv ([01485ca](https://github.com/revodatanl/revo-asset-bundle-templates/commit/01485ca))
 
 # [0.13.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.12.0...v0.13.0) (2025-05-13)
 
