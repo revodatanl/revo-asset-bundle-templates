@@ -32,6 +32,8 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
     databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
     ```
 
+    ![bundle-init](images/bundle-init.png)
+
     When initializing your project, you'll be prompted to answer several questions. These configurations will be used to customize your project:
 
     | Parameter | Description | Example |
@@ -45,5 +47,3 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
     | `cloud_provider` | Cloud provider | `azure/aws` |
     | `include_example_jobs` | Whether to include example DLT pipeline and jobs | `yes/no` |
     | `use_devcontainer` | Whether to develop in a DevContainer (recommended for Windows users) | `yes/no` |
-
-    ![bundle-init](images/bundle-init.png)
