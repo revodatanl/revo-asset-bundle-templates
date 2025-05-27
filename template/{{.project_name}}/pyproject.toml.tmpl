@@ -10,14 +10,17 @@ requires-python = ">=3.11,<4.0"
 scripts = { "main" = "{{.package_name}}.main:main" }
 classifiers = ["Programming Language :: Python :: 3.11", "Operating System :: OS Independent"]
 dependencies = [
-    "pyspark==3.5.0",  # Databricks Runtime 15.4-LTS
+{{if (eq .use_databricks_connect "no")}}    "pyspark==3.5.0",  # Databricks Runtime 15.4-LTS{{end}}
 ]
 
 [dependency-groups]
 dev = [
     "bandit>=1.8.3",
     "databricks-dlt{{if (eq .use_databricks_connect "no")}}==0.2.1{{else}}>=0.3.0{{end}}",
-    "databricks-sdk>=0.45.0",
+    "databricks-sdk>=0.45.0",{{if (eq .use_databricks_connect "yes")}}
+    "databricks-connect==15.4.*",
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",{{end}}
     "mkdocs-material>=9.6.7",
     "mkdocs>=1.6.1",
     "mypy>=1.15.0",
@@ -28,12 +31,7 @@ dev = [
     "pytest>=8.3.5",
     "ruff>=0.11.9",
     "sqlfluff>=3.3.1",
-]{{if (eq .use_databricks_connect "yes")}}
-db-connect = [
-    "databricks-connect==15.4.*",
-    "ipykernel>=6.29.5",
-    "jupyter>=1.1.1",
-]{{end}}
+]
 
 [tool.uv]
 package = true

@@ -16,23 +16,27 @@ jobs:
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
-            include_devcontainer: no
+            use_devcontainer: no
+            use_databricks_connect: no
           - os: macos-latest
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
-            include_devcontainer: no
+            use_devcontainer: no
+            use_databricks_connect: no
           # Non-default configuration
           - os: ubuntu-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
-            include_devcontainer: yes
+            use_devcontainer: yes
+            use_databricks_connect: yes
           - os: macos-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
-            include_devcontainer: yes
+            use_devcontainer: yes
+            use_databricks_connect: yes
 
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -55,7 +59,8 @@ jobs:
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
             "include_example_jobs": "${{ matrix.include_example_jobs }}",
-            "include_devcontainer": "${{ matrix.include_devcontainer }}"
+            "use_devcontainer": "${{ matrix.use_devcontainer }}",
+            "use_databricks_connect": "${{ matrix.use_databricks_connect }}"
           }
           EOF
           cat init_params.json
@@ -72,6 +77,8 @@ jobs:
       - name: Build and test Databricks Asset Bundle with Makefile
         run: |
           cd revo-dabs-test-project
+          cat tests/conftest.py
+          cat pyproject.toml
           echo ""
           echo "=================================================================="
           echo "=============== BUILD PROJECT (WITH DEFAULT TARGET) =============="
@@ -142,7 +149,8 @@ jobs:
           matrix.cicd_provider == 'github' &&
           matrix.cloud_provider == 'azure' &&
           matrix.include_example_jobs == 'yes' &&
-          matrix.include_devcontainer == 'no'
+          matrix.use_devcontainer == 'no'  &&
+          matrix.use_databricks_connect == 'no'
         run: |
           cd revo-dabs-test-project
           echo ""
@@ -161,7 +169,8 @@ jobs:
           matrix.cicd_provider == 'github' &&
           matrix.cloud_provider == 'azure' &&
           matrix.include_example_jobs == 'yes' &&
-          matrix.include_devcontainer == 'no'
+          matrix.use_devcontainer == 'no' &&
+          matrix.use_databricks_connect == 'no'
         uses: actions/upload-artifact@v4
         with:
           name: revo-dabs-test-project
