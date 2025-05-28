@@ -49,7 +49,7 @@
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
-      "description": "Include example jobs (Delta Live Tables pipeline and example job) in '{{.project_name}}{{path_separator}}resources{{path_separator}}example'\n You need CREATE SCHEMA privilege on Catalog 'main' in your workspace",
+      "description": "Include example jobs (Delta Live Tables pipeline and example job) in '{{.project_name}}{{path_separator}}resources{{path_separator}}example'\nNOTE: you need CREATE SCHEMA privilege on Catalog 'main' in your workspace, or supply your own catalog",
       "order": 8
     },
     "use_devcontainer": {
