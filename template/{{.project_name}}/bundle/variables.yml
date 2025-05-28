@@ -6,3 +6,6 @@ variables:
   wheel_path:
     description: Path of the wheel file
     default: ${workspace.root_path}/artifacts/.internal/*.whl
+  schema_prefix:
+    description: Prefix to use for schemas to differentiate between developers and production
+    default: ""

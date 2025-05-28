@@ -1,6 +1,19 @@
 bundle:
   name: {{.project_name}}
 
+variables:
+  spark_version:
+    description: Default Spark version to use for jobs
+    default: 15.4.x-scala2.12
+  wheel_path:
+    description: Path of the wheel file
+    default: ${workspace.root_path}/artifacts/.internal/*.whl
+  {{- if not (eq .catalog_name "") }}
+  schema_prefix:
+    description: Prefix to use for schemas to differentiate between developers and production
+    default: ""
+  {{- end}}
+
 include:
   - bundle/variables.yml
   - bundle/targets.yml

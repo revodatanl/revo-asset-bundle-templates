@@ -10,6 +10,8 @@ targets:
     default: true
     workspace:
       host: {{workspace_host}}
+    variables:
+      schema_prefix: dev_${workspace.current_user.short_name}_
 
   # The 'test' target, used for testing deployment.
   test:
@@ -23,4 +25,4 @@ targets:
     # We use 'mode: production' to indicate this is a production deployment.
     mode: production
     workspace:
-      root_path: /Shared/{{.project_name}}/
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/my-envs/${bundle.target}
