@@ -47,3 +47,4 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
     | `cloud_provider` | Cloud provider | `azure/aws` |
     | `include_example_jobs` | Whether to include example DLT pipeline and jobs | `yes/no` |
     | `use_devcontainer` | Whether to develop in a DevContainer (recommended for Windows users) | `yes/no` |
+    | `use_databricks_connect` | Whether to include support for [Databricks Connect](https://docs.databricks.com/aws/en/dev-tools/databricks-connect/) | `yes/no` |

@@ -29,14 +29,27 @@ jobs:
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
-            use_devcontainer: yes
+            use_devcontainer: no
             use_databricks_connect: yes
           - os: macos-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
-            use_devcontainer: yes
+            use_devcontainer: no
             use_databricks_connect: yes
+          #   # DevContainer configurations
+          # - os: ubuntu-latest
+          #   cicd_provider: github
+          #   cloud_provider: azure
+          #   include_example_jobs: yes
+          #   use_devcontainer: yes
+          #   use_databricks_connect: no
+          # - os: ubuntu-latest
+          #   cicd_provider: azure
+          #   cloud_provider: aws
+          #   include_example_jobs: no
+          #   use_devcontainer: yes
+          #   use_databricks_connect: yes
 
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -77,8 +90,6 @@ jobs:
       - name: Build and test Databricks Asset Bundle with Makefile
         run: |
           cd revo-dabs-test-project
-          cat tests/conftest.py
-          cat pyproject.toml
           echo ""
           echo "=================================================================="
           echo "=============== BUILD PROJECT (WITH DEFAULT TARGET) =============="
