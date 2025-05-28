@@ -35,8 +35,8 @@ install:
 		if ! command -v uv >/dev/null 2>&1; then \
 			echo "Installing uv..."; \
 			curl -LsSf https://astral.sh/uv/install.sh | sh; \
-			echo "Adding uv to PATH..."; \
-			export PATH="$$HOME/.local/bin:$$PATH"; \
+			echo "Sourcing ~/.bashrc to update shell environment..."; \
+			source ~/.bashrc || true; \
 		else \
 			echo "uv is already installed. Skipping."; \
 		fi; \
