@@ -8,6 +8,9 @@ variables:
   wheel_path:
     description: Path of the wheel file
     default: ${workspace.root_path}/artifacts/.internal/*.whl
+  default_catalog:
+    description: Default catalog to use for pipelines. Catalog must already exist in the workspace!
+    default: main
 
 include:
   - resources/*.yml
@@ -35,3 +38,5 @@ targets:
     # We use 'mode: production' to indicate this is a production deployment.
     # Doing so enables strict verification of the settings below.
     mode: production
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}

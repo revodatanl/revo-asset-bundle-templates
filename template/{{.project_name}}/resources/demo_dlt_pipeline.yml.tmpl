@@ -1,0 +1,43 @@
+variables:
+  pipeline_name:
+    description: Name of the pipeline to be used for the schema, metadata, notebooks and labeling
+    default: demo_dlt_pipeline
+
+resources:
+
+  pipelines:
+    demo_pipeline:
+      name: ${var.pipeline_name}
+      catalog: ${var.default_catalog}
+      target: ${var.pipeline_name}
+      libraries:
+        - notebook:
+            path: ../notebooks/demo_dlt_pipeline_notebook.py
+        - file:
+            path: ../sql/demo_dlt_pipeline_file.sql
+      clusters:
+        - num_workers: 1
+        - node_type_id: {{if (eq .cloud_provider "azure")}}Standard_D4s_v3{{end}}{{if (eq .cloud_provider "aws")}}i3.xlarge{{end}}
+        - custom_tags:
+            pipeline: ${var.pipeline_name}
+      configuration:
+        pipelines.clusterShutdown.delay: 20min
+        wheel_path: ${var.wheel_path}
+
+      dry_run: false
+      continuous: false
+      photon: false
+      channel: CURRENT
+
+  jobs:
+    demo_pipeline_workflow:
+      name: ${var.pipeline_name}_workflow
+      tasks:
+        - task_key: ${var.pipeline_name}_task
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.demo_pipeline.id}
+
+  schemas:
+    pipeline_schema:
+      name: ${var.pipeline_name}
+      catalog_name: ${var.default_catalog}
