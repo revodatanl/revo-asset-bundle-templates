@@ -40,7 +40,7 @@ if main():
         comment="Bronze NYC taxi data",
     )
     def ingest_nyc_taxi() -> dlt.DataFrame:
-         """Ingest raw data from Databricks sample dataset"""
+        """Ingest raw data from Databricks sample dataset"""
         return (
             spark.readStream.format("delta")
             .load("dbfs:/databricks-datasets/nyctaxi-with-zipcodes/subsampled")
@@ -61,7 +61,7 @@ rules: dict[str, str] = {
     "valid_trip_distance": "(trip_distance_miles) > 0",
     "valid_fare_amount": "(fare_amount_usd) > 0",
 }
-validation_rules = "NOT({0})".format(" AND ".join(rules.values()))
+validation_rules = "NOT({})".format(" AND ".join(rules.values()))
 
 
 @dlt.table(
