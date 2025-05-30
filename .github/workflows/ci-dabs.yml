@@ -1,8 +1,9 @@
 name: CI DABs
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+on: push
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
+  # workflow_dispatch:
 
 jobs:
   ci-dabs:
@@ -37,22 +38,29 @@ jobs:
             include_example_jobs: no
             use_devcontainer: no
             use_databricks_connect: yes
-          #   # DevContainer configurations
-          # - os: ubuntu-latest
-          #   cicd_provider: github
-          #   cloud_provider: azure
-          #   include_example_jobs: yes
-          #   use_devcontainer: yes
-          #   use_databricks_connect: no
-          # - os: ubuntu-latest
-          #   cicd_provider: azure
-          #   cloud_provider: aws
-          #   include_example_jobs: no
-          #   use_devcontainer: yes
-          #   use_databricks_connect: yes
+          # DevContainer configurations
+          - os: ubuntu-latest
+            cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
+            use_devcontainer: yes
+            use_databricks_connect: no
+            container_name: revo-devcontainer-databricksruntime
+            container_tag: "15.4-LTS"
+          - os: ubuntu-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+            use_devcontainer: yes
+            use_databricks_connect: yes
+            container_name: revo-devcontainer-databricksruntime
+            container_tag: "15.4-LTS"
 
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+      CONTAINER_REGISTRY: ghcr.io
+      CONTAINER_NAME: ${{ matrix.container_name || '' }}
+      CONTAINER_TAG: ${{ matrix.container_tag || '' }}
 
     steps:
       - name: Install Databricks CLI
@@ -88,6 +96,7 @@ jobs:
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
       - name: Build and test Databricks Asset Bundle with Makefile
+        if: matrix.use_devcontainer == 'no'
         run: |
           cd revo-dabs-test-project
           echo ""
@@ -107,6 +116,15 @@ jobs:
           echo "=============== RE-BUILD PROJECT (WITH SETUP TARGET) ============="
           echo "=================================================================="
           make setup
+
+          echo ""
+          echo "=================================================================="
+          echo "==================== COMMIT ALL FILES ============================"
+          echo "=================================================================="
+          git config --global user.email "pipeline@github.com"
+          git config --global user.name "GitHub Actions"
+          git add .
+          git commit -m "feat: initial commit"
 
           echo ""
           echo "=================================================================="
@@ -149,6 +167,133 @@ jobs:
           echo "======================== VALIDATE BUNDLE ========================="
           echo "=================================================================="
           databricks bundle validate
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+
+      - name: Log in to GitHub Container Registry
+        if: matrix.use_devcontainer == 'yes'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull DevContainer image
+        if: matrix.use_devcontainer == 'yes'
+        run: |
+          echo "Pulling container image..."
+          docker pull ${{ env.CONTAINER_REGISTRY }}/${{ github.repository_owner }}/${{ env.CONTAINER_NAME }}:${{ env.CONTAINER_TAG }}
+
+      # Mount the project directory and run Make commands inside the container
+      - name: Build and test Databricks Asset Bundle with Makefile in container
+        if: matrix.use_devcontainer == 'yes'
+        run: |
+          cd revo-dabs-test-project
+          echo "Running commands in container..."
+          cat Makefile
+          cat pyproject.toml
+          set -e
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -e DATABRICKS_HOST="${{ secrets.DATABRICKS_HOST }}" \
+            -e DATABRICKS_CLIENT_ID="${{ secrets.DATABRICKS_CLIENT_ID }}" \
+            -e DATABRICKS_CLIENT_SECRET="${{ secrets.DATABRICKS_CLIENT_SECRET }}" \
+            -e PATH="/databricks/python3/bin:$PATH" \
+            -e UV_PROJECT_ENVIRONMENT="/databricks/python3" \
+            -e UV_SYSTEM_PYTHON=true \
+            -w /workspace/revo-dabs-test-project \
+            ${{ env.CONTAINER_REGISTRY }}/${{ github.repository_owner }}/${{ env.CONTAINER_NAME }}:${{ env.CONTAINER_TAG }} \
+            bash -c "
+              set -e
+              cd /workspace/revo-dabs-test-project
+
+              echo \"Setting Git configuration...\"
+              git config --global user.email \"pipeline@github.com\"
+              git config --global user.name \"GitHub Actions\"
+
+              echo \"Adding workspace to Git safe.directory to fix ownership issues...\"
+              git config --global --add safe.directory /workspace/revo-dabs-test-project
+              git config --global --add safe.directory '*'
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"=============== BUILD PROJECT (WITH DEFAULT TARGET) ==============\"
+              echo \"==================================================================\"
+              make
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"================ SETUP PROJECT (WITH SETUP TARGET) ===============\"
+              echo \"==================================================================\"
+              make setup
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"=============== BUILD PROJECT (WITH BUILD TARGET) ================\"
+              echo \"==================================================================\"
+              make build
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"==================== COMMIT ALL FILES ============================\"
+              echo \"==================================================================\"
+              git add .
+              git commit -m \"feat: initial commit\"
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== GENERATE TREE ===========================\"
+              echo \"==================================================================\"
+              make tree
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== LINT PROJECT ============================\"
+              echo \"==================================================================\"
+              make lint
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"========================= RUN TESTS ==============================\"
+              echo \"==================================================================\"
+              make test
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== GENERATE DOCS ===========================\"
+              echo \"==================================================================\"
+              uv run mkdocs build
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== CLEAN PROJECT ===========================\"
+              echo \"==================================================================\"
+              make clean
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"=============== RE-BUILD PROJECT (AFTER CLEAN) ===================\"
+              echo \"==================================================================\"
+              make build
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== VALIDATE BUNDLE =========================\"
+              echo \"==================================================================\"
+              databricks bundle validate
+
+              # Exit with status code from the last command
+              exit \$?
+            "
+
+          # Capture Docker exit status
+          DOCKER_EXIT_CODE=$?
+          if [ $DOCKER_EXIT_CODE -ne 0 ]; then
+            echo "Container commands failed with exit code: $DOCKER_EXIT_CODE"
+            exit $DOCKER_EXIT_CODE
+          fi
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}

@@ -175,7 +175,7 @@ docs:
 
 lint:
 	@echo "Linting the project..."
-	@uv sync
+	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
 	@echo "Building the project..."
 	@uv build > /dev/null 2>&1
 	@echo "Running ruff..."
