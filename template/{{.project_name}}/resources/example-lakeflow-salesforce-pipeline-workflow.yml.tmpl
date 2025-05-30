@@ -14,7 +14,7 @@ resources:
       catalog: {{.package_name}}_${bundle.environment}              # Location of the pipeline event log
       schema: {{.package_name}}_salesforce_${bundle.environment}    # Location of the pipeline event log
       ingestion_definition:
-        connection_name: {{.package_name}}_salesforce_connection_${bundle.environment}
+        connection_name: salesforce_connection
         objects:
           # ingests the AccountShare and AccountPartner objects.
           - table:
