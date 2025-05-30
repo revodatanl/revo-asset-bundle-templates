@@ -1,0 +1,11 @@
+{
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "default": "basic_bundle",
+      "description": "What is the name of the bundle you want to create?",
+      "order": 1
+    }
+  },
+  "success_message": "\nYour bundle '{{.project_name}}' has been created."
+}

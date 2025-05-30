@@ -1,0 +1,17 @@
+# {{.project_name}}_job.yml
+# The main job for {{.project_name}}
+
+resources:
+    jobs:
+        {{.project_name}}_job:
+            name: {{.project_name}}_job
+            tasks:
+                - task_key: notebook_task
+                  job_cluster_key: job_cluster
+                  notebook_task:
+                    notebook_path: ../src/simple_notebook.ipynb
+            job_clusters:
+                - job_cluster_key: job_cluster
+                  new_cluster:
+                    node_type_id: Standard_DS3_v2
+                    spark_version: 16.4.x-cpu-ml-scala2.12
