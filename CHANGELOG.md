@@ -1,3 +1,16 @@
+# [0.15.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.2...v0.15.0) (2025-05-30)
+
+
+### Bug Fixes
+
+* **ci-dabs:** update matrix configuration to include 'use_databricks_connect' keys ([41ef611](https://github.com/revodatanl/revo-asset-bundle-templates/commit/41ef611368904a6da8a5842a512ab4010a8070ed))
+* remove DevContainer configuration from the CI DABs pipeline ([1287e61](https://github.com/revodatanl/revo-asset-bundle-templates/commit/1287e61b8ce138837d82d1d257eca61ae9c7ad3d))
+
+
+### Features
+
+* add Databricks Connect support and adapt testing configuration accordingly ([8ce6874](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8ce687499f25eac3e4d74de1bf760e01a402ca66))
+
 ## [0.14.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.1...v0.14.2) (2025-05-23)
 
 
