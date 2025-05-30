@@ -1,9 +1,9 @@
 name: CI DABs
 
-on: push
-  # pull_request:
-  #   types: [opened, synchronize, reopened]
-  # workflow_dispatch:
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   ci-dabs:

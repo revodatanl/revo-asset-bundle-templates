@@ -1,15 +1,9 @@
 bundle:
   name: {{.project_name}}
 
-variables:
-  spark_version:
-    description: Default Spark version to use for jobs
-    default: 15.4.x-scala2.12
-  wheel_path:
-    description: Path of the wheel file
-    default: ${workspace.root_path}/artifacts/.internal/*.whl
-
 include:
+  - bundle/variables.yml
+  - bundle/targets.yml
   - resources/*.yml
 
 artifacts:
@@ -18,20 +12,3 @@ artifacts:
     path: .
     build: uv build
     dynamic_version: true
-
-# Use the host mapping with configured profiles in your .databrickscfg file to authenticate
-targets:
-  # The 'dev' target, for development purposes. This target is the default.
-  dev:
-    # We use 'mode: development' to indicate this is a personal development copy:
-    # - Deployed resources get prefixed with '[dev my_user_name]'
-    # - Any job schedules and triggers are paused by default
-    # - The 'development' mode is used for Delta Live Tables pipelines
-    mode: development
-    default: true
-
-  # The 'prod' target, used for production deployment.
-  prod:
-    # We use 'mode: production' to indicate this is a production deployment.
-    # Doing so enables strict verification of the settings below.
-    mode: production
