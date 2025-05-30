@@ -5,18 +5,16 @@
 # Add custom RevoData modules to the project
 module:
 	@echo "Select the module to deploy:"
-	@echo "1) Deploy Databricks Asset Bundle pipeline for GitHub"
-	@echo "2) Deploy Databricks Asset Bundle pipeline for Azure DevOps"
+	@echo "1) Deploy simple notebook job in Databricks"
 	@echo "Enter the number of the module you want to deploy: "
 	@read choice; \
 	case "$$choice" in \
-		1) $(MAKE) module_github-deploy-dab ;; \
-		2) $(MAKE) module_azure-devops-deploy-dab ;; \
+		1) $(MAKE) module_notebook-job ;; \
 		*) echo "Invalid choice. Exiting.";; \
 	esac
 
 module_%:
-	@if [ "$*" != "github-deploy-dab" ] && [ "$*" != "azure-devops-deploy-dab" ]; then \
+	@if [ "$*" != "notebook-job" ] ; then \
 		echo "Error: Invalid module. Use 'github-deploy-dab' or 'azure-devops-deploy-dab'."; \
 		exit 1; \
 	fi
