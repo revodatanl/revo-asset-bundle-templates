@@ -34,30 +34,59 @@
     "cicd_provider": {
       "type": "string",
       "default": "github",
-      "enum": ["github", "azure"],
+      "enum": [
+        "github",
+        "azure"
+      ],
       "description": "CI/CD provider",
       "order": 6
     },
     "cloud_provider": {
       "type": "string",
       "default": "azure",
-      "enum": ["azure", "aws"],
+      "enum": [
+        "azure",
+        "aws"
+      ],
       "description": "Cloud provider",
       "order": 7
     },
     "include_example_jobs": {
       "type": "string",
       "default": "no",
-      "enum": ["no", "yes"],
+      "enum": [
+        "no",
+        "yes"
+      ],
       "description": "Include example jobs (Delta Live Tables pipeline and example job) in '{{.project_name}}{{path_separator}}resources{{path_separator}}example'",
       "order": 8
+    },
+    "catalog_name": {
+      "type": "string",
+      "description": "Catalog name",
+      "order": 9
     },
     "use_devcontainer": {
       "type": "string",
       "default": "no",
-      "enum": ["no", "yes"],
+      "enum": [
+        "no",
+        "yes"
+      ],
       "description": "Include devcontainer (recommended for Windows users)",
-      "order": 9
+      "order": 10
+    }
+  },
+  "dependencies": {
+    "catalog_name": {
+      "properties": {
+        "include_example_jobs": {
+          "const": "yes"
+        }
+      },
+      "required": [
+        "include_example_jobs"
+      ]
     }
   },
   "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in 'databricks.yml' and configure 'PROFILE_NAME' in the 'Makefile')\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
