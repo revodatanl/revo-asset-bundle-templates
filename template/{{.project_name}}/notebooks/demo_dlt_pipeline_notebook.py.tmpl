@@ -40,7 +40,7 @@ if main():
         comment="Bronze NYC taxi data",
     )
     def ingest_nyc_taxi() -> dlt.DataFrame:
-        """Ingest raw data using the Auto Loader."""
+         """Ingest raw data from Databricks sample dataset"""
         return (
             spark.readStream.format("delta")
             .load("dbfs:/databricks-datasets/nyctaxi-with-zipcodes/subsampled")
@@ -51,7 +51,7 @@ if main():
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Set [expectations](https://learn.microsoft.com/en-us/azure/databricks/delta-live-tables/expectations) and quarantine rules to monitor silver data quality
+# MAGIC ## Set [expectations](https://learn.microsoft.com/en-us/azure/databricks/delta-live-tables/expectations)
 # MAGIC
 
 # COMMAND ----------
@@ -61,7 +61,7 @@ rules: dict[str, str] = {
     "valid_trip_distance": "(trip_distance_miles) > 0",
     "valid_fare_amount": "(fare_amount_usd) > 0",
 }
-quarantine_rules = "NOT({0})".format(" AND ".join(rules.values()))
+validation_rules = "NOT({0})".format(" AND ".join(rules.values()))
 
 
 @dlt.table(
@@ -71,6 +71,7 @@ quarantine_rules = "NOT({0})".format(" AND ".join(rules.values()))
 )
 @dlt.expect_all(rules)
 def clean_and_transform() -> dlt.DataFrame:
+    """Clean and transform bronze data, enrich with calculated columns"""
     return dlt.read_stream("bronze_nyc_taxi_trips").select(
         F.col("tpep_pickup_datetime").alias("pickup_datetime_utc"),
         F.col("tpep_dropoff_datetime").alias("dropoff_datetime_utc"),
@@ -88,7 +89,7 @@ def clean_and_transform() -> dlt.DataFrame:
         ),
         F.col("pickup_zip").cast("string"),
         F.col("dropoff_zip").cast("string"),
-        F.expr(quarantine_rules).alias("is_valid"),
+        F.expr(validation_rules).alias("is_valid"),
     )
 
 # COMMAND ----------
@@ -103,4 +104,5 @@ def clean_and_transform() -> dlt.DataFrame:
     comment="Cleaned and filtered nyc taxi data",
 )
 def filter_valid_rows() -> dlt.DataFrame:
+    """Filter silver rows that are valid trips based on the validation rules"""
     return dlt.read("silver_nyc_taxi_trips").filter("is_valid=false").drop("is_valid")
