@@ -15,15 +15,16 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "bandit>=1.8.3",
+    "bandit>=1.8.3",{{if (eq .use_databricks_connect "yes")}}
+    "databricks-connect==15.4.*",{{end}}
     "databricks-dlt{{if (eq .use_databricks_connect "no")}}==0.2.1{{else}}>=0.3.0{{end}}",
     "databricks-sdk>=0.45.0",{{if (eq .use_databricks_connect "yes")}}
-    "databricks-connect==15.4.*",
     "ipykernel>=6.29.5",
     "jupyter>=1.1.1",{{end}}
     "mkdocs-material>=9.6.7",
     "mkdocs>=1.6.1",
-    "mypy>=1.15.0",
+    "mypy>=1.15.0",{{if (eq .use_databricks_connect "yes")}}
+    "pip>=25.1.1",{{end}}
     "pre-commit>=4.1.0",
     "pydoclint>=0.6.6",
     "pytest-cov>=6.0.0",
