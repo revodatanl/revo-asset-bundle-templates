@@ -99,6 +99,8 @@ jobs:
         if: matrix.use_devcontainer == 'no'
         run: |
           cd revo-dabs-test-project
+          cat bundle/targets.yml
+          cat pyproject.toml
           echo ""
           echo "=================================================================="
           echo "=============== BUILD PROJECT (WITH DEFAULT TARGET) =============="
@@ -121,6 +123,7 @@ jobs:
           echo "=================================================================="
           echo "==================== COMMIT ALL FILES ============================"
           echo "=================================================================="
+          uv run pre-commit autoupdate || true
           git config --global user.email "pipeline@github.com"
           git config --global user.name "GitHub Actions"
           git add .
@@ -239,6 +242,7 @@ jobs:
               echo \"==================================================================\"
               echo \"==================== COMMIT ALL FILES ============================\"
               echo \"==================================================================\"
+              uv run pre-commit autoupdate || true
               git add .
               git commit -m \"feat: initial commit\"
 
