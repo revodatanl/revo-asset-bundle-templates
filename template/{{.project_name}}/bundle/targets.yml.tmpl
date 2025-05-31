@@ -8,6 +8,7 @@ targets:
     # - The 'development' mode is used for Delta Live Tables pipelines
     mode: development
     default: true
+    host: {{workspace_host}}
 
   # The 'prod' target, used for production deployment.
   prod:
@@ -16,3 +17,4 @@ targets:
     mode: production
     workspace:
       root_path: /Shared/{{.project_name}}/
+    # host: <prod_workspace_host>  # set the production workspace host
