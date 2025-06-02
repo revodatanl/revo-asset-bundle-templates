@@ -3,7 +3,8 @@ site_name: {{.project_name}}
 nav:
   - Introduction: index.md
   - Getting Started: getting_started.md
-  - Bundle Deployment: bundle_deployment.md
+  - Bundle Deployment: bundle_deployment.md{{if (eq .use_databricks_connect "yes")}}
+  - Databricks Connect: databricks_connect.md{{end}}
   - Coding Standards: coding_standards.md
   - Command Reference: commands.md
 

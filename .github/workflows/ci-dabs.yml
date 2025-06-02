@@ -99,8 +99,6 @@ jobs:
         if: matrix.use_devcontainer == 'no'
         run: |
           cd revo-dabs-test-project
-          cat bundle/targets.yml
-          cat pyproject.toml
           echo ""
           echo "=================================================================="
           echo "=============== BUILD PROJECT (WITH DEFAULT TARGET) =============="
