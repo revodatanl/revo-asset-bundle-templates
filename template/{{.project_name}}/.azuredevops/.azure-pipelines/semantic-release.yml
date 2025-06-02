@@ -43,6 +43,3 @@ jobs:
       # 4. Run Semantic Release
       - script: npx semantic-release
         displayName: Run Semantic Release
-        env:
-          # Pass the Azure DevOps OAuth token so that Git push operations are authenticated.
-          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
