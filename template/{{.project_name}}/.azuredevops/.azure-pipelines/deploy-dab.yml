@@ -7,7 +7,7 @@ trigger:
       - release/*
 
 pool:
-  name: ubuntu-latest
+  vmImage: ubuntu-latest
 
 variables:
   groupName: group_name # Azure Library Group name
@@ -34,10 +34,25 @@ stages:
                     azureSubscription: ${{ variables.azureSubscription }}_test
                     deployTarget: test
 
+  - stage: wait_for_approval
+    displayName: Manual validation before production
+    dependsOn: deploy_test
+    jobs:
+      - job: manual_validation
+        pool: server
+        steps:
+          - task: ManualValidation@0
+            timeoutInMinutes: 720
+            inputs:
+              instructions: "Please approve promotion to **production**."
+              notifyUsers: |
+                someone@example.com
+                another@example.com
+
   - stage: deploy_prd
     displayName: Deploy Databricks Asset Bundle to prd environment
     condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
-    dependsOn: deploy_acc
+    dependsOn: deploy_test
     jobs:
       - deployment: deploy_Databricks_Asset_Bundle_prd
         displayName: Deploy Databricks Asset Bundle to `prd`
@@ -52,3 +67,16 @@ stages:
                   parameters:
                     azureSubscription: ${{ variables.azureSubscription }}_prd
                     deployTarget: prd
+  - job: manual_approval
+    displayName: "Manual Approval Before Production"
+    dependsOn: ci
+    pool: server
+    steps:
+      # Wait for manual approval before deploying to production
+      - task: ManualValidation@0
+        timeoutInMinutes: 720
+        inputs:
+          instructions: "Please approve promotion to **production**."
+          notifyUsers: |
+            t.brouwer@cowmanager.com
+            thomas.brouwer@revodata.nl
