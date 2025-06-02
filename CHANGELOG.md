@@ -1,3 +1,13 @@
+## [0.15.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.0...v0.15.1) (2025-06-02)
+
+
+### Bug Fixes
+
+* **ci-dabs:** enhance workflow with DevContainer support ([233f344](https://github.com/revodatanl/revo-asset-bundle-templates/commit/233f34406ead0c3ea03c0bf981c94f97ced5bf3a))
+* decouple targets and variables from databricks.yml ([5e51792](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5e5179250174d77a189149e6be0999499e19ea53))
+* include pip dependency for databricks-connect ([6f467a1](https://github.com/revodatanl/revo-asset-bundle-templates/commit/6f467a1540a1f75edeb7befb6bb162c0742e23a0))
+* update targets configuration by adding host ([36673be](https://github.com/revodatanl/revo-asset-bundle-templates/commit/36673be9fb062d6d5fd40e5705a823d1d5ab3ee3))
+
 # [0.15.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.2...v0.15.0) (2025-05-30)
 
 
