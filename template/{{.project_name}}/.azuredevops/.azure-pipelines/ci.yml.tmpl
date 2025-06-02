@@ -50,8 +50,32 @@ jobs:
       # Run unit tests
       - script: |
           set -e
-          uv run pytest -v tests --cov=src --cov-report=term
+          uv run pytest -v tests \
+            --cov=src \
+            --cov-report=term \
+            --cov-report=xml:coverage.xml \
+            --junit-xml=test-results.xml
           echo "Unit tests passed ✅"
         displayName: Run unit tests
         env:
           PYTHONPATH: $(Build.SourcesDirectory)/src
+
+      # Publish test results
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
+        displayName: "Publish test results 📈"
+        inputs:
+          testResultsFormat: "JUnit"
+          testResultsFiles: "test-results.xml"
+          testRunTitle: "Unit Test Results"
+          searchFolder: "$(System.DefaultWorkingDirectory)"
+          mergeTestResults: true
+
+      # Publish code coverage results
+      - task: PublishCodeCoverageResults@2
+        displayName: "Publish coverage report 📄"
+        condition: succeededOrFailed()
+        inputs:
+          codeCoverageTool: "Cobertura"
+          summaryFileLocation: "$(System.DefaultWorkingDirectory)/coverage.xml"
+          reportDirectory: "$(System.DefaultWorkingDirectory)"

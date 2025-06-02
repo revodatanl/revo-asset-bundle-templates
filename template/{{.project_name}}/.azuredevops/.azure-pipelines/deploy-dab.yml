@@ -35,7 +35,7 @@ stages:
                     deployTarget: test
 
   - stage: wait_for_approval
-    displayName: Manual validation before production
+    displayName: Manual validation
     dependsOn: deploy_test
     jobs:
       - job: manual_validation
@@ -48,6 +48,8 @@ stages:
               notifyUsers: |
                 someone@example.com
                 another@example.com
+            displayName: Manual validation
+
 
   - stage: deploy_prd
     displayName: Deploy Databricks Asset Bundle to prd environment
