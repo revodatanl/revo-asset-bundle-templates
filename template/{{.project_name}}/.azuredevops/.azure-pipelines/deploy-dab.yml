@@ -50,7 +50,6 @@ stages:
                 another@example.com
             displayName: Manual validation
 
-
   - stage: deploy_prd
     displayName: Deploy Databricks Asset Bundle to prd environment
     condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
