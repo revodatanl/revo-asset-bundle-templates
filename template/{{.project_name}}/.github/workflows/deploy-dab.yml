@@ -2,47 +2,50 @@ name: Deploy Databricks Asset Bundle
 
 on:
   push:
-    branches:
-      - main
-      - release/**
+    branches: [ main, release/** ]
 
 jobs:
-  deploy_dev:
+# ────────────────  TEST  ────────────────
+  deploy_test:
+    name: Deploy to test
+    if: startsWith(github.ref, 'refs/heads/main/')
     runs-on: ubuntu-latest
-
+    environment: test
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - uses: ./.github/actions/deploy-dab
         with:
-          python-version: 3.11
-
-      - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
-          databricks version
-
-      - name: Install uv
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv --version
-
-      - name: Authenticate Databricks
-        run: |
-          cat > ~/.databrickscfg << EOF
-          [DEFAULT]
-          host = $DATABRICKS_HOST
-          client_id = $DATABRICKS_CLIENT_ID
-          client_secret = $DATABRICKS_CLIENT_SECRET
-          EOF
-          chmod 600 ~/.databrickscfg
+          target: test
         env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS-HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS-CLIENT-ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS-CLIENT-SECRET }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-      - name: Deploy Databricks Bundle
-        run: |
-          databricks bundle deploy --target dev
+# ───────  MANUAL APPROVAL (prod env gate)  ───────
+  wait_for_approval:
+    name: Await production approval
+    if: startsWith(github.ref, 'refs/heads/release/')
+    needs: deploy_test
+    runs-on: ubuntu-latest
+    environment: prod          # ← triggers the approval gate
+    steps:
+      - run: echo "Pausing — please approve to continue to production…"
+
+# ────────────────  PROD  ────────────────
+  deploy_prod:
+    name: Deploy to production
+    if: startsWith(github.ref, 'refs/heads/release/')
+    needs: wait_for_approval
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/deploy-dab
+        with:
+          target: prd
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
