@@ -22,3 +22,7 @@ This file only provides template directives; it is skipped for the actual output
 {{if not (eq .use_devcontainer "yes")}}
   {{skip "{{.project_name}}/.devcontainer"}}
 {{end}}
+
+{{if not (eq .use_databricks_connect "yes")}}
+  {{skip "{{.project_name}}/docs/databricks_connect.md"}}
+{{end}}
