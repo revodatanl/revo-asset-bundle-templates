@@ -8,8 +8,10 @@ resources:
   pipelines:
     demo_pipeline:
       name: ${var.pipeline_name}
-      # catalog: ${var.default_catalog} # Need CREATE SCHEMA privileges on catalog to enable writing to catalog.schema
-      # target: ${var.pipeline_name}
+      {{if not (eq .catalog_name "")}}
+      catalog: {{.catalog_name}} # Need CREATE SCHEMA privileges on catalog to enable writing to catalog.schema
+      target: ${var.pipeline_name}
+      {{end}}
       libraries:
         - notebook:
             path: ../notebooks/demo_dlt_pipeline_notebook.py
