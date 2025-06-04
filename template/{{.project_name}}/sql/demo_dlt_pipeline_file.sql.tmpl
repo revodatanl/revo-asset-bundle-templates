@@ -1,5 +1,5 @@
 CREATE OR REFRESH MATERIALIZED VIEW gold_nyc_taxi_daily_revenue AS SELECT
-    DATE(pickup_datetime_utc) AS date,
+    DATE(pickup_datetime_utc) AS pickup_date,
     SUM(fare_amount_usd) AS total_fare_amount_usd
 FROM live.valid_nyc_taxi_trips
 GROUP BY DATE(pickup_datetime_utc)
