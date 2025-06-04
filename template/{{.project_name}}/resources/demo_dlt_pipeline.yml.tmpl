@@ -38,8 +38,3 @@ resources:
         - task_key: ${var.pipeline_name}_task
           pipeline_task:
             pipeline_id: ${resources.pipelines.demo_pipeline.id}
-
-  # schemas:
-  #   pipeline_schema:
-  #     name: ${var.pipeline_name}
-  #     catalog_name: ${var.default_catalog}

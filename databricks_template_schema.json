@@ -63,7 +63,7 @@
     },
     "catalog_name": {
       "type": "string",
-      "description": "Catalog name for example jobs, leave empty to skip writing tables",
+      "description": "Catalog name for example jobs, leave blank to skip writing tables",
       "order": 9
     },
     "use_devcontainer": {
