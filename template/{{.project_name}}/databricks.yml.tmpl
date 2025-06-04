@@ -8,9 +8,11 @@ variables:
   wheel_path:
     description: Path of the wheel file
     default: ${workspace.root_path}/artifacts/.internal/*.whl
-  default_catalog:
-    description: Default catalog to use for pipelines. Catalog must already exist in the workspace!
-    default: main
+  {{if not (eq .catalog_name "")}}
+  schema_prefix:
+    description: Prefix to use for schemas to differentiate between developers and production
+    default: ""
+  {{end}}
 
 include:
   - resources/*.yml
@@ -32,6 +34,10 @@ targets:
     # - The 'development' mode is used for Delta Live Tables pipelines
     mode: development
     default: true
+    {{if not (eq .catalog_name "")}}
+    variables:
+      schema_prefix: dev_${workspace.current_user.short_name}_
+    {{end}}
 
   # The 'prod' target, used for production deployment.
   prod:
