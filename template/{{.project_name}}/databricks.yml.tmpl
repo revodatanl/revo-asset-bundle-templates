@@ -37,7 +37,7 @@ targets:
     {{if not (eq .catalog_name "")}}
     variables:
       schema_prefix: dev_${workspace.current_user.short_name}_
-    {{end}}
+    {{end -}}
 
   # The 'prod' target, used for production deployment.
   prod:
