@@ -75,6 +75,13 @@
       ],
       "description": "Include devcontainer (recommended for Windows users)",
       "order": 10
+    },
+    "use_databricks_connect": {
+      "type": "string",
+      "default": "no",
+      "enum": ["no", "yes"],
+      "description": "Enable Databricks Connect for remote Spark execution",
+      "order": 11
     }
   },
   "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in 'databricks.yml' and configure 'PROFILE_NAME' in the 'Makefile')\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
