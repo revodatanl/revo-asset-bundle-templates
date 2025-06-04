@@ -1,9 +1,36 @@
+## [0.15.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.0...v0.15.1) (2025-06-02)
+
+
+### Bug Fixes
+
+* **ci-dabs:** enhance workflow with DevContainer support ([233f344](https://github.com/revodatanl/revo-asset-bundle-templates/commit/233f34406ead0c3ea03c0bf981c94f97ced5bf3a))
+* decouple targets and variables from databricks.yml ([5e51792](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5e5179250174d77a189149e6be0999499e19ea53))
+* include pip dependency for databricks-connect ([6f467a1](https://github.com/revodatanl/revo-asset-bundle-templates/commit/6f467a1540a1f75edeb7befb6bb162c0742e23a0))
+* update targets configuration by adding host ([36673be](https://github.com/revodatanl/revo-asset-bundle-templates/commit/36673be9fb062d6d5fd40e5705a823d1d5ab3ee3))
+
+# [0.15.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.2...v0.15.0) (2025-05-30)
+
+
+### Bug Fixes
+
+* **ci-dabs:** update matrix configuration to include 'use_databricks_connect' keys ([41ef611](https://github.com/revodatanl/revo-asset-bundle-templates/commit/41ef611368904a6da8a5842a512ab4010a8070ed))
+* remove DevContainer configuration from the CI DABs pipeline ([1287e61](https://github.com/revodatanl/revo-asset-bundle-templates/commit/1287e61b8ce138837d82d1d257eca61ae9c7ad3d))
+
+
+### Features
+
+* add Databricks Connect support and adapt testing configuration accordingly ([8ce6874](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8ce687499f25eac3e4d74de1bf760e01a402ca66))
+
 ## [0.14.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.1...v0.14.2) (2025-05-23)
 
 
 ### Bug Fixes
 
 * **ci-dabs:** improve error handling for missing workflows in CI pipeline ([fa911ae](https://github.com/revodatanl/revo-asset-bundle-templates/commit/fa911ae41490b029de1fbfeb861fa4cbba32052d))
+* include default_task_config in example workflow ([20fd550](https://github.com/revodatanl/revo-asset-bundle-templates/commit/20fd550))
+* setup proper error handling in CI pipeline templates ([727e977](https://github.com/revodatanl/revo-asset-bundle-templates/commit/727e977))
+* package_name issues ([6502e82](https://github.com/revodatanl/revo-asset-bundle-templates/commit/6502e82))
+* template initialization for the python_wheel_job ([83cbcea](https://github.com/revodatanl/revo-asset-bundle-templates/commit/83cbcea))
 
 ## [0.14.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.0...v0.14.1) (2025-05-22)
 
@@ -18,11 +45,18 @@
 ### Bug Fixes
 
 * **configuration:** update mypy configuration and Makefile redundancies ([a86237b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a86237bce931f15840bcb298bcd6f701a06095c3))
+* **ci-dabs:** deploy and run example workflows ([302f1fd](https://github.com/revodatanl/revo-asset-bundle-templates/commit/302f1fd))
+* **mypy:** defined mypy_path for more robustness ([4bfec8c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4bfec8c))
+* **ci-dabs:** clean the pipeline of redundancies ([7b62fed](https://github.com/revodatanl/revo-asset-bundle-templates/commit/7b62fed))
+* **ci:** debug GitHub CI pipeline ([c6c92c9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/c6c92c9))
 
 
 ### Features
 
 * **gitmoji:** add this very important hook to the template ([514f635](https://github.com/revodatanl/revo-asset-bundle-templates/commit/514f635b2b4ce71d5333cdf9195df44f8e00d130))
+* **ci-dabs:** introduce a CI pipeline to test the deployability of the DABs template ([a112cdd](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a112cdd))
+* **modules:** integrate deploy-dab pipeline by default in template, effectively making revodata modules redundant ([1331cef](https://github.com/revodatanl/revo-asset-bundle-templates/commit/1331cef))
+* **uv:** remove package_manager option from template, default to uv ([01485ca](https://github.com/revodatanl/revo-asset-bundle-templates/commit/01485ca))
 
 # [0.13.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.12.0...v0.13.0) (2025-05-13)
 

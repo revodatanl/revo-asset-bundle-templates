@@ -10,18 +10,21 @@ requires-python = ">=3.11,<4.0"
 scripts = { "main" = "{{.package_name}}.main:main" }
 classifiers = ["Programming Language :: Python :: 3.11", "Operating System :: OS Independent"]
 dependencies = [
-    "pyspark==3.5.0",  # Databricks Runtime 15.4-LTS
+{{if (eq .use_databricks_connect "no")}}    "pyspark==3.5.0",  # Databricks Runtime 15.4-LTS{{end}}
 ]
 
 [dependency-groups]
 dev = [
-    "bandit>=1.8.3",
-    # "databricks-connect==15.4.*",
-    "databricks-dlt==0.2.1",
-    "databricks-sdk>=0.45.0",
+    "bandit>=1.8.3",{{if (eq .use_databricks_connect "yes")}}
+    "databricks-connect==15.4.*",{{end}}
+    "databricks-dlt{{if (eq .use_databricks_connect "no")}}==0.2.1{{else}}>=0.3.0{{end}}",
+    "databricks-sdk>=0.45.0",{{if (eq .use_databricks_connect "yes")}}
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",{{end}}
     "mkdocs-material>=9.6.7",
     "mkdocs>=1.6.1",
-    "mypy>=1.15.0",
+    "mypy>=1.15.0",{{if (eq .use_databricks_connect "yes")}}
+    "pip>=25.1.1",{{end}}
     "pre-commit>=4.1.0",
     "pydoclint>=0.6.6",
     "pytest-cov>=6.0.0",
@@ -39,13 +42,14 @@ target-version = "py311"
 line-length = 100
 extend-include = ["*.ipynb"]
 extend-exclude = ["scratch"]
-builtins = ["dbutils", "display", "spark", "dlt"]
+builtins = ["dbutils", "display", "spark"]
 
 [tool.ruff.lint]
 pydocstyle.convention = "numpy"
 external = ["DOC"]
 select = ["ALL"]
 ignore = [
+    # RevoData's standard exceptions
     "COM812",   # "Checks for the absence of trailing commas" - redundant when used in tandem with the formatter
     "D203",     # "One blank line required before class docstring" - should be disabled by default
     "D213",     # "Multi-line docstring summary should start at the second line" - should be disabled by default
@@ -57,8 +61,13 @@ ignore = [
     "ISC001",   # "Implicit string concatenation" - conflicts with the formatter
     "N812",     # "Lowercase `functions` imported as non-lowercase"
     "T201",     # "`print` found"
-    # Nitpicky exceptions - comment out when productionalizing your code
+    # RevoData's nitpicky exceptions - comment out when productionalizing your code
     "BLE001",   # "Do not catch blind exception: `Exception`"
+    "D100",     # "Missing docstring in public module"
+    "D104",     # "Missing docstring in public package"
+    "D105",     # "Missing docstring in magic method"
+    "D106",     # "Missing docstring in public nested class"
+    "D107",     # "Missing docstring in __init__"
     "D400",     # "First line should end with a period"
     "D401",     # "First line of docstring should be in imperative mood"
     "PD901",    # "Avoid using the generic variable name `df` for DataFrames"

@@ -118,7 +118,8 @@ clean:
 		-name ".ruff_cache" -o \
 		-name ".venv" -o \
 		-name "dist" -o \
-		-name "site" \) \
+		-name "site" -o \
+		-name "*.egg-info" \) \
 		-type d -exec rm -rf {} + 2>/dev/null || true
 	@find . -name ".coverage" -type f -delete 2>/dev/null || true
 	@echo "Rebuilding the project..."
@@ -174,7 +175,7 @@ docs:
 
 lint:
 	@echo "Linting the project..."
-	@uv sync
+	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
 	@echo "Building the project..."
 	@uv build > /dev/null 2>&1
 	@echo "Running ruff..."

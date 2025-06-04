@@ -2,7 +2,10 @@
 
 To contribute to this GitHub project, you can follow these steps:
 
-1. Fork the repository you want to contribute to by clicking the "Fork" button on the project page.
+1. you can take two paths:
+
+    a. Developing within the RevoData organisation: create a feature branch and work from there.
+    b. Developing outside the RevoData organisation: fork the repository by clicking the "Fork" button on the project page.
 
 2. Clone the repository to your local machine using the following command:
 
@@ -44,7 +47,7 @@ git push origin branch-name
 
 11. Add a meaningful description of your changes and click the "Create pull request" button.
 
-12. Wait for the project maintainer to review your changes and provide feedback.
+12. Wait for the project maintainer to review your changes and provide feedback. Also, the `CI DABs` pipeline must pass succesfully. You may need to add secrets to your repository.
 
 13. Make any necessary changes based on feedback and repeat steps 5-12 until your changes are accepted and merged into the main project.
 
@@ -52,8 +55,8 @@ git push origin branch-name
 
 ```bash
 git fetch upstream
-git checkout master
-git merge upstream/master
+git checkout main
+git merge upstream/main
 ```
 
 Finally, delete the branch you created with the following command:
