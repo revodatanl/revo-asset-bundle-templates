@@ -25,26 +25,3 @@ artifacts:
     path: .
     build: uv build
     dynamic_version: true
-
-# Use the host mapping with configured profiles in your .databrickscfg file to authenticate
-targets:
-  # The 'dev' target, for development purposes. This target is the default.
-  dev:
-    # We use 'mode: development' to indicate this is a personal development copy:
-    # - Deployed resources get prefixed with '[dev my_user_name]'
-    # - Any job schedules and triggers are paused by default
-    # - The 'development' mode is used for Delta Live Tables pipelines
-    mode: development
-    default: true
-    {{if not (eq .catalog_name "")}}
-    variables:
-      schema_prefix: dev_${workspace.current_user.short_name}_
-    {{end}}
-
-  # The 'prod' target, used for production deployment.
-  prod:
-    # We use 'mode: production' to indicate this is a production deployment.
-    # Doing so enables strict verification of the settings below.
-    mode: production
-    workspace:
-      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}

@@ -10,6 +10,8 @@ targets:
     default: true
     workspace:
       host: {{workspace_host}}
+    variables:
+      schema_prefix: ${workspace.current_user.short_name}
 
   # The 'prod' target, used for production deployment.
   prod:
@@ -17,4 +19,4 @@ targets:
     # Doing so enables strict verification of the settings below.
     mode: production
     workspace:
-      root_path: /Shared/{{.project_name}}/
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/my-envs/${bundle.target}
