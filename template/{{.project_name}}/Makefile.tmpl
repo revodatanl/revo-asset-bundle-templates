@@ -68,6 +68,7 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit..."
+	@uv run pre-commit autoupdate || true
 	@uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
 
 	@echo "Setup completed successfully!"
