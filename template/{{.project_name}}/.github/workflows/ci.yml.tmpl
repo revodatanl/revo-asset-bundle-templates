@@ -6,8 +6,10 @@ on:
 
 jobs:
   ci:
-    name: CI
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -50,7 +52,21 @@ jobs:
       - name: Run unit tests
         run: |
           set -e
-          uv run pytest -v tests --cov=src/{{.package_name}} --cov-report=term
+          uv run pytest -v tests \
+          --cov=src \
+          --cov-report=term \
+          --cov-report=xml:coverage.xml \
+          --junit-xml=test-results.xml
           echo "Unit tests passed ✅"
         env:
-          PYTHONPATH: ${{ "{{" }} github.workspace {{ "}}" }}/src/{{.package_name}}
+          PYTHONPATH: ${{ github.workspace }}/src
+
+      - name: Publish coverage report to Codecov 📈
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          files: coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          verbose: true
+          use_oidc: true

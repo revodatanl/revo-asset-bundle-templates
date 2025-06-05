@@ -11,10 +11,16 @@ targets:
     workspace:
       host: {{workspace_host}}
 
+  # The 'test' target, used for testing deployment.
+  test:
+    # We use 'mode: production' to mimic behavior of production deployment.
+    mode: production
+    workspace:
+      root_path: /Shared/{{.project_name}}/
+
   # The 'prod' target, used for production deployment.
   prod:
     # We use 'mode: production' to indicate this is a production deployment.
-    # Doing so enables strict verification of the settings below.
     mode: production
     workspace:
       root_path: /Shared/{{.project_name}}/

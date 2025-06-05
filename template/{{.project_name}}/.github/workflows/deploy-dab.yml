@@ -5,16 +5,17 @@ on:
     branches: [ main, release/** ]
 
 jobs:
-# ────────────────  TEST  ────────────────
   deploy_test:
     name: Deploy to test
-    if: startsWith(github.ref, 'refs/heads/main/')
+    if: startsWith(github.ref, 'refs/heads/main')
     runs-on: ubuntu-latest
     environment: test
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: ./.github/actions/deploy-dab
+      - name: Deploy to test
+        uses: ./.github/actions/deploy-dab
         with:
           target: test
         env:
@@ -22,17 +23,18 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-# ───────  MANUAL APPROVAL (prod env gate)  ───────
+  # Configure environment protection rules in your GitHub repository settings.
+  # Go to Settings → Environments → `prod` and add required reviewers.
   wait_for_approval:
     name: Await production approval
     if: startsWith(github.ref, 'refs/heads/release/')
-    needs: deploy_test
     runs-on: ubuntu-latest
-    environment: prod          # ← triggers the approval gate
+    environment: prod
     steps:
-      - run: echo "Pausing — please approve to continue to production…"
+      - name: Notify approvers
+        run: |
+          echo "Production deployment for ${{ github.ref_name }} is pending approval"
 
-# ────────────────  PROD  ────────────────
   deploy_prod:
     name: Deploy to production
     if: startsWith(github.ref, 'refs/heads/release/')
@@ -40,11 +42,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: ./.github/actions/deploy-dab
+      - name: Deploy to production
+        uses: ./.github/actions/deploy-dab
         with:
-          target: prd
+          target: prod
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}

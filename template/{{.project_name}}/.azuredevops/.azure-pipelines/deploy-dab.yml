@@ -18,7 +18,7 @@ variables:
 stages:
   - stage: deploy_test
     displayName: Deploy Databricks Asset Bundle to test environment
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/main/')
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/main')
     jobs:
       - deployment: deploy_Databricks_Asset_Bundle_test
         displayName: Deploy Databricks Asset Bundle to `test`
@@ -42,7 +42,7 @@ stages:
         pool: server
         steps:
           - task: ManualValidation@0
-            timeoutInMinutes: 720
+            timeoutInMinutes: 720 # 12 hours
             inputs:
               instructions: "Please approve promotion to **production**."
               notifyUsers: |
@@ -50,34 +50,21 @@ stages:
                 another@example.com
             displayName: Manual validation
 
-  - stage: deploy_prd
-    displayName: Deploy Databricks Asset Bundle to prd environment
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
+  - stage: deploy_prod
+    displayName: Deploy Databricks Asset Bundle to prod environment
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/*')
     dependsOn: deploy_test
     jobs:
-      - deployment: deploy_Databricks_Asset_Bundle_prd
-        displayName: Deploy Databricks Asset Bundle to `prd`
+      - deployment: deploy_Databricks_Asset_Bundle_prod
+        displayName: Deploy Databricks Asset Bundle to `prod`
         variables:
-          - group: ${{ variables.groupName }}_prd
-        environment: ${{ variables.environmentName }}_prd
+          - group: ${{ variables.groupName }}_prod
+        environment: ${{ variables.environmentName }}_prod
         strategy:
           runOnce:
             deploy:
               steps:
                 - template: templates/deploy-dab-template.yml
                   parameters:
-                    azureSubscription: ${{ variables.azureSubscription }}_prd
-                    deployTarget: prd
-  - job: manual_approval
-    displayName: "Manual Approval Before Production"
-    dependsOn: ci
-    pool: server
-    steps:
-      # Wait for manual approval before deploying to production
-      - task: ManualValidation@0
-        timeoutInMinutes: 720
-        inputs:
-          instructions: "Please approve promotion to **production**."
-          notifyUsers: |
-            t.brouwer@cowmanager.com
-            thomas.brouwer@revodata.nl
+                    azureSubscription: ${{ variables.azureSubscription }}_prod
+                    deployTarget: prod
