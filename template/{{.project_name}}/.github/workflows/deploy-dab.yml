@@ -2,13 +2,16 @@ name: Deploy Databricks Asset Bundle
 
 on:
   push:
-    branches: [ main, release/** ]
+    branches:
+      - main
+      - release/**
 
 jobs:
   deploy_test:
     name: Deploy to test
     if: startsWith(github.ref, 'refs/heads/main')
     runs-on: ubuntu-latest
+    timeout-minutes: 720 # 12 hours
     environment: test
     steps:
       - name: Checkout repository
@@ -23,17 +26,17 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-  # Configure environment protection rules in your GitHub repository settings.
-  # Go to Settings → Environments → `prod` and add required reviewers.
+  # Make sure to configure environment protection rules to enable the manual approval
+  # in your GitHub repository settings. Go to Settings → Environments → `prod` and add required reviewers.
   wait_for_approval:
     name: Await production approval
     if: startsWith(github.ref, 'refs/heads/release/')
     runs-on: ubuntu-latest
     environment: prod
     steps:
-      - name: Notify approvers
+      - name: Wait for approval
         run: |
-          echo "Production deployment for ${{ github.ref_name }} is pending approval"
+          echo "Production deployment for ${{ github.ref_name }} has been approved and will proceed"
 
   deploy_prod:
     name: Deploy to production

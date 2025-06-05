@@ -1,11 +1,11 @@
 name: Deploy Databricks Bundle
 description: >
-  Composite action that installs the Databricks CLI & uv, authenticates
+  Composite action that installs the Databricks CLI, uv, authenticates
   against Databricks, and deploys the bundle to the requested target.
 
 inputs:
   target:
-    description: "Bundle target (test | prd)"
+    description: Bundle target (test | prod)
     required: true
 
 runs:
@@ -25,7 +25,6 @@ runs:
 
     - name: Authenticate Databricks
       shell: bash
-      # Caller must provide these env-vars (mapped from Secrets)
       run: |
         cat > ~/.databrickscfg << EOF
         [DEFAULT]
