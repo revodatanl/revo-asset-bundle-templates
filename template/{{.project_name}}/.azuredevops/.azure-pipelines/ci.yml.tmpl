@@ -9,6 +9,10 @@ jobs:
   - job: ci
     displayName: CI
     steps:
+      # Checkout code
+      - checkout: self
+        displayName: Checkout code
+
       # Install uv
       - script: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
