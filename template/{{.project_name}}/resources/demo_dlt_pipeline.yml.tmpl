@@ -12,6 +12,7 @@ resources:
       catalog: {{.catalog_name}} # Need CREATE SCHEMA privileges on catalog to enable writing to catalog.schema
       target: ${var.schema_prefix}${var.pipeline_name}
       {{end}}
+
       libraries:
         - notebook:
             path: ../notebooks/demo_dlt_pipeline_notebook.py
