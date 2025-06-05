@@ -59,7 +59,7 @@ jobs:
           --junit-xml=test-results.xml
           echo "Unit tests passed ✅"
         env:
-          PYTHONPATH: ${{ github.workspace }}/src
+          PYTHONPATH: ${{ "{{" }} github.workspace {{ "}}" }}/src
 
       - name: Publish coverage report to Codecov 📈
         uses: codecov/codecov-action@v5

@@ -36,7 +36,7 @@ stages:
 
   - stage: wait_for_approval
     displayName: Manual validation
-    dependsOn: deploy_test
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
     jobs:
       - job: manual_validation
         pool: server
@@ -52,7 +52,7 @@ stages:
 
   - stage: deploy_prod
     displayName: Deploy Databricks Asset Bundle to prod environment
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/*')
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
     dependsOn: deploy_test
     jobs:
       - deployment: deploy_Databricks_Asset_Bundle_prod
