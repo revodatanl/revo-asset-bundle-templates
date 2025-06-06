@@ -1,3 +1,17 @@
+## [0.15.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.1...v0.15.2) (2025-06-06)
+
+
+### Bug Fixes
+
+* **azure:** enhance unit test step to publish test and coverage results ([f0425ac](https://github.com/revodatanl/revo-asset-bundle-templates/commit/f0425ac4b7109399d8fd5d51463345198ef51220))
+* **azure:** omit redundancies from semantic release pipeline ([dc0f319](https://github.com/revodatanl/revo-asset-bundle-templates/commit/dc0f319225807482d6f45bdece185b48c19e8d5c))
+* **azure:** update conditions for manual validation and production deployment stages in DAB pipeline ([f5321c7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/f5321c7701301858c012a2de31f7478fb0f0fb5c))
+* **azure:** use vmImage in CI and deployment pipelines ([ef98b5c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/ef98b5c8a91b1f760d96d0d2082e3d9904453a6e))
+* **github:** add composite action for deploying Databricks bundles ([29c0346](https://github.com/revodatanl/revo-asset-bundle-templates/commit/29c03466f2791034db556f2b1fa9cd521fd5e051))
+* **github:** update DAB deployment configurations composite action ([4d274ad](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4d274ad576606434eda8bb0398bd7d53fcf7fa02))
+* **makefile:** add pre-commit autoupdate step in setup target ([b339313](https://github.com/revodatanl/revo-asset-bundle-templates/commit/b339313282d5765f3303d23858e5f9de4f7805b5))
+* **template:** add preamble directive for databricks_connect documentation ([53ce1c6](https://github.com/revodatanl/revo-asset-bundle-templates/commit/53ce1c6271c6b654b76c9aa43d0531cc19172191))
+
 ## [0.15.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.0...v0.15.1) (2025-06-02)
 
 
