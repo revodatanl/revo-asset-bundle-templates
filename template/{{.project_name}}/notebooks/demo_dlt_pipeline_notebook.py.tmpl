@@ -1,0 +1,110 @@
+# Databricks notebook source
+# MAGIC %pip install --no-deps --force-reinstall {spark.conf.get("wheel_path")}
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC # Data ingestion with Delta Live Tables
+# MAGIC
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Load libraries and functions
+# MAGIC
+
+# COMMAND ----------
+
+import dlt
+from databricks.sdk.runtime import spark
+from pyspark.sql import functions as F
+
+from {{.package_name}}.main import main
+
+seconds_in_hour = 3600
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Ingest NYC taxi demo data
+# MAGIC Only for demonstration purposes, we made the ingestion dependent on the `main` function of our wheel.
+
+# COMMAND ----------
+
+# since main() returns `True` this condition only serves as an example on how to import functions from the package
+if main():
+
+    @dlt.table(
+        name="bronze_nyc_taxi_trips",
+        table_properties={"quality": "bronze", "pipelines.reset.allowed": "false"},
+        comment="Bronze NYC taxi data",
+    )
+    def ingest_nyc_taxi() -> dlt.DataFrame:
+        """Ingest raw data from Databricks sample dataset"""
+        return (
+            spark.readStream.format("delta")
+            .load("dbfs:/databricks-datasets/nyctaxi-with-zipcodes/subsampled")
+            .withColumn("load_date_utc", F.current_timestamp())
+            .select("*", "_metadata")
+        )
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Set [expectations](https://learn.microsoft.com/en-us/azure/databricks/delta-live-tables/expectations)
+# MAGIC
+
+# COMMAND ----------
+rules: dict[str, str] = {
+    "valid_pickup_zip": "(pickup_zip IS NOT NULL)",
+    "valid_dropoff_zip": "(dropoff_zip IS NOT NULL)",
+    "valid_trip_distance": "(trip_distance_miles) > 0",
+    "valid_fare_amount": "(fare_amount_usd) > 0",
+}
+validation_rules = "NOT({})".format(" AND ".join(rules.values()))
+
+
+@dlt.table(
+    name="silver_nyc_taxi_trips",
+    table_properties={"quality": "silver"},
+    comment="Cleaned unfiltered nyc taxi data",
+)
+@dlt.expect_all(rules)
+def clean_and_transform() -> dlt.DataFrame:
+    """Clean and transform bronze data, enrich with calculated columns"""
+    return dlt.read_stream("bronze_nyc_taxi_trips").select(
+        F.col("tpep_pickup_datetime").alias("pickup_datetime_utc"),
+        F.col("tpep_dropoff_datetime").alias("dropoff_datetime_utc"),
+        (F.unix_timestamp("tpep_dropoff_datetime") - F.unix_timestamp("tpep_pickup_datetime"))
+        .cast("integer")
+        .alias("fare_duration_seconds"),
+        F.col("trip_distance").alias("trip_distance_miles"),
+        F.col("fare_amount").alias("fare_amount_usd"),
+        F.round(
+            (F.col("trip_distance_miles") / F.col("fare_duration_seconds") * seconds_in_hour),
+            2,
+        ).alias("average_speed_mph"),
+        F.round(F.try_divide(F.col("fare_amount_usd"), F.col("trip_distance_miles")), 2).alias(
+            "usd_per_mile"
+        ),
+        F.col("pickup_zip").cast("string"),
+        F.col("dropoff_zip").cast("string"),
+        F.expr(validation_rules).alias("is_valid"),
+    )
+
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Create view that filters valid rows to ensure data quality
+# MAGIC
+
+
+# COMMAND ----------
+@dlt.view(
+    name="valid_nyc_taxi_trips",
+    comment="Cleaned and filtered nyc taxi data",
+)
+def filter_valid_rows() -> dlt.DataFrame:
+    """Filter silver rows that are valid trips based on the validation rules"""
+    return dlt.read("silver_nyc_taxi_trips").filter("is_valid=false").drop("is_valid")
