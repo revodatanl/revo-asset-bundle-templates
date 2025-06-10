@@ -1,3 +1,10 @@
+## [0.15.3](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.2...v0.15.3) (2025-06-10)
+
+
+### Bug Fixes
+
+* **claude:** include Claude Code GitHub Action ([e46966e](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e46966e56e0424470216c51a2899f7a9adfc5d1e))
+
 ## [0.15.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.1...v0.15.2) (2025-06-06)
 
 
