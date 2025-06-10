@@ -19,6 +19,6 @@ repos:
     -   id: check-json
     -   id: check-xml
 -   repo: https://github.com/gitleaks/gitleaks
-    rev: v8.27.0
+    rev: v8.27.2
     hooks:
     -   id: gitleaks
