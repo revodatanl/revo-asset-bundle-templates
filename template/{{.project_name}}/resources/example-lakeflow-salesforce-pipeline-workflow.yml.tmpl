@@ -1,0 +1,29 @@
+resources:
+  jobs:
+    example-lakeflow-salesforce-pipeline-workflow:
+      name: example-lakeflow-salesforce-pipeline-workflow
+      tasks:
+        - task_key: refresh_pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.example-lakeflow-salesforce-pipeline.id}
+
+  # The main pipeline for lakeflow-salesforce ingestion
+  pipelines:
+    example-lakeflow-salesforce-pipeline:
+      name: example-lakeflow-salesforce-pipeline
+      catalog: {{.package_name}}_${bundle.environment}              # Location of the pipeline event log
+      schema: {{.package_name}}_salesforce_${bundle.environment}    # Location of the pipeline event log
+      ingestion_definition:
+        connection_name: salesforce_connection
+        objects:
+          # ingests the AccountShare and AccountPartner objects.
+          - table:
+              source_schema: objects
+              source_table: AccountShare
+              destination_catalog: example-catalog-1  # Catalog location of table AccountShare
+              destination_schema: example-schema-1    # Schema location of table AccountShare
+          - table:
+              source_schema: objects
+              source_table: AccountPartner
+              destination_catalog: example-catalog-2  # Catalog location of table AccountPartner
+              destination_schema: example-schema-2    # Schema location of table AccountPartner
