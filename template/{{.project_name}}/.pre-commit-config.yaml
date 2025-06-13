@@ -11,7 +11,7 @@ repos:
     -   id: conventional-pre-commit
         stages: [commit-msg]
 -   repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.7.8
+    rev: 0.7.11
     hooks:
     -   id: uv-lock
 -   repo: https://github.com/pre-commit/pre-commit-hooks
@@ -63,6 +63,6 @@ repos:
     -   id: sqlfluff-lint
     -   id: sqlfluff-fix
 -   repo: https://github.com/gitleaks/gitleaks
-    rev: v8.26.0
+    rev: v8.27.0
     hooks:
     -   id: gitleaks
