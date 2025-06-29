@@ -1,44 +1,41 @@
 name: Deploy Databricks Asset Bundle
 
-trigger:
-  branches:
-    include:
-      - main
-      - release/*
+# trigger:
+#   branches:
+#     include:
+#       - main
+#       - release/*
 
-pool:
-  vmImage: ubuntu-latest
-
-variables:
-  groupName: group_name # Azure Library Group name
-  environmentName: environment_name # Azure DevOps Environment name
-  keyVaultName: key_vault_name # Azure Key Vault name
-  azureSubscription: azure_subscription_name # Service Principal name
+trigger: none
 
 stages:
-  - stage: deploy_test
-    displayName: Deploy Databricks Asset Bundle to test environment
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/main')
+  - stage: Development
     jobs:
-      - deployment: deploy_Databricks_Asset_Bundle_test
-        displayName: Deploy Databricks Asset Bundle to `test`
-        variables:
-          - group: ${{ variables.groupName }}_test
-        environment: ${{ variables.environmentName }}_test
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: templates/deploy-dab-template.yml
-                  parameters:
-                    azureSubscription: ${{ variables.azureSubscription }}_test
-                    deployTarget: test
+      - template: templates/deploy-dab-template.yml
+        parameters:
+          stageName: "Development"
+          displayName: "Deploy to Development"
+          agentPool: "sup-dp"
+          variableGroup: "sup-dev"
+          databricksTarget: "dev"
+
+  - stage: Acceptance
+    dependsOn: Development
+    jobs:
+      - template: templates/deploy-dab-template.yml
+        parameters:
+          stageName: "Acceptance"
+          displayName: "Deploy to Acceptance"
+          agentPool: "sup-dp"
+          variableGroup: "sup-acc"
+          databricksTarget: "acc"
 
   - stage: wait_for_approval
     displayName: Manual validation
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
+    dependsOn: Acceptance
     jobs:
       - job: manual_validation
+        displayName: Manual validation
         pool: server
         steps:
           - task: ManualValidation@0
@@ -46,25 +43,16 @@ stages:
             inputs:
               instructions: "Please approve promotion to **production**."
               notifyUsers: |
-                someone@example.com
-                another@example.com
-            displayName: Manual validation
+                someone@superunie.nl
+                another@superunie.nl
 
-  - stage: deploy_prod
-    displayName: Deploy Databricks Asset Bundle to prod environment
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
-    dependsOn: deploy_test
+  - stage: Production
+    dependsOn: wait_for_approval
     jobs:
-      - deployment: deploy_Databricks_Asset_Bundle_prod
-        displayName: Deploy Databricks Asset Bundle to `prod`
-        variables:
-          - group: ${{ variables.groupName }}_prod
-        environment: ${{ variables.environmentName }}_prod
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: templates/deploy-dab-template.yml
-                  parameters:
-                    azureSubscription: ${{ variables.azureSubscription }}_prod
-                    deployTarget: prod
+      - template: templates/deploy-dab-template.yml
+        parameters:
+          stageName: "Production"
+          displayName: "Deploy to Production"
+          agentPool: "sup-dp"
+          variableGroup: "sup-prod"
+          databricksTarget: "prod"

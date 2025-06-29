@@ -12,3 +12,35 @@ artifacts:
     path: .
     build: uv build
     dynamic_version: true
+    
+# Use the host mapping with configured profiles in your .databrickscfg file to authenticate
+targets:
+  # The 'dev' target, for development purposes. This target is the default.
+  user_dev:
+    # We use 'mode: development' to indicate this is a personal development copy:
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default
+    # - The 'development' mode is used for Delta Live Tables pipelines
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-1648670431282423.3.azuredatabricks.net/
+
+    # The 'develop' target, for stable development purposes.
+  dev:
+    # mode: development
+    workspace:
+      host: https://adb-1648670431282423.3.azuredatabricks.net/
+
+  acc:
+    workspace:
+      # mode: production
+      host: https://adb-1392839438648454.14.azuredatabricks.net/
+
+  # The 'prod' target, used for production deployment.
+  prod:
+    # We use 'mode: production' to indicate this is a production deployment.
+    # Doing so enables strict verification of the settings below.
+    # mode: production
+    workspace:
+      host: https://adb-4268790962396140.0.azuredatabricks.net/

@@ -4,7 +4,7 @@
 
 SHELL := /bin/bash
 
-PROFILE_NAME := DEFAULT  # .databrickscfg profile name
+PROFILE_NAME := sup_dev  # .databrickscfg profile name
 {{if (eq .use_devcontainer "no")}}
 install:
 	@CURRENT_OS=$$(uname -s); \

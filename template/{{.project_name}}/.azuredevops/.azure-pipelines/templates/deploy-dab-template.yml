@@ -1,46 +1,51 @@
 parameters:
-  - name: azureSubscription
+  - name: stageName
     type: string
-    default: ""
-  - name: deployTarget
+  - name: displayName
     type: string
-    default: ""
+  - name: agentPool
+    type: string
+  - name: variableGroup
+    type: string
+  - name: databricksTarget
+    type: string
 
-steps:
-  - checkout: self
-    displayName: Checkout repository
+jobs:
+  - job: DeployJob
+    displayName: ${{ parameters.displayName }}
+    timeoutInMinutes: 0
+    pool: ${{ parameters.agentPool }}
+    variables:
+      - group: ${{ parameters.variableGroup }}
+      - name: FULL_REFRESH
+        value: false
+    steps:
+      - script: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          ls -l $HOME/.local/bin
+          export PATH=$HOME/.local/bin:$PATH
+          echo "Checking uv version..."
+          uv --version
+        displayName: "Install uv"
 
-  - task: AzureKeyVault@2
-    inputs:
-      azureSubscription: ${{ parameters.azureSubscription }}
-      KeyVaultName: $(KEYVAULT-NAME)  # from DevOps Library
-      SecretsFilter: DATABRICKS-CLIENT-ID,DATABRICKS-CLIENT-SECRET
-    displayName: Extract secrets from Azure Key Vault
+      - script: |
+          echo "Removing old Databricks CLI binary (if any)..."
+          rm /usr/local/bin/databricks
+          echo "Downloading Databricks CLI and installing it"
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+          echo "Checking Databricks CLI version..."
+          databricks version
+        displayName: "Install Databricks CLI"
 
-  - script: |
-      curl -LsSf https://astral.sh/uv/install.sh | sh
-      uv --version
-    displayName: Install uv
+      - script: |
+          envsubst < ./.azuredevops/.azure-pipelines/databricks.cfg > ~/.databrickscfg
+        env:
+          AZURE_TENANT_ID: $(AZURE_TENANT_ID)
+          AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
+          AZURE_CLIENT_SECRET: $(AZURE_CLIENT_SECRET)
+        displayName: "Configure Databricks authentication"
 
-  - script: |
-      curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
-      databricks version
-    displayName: Install Databricks CLI
-
-  - script: |
-      cat > ~/.databrickscfg << EOF
-      [DEFAULT]
-      host = $DATABRICKS_HOST
-      client_id = $DATABRICKS_CLIENT_ID
-      client_secret = $DATABRICKS_CLIENT_SECRET
-      EOF
-      chmod 600 ~/.databrickscfg
-    env:
-      DATABRICKS_HOST: $(DATABRICKS-HOST) # from DevOps Library
-      DATABRICKS_CLIENT_ID: $(DATABRICKS-CLIENT-ID) # from KeyVault
-      DATABRICKS_CLIENT_SECRET: $(DATABRICKS-CLIENT-SECRET) # from KeyVault
-    displayName: Authenticate Databricks
-
-  - script: |
-      databricks bundle deploy --target ${{ parameters.deployTarget }}
-    displayName: Deploy bundle to `${{ parameters.deployTarget }}`
+      - script: |
+          export PATH="$HOME/.local/bin:$PATH"
+          databricks bundle deploy -t ${{ parameters.databricksTarget }} --auto-approve
+        displayName: "Deploy to ${{ parameters.displayName }}"
