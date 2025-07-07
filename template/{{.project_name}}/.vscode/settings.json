@@ -8,20 +8,21 @@
     "**/__pycache__": true,
     ".pytest_cache": true
   },
-  "github.copilot.enable": {
-    "markdown": true
-  },
   "jupyter.interactiveWindow.cellMarker.codeRegex": "^# COMMAND ----------|^# Databricks notebook source|^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])",
   "jupyter.interactiveWindow.cellMarker.default": "# COMMAND ----------",
   "jupyter.notebookFileRoot": "${workspaceFolder}",
-  "makefile.configureOnOpen": true,{{if not (eq .use_devcontainer "yes")}}
-  "mypy-type-checker.path": ["${workspaceFolder}/.venv/bin/mypy"],{{end}}
+  "makefile.configureOnOpen": true,
+  "notebook.formatOnSave.enabled": true,
+  "notebook.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
   "python.analysis.diagnosticSeverityOverrides": {
     "reportUndefinedVariable": "none"
   },
   "python.analysis.extraPaths": ["${workspaceFolder}"],
   "python.analysis.stubPath": ".vscode",
-  "python.defaultInterpreterPath": {{if not (eq .use_devcontainer "yes")}}"${workspaceFolder}/.venv/bin/python"{{else}}"/databricks/python3/bin/python"{{end}},
+  "python.defaultInterpreterPath": "./.venv/bin/python",
   "python.terminal.activateEnvInCurrentTerminal": true,
   "python.terminal.activateEnvironment": true,
   "python.testing.pytestArgs": ["."],
@@ -44,21 +45,6 @@
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
     }
-  },
-  "notebook.formatOnSave.enabled": true,
-  "notebook.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit"
-  },
-  "[sql]": {
-    "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": false
-  },
-  "[xml]": {
-  "editor.defaultFormatter": "redhat.vscode-xml",
-  "editor.formatOnSave": true,
-  "editor.tabSize": 2
   },
   "[markdown]": {
     "editor.formatOnSave": true

@@ -143,9 +143,8 @@ validate:
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
-	else \
-		databricks bundle validate --profile $(PROFILE_NAME) --target dev; \
 	fi
+	databricks bundle validate --profile $(PROFILE_NAME) --target dev; \
 
 deploy:
 	@echo "Deploying resources..."
@@ -153,18 +152,16 @@ deploy:
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
-	else \
-		databricks bundle deploy --profile $(PROFILE_NAME) --target dev; \
 	fi
+	databricks bundle deploy --profile $(PROFILE_NAME) --target dev; \
 
 destroy:
 	@echo "Destroying resources..."
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
-	else \
-		databricks bundle destroy --profile $(PROFILE_NAME) --target dev; \
 	fi
+	databricks bundle destroy --profile $(PROFILE_NAME) --target dev; \
 
 tree:
 	@echo "Generating project tree..."

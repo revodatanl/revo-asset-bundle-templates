@@ -26,6 +26,7 @@ This is **RevoData Asset Bundle Templates** - a template repository for generati
 ### Generated Project Structure
 
 Each generated project includes:
+
 - `databricks.yml.tmpl` - Bundle configuration
 - `pyproject.toml.tmpl` - Python project with uv package manager
 - `bundle/targets.yml.tmpl` - Deployment targets (dev, test, prod)
@@ -34,11 +35,10 @@ Each generated project includes:
 
 ## Development Commands
 
-The template repository uses standard Python tooling:
+The template repository itself doesn't have traditional development commands, but to test template generation:
 
-- **Testing**: `pytest` for unit tests
-- **Linting**: `ruff` and `mypy` for code quality
-- **Dependencies**: Standard `pip install -e .` for development
+- **Feature Testing**: `databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch <branch_name>` to test specific feature branch
+- **CI Testing**: The `ci-dabs.yml` workflow comprehensively tests all template configurations
 
 ## Generated Project Commands
 
