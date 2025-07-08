@@ -8,9 +8,6 @@
     "**/__pycache__": true,
     ".pytest_cache": true
   },
-  "github.copilot.enable": {
-    "markdown": true
-  },
   "jupyter.interactiveWindow.cellMarker.codeRegex": "^# COMMAND ----------|^# Databricks notebook source|^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])",
   "jupyter.interactiveWindow.cellMarker.default": "# COMMAND ----------",
   "jupyter.notebookFileRoot": "${workspaceFolder}",
@@ -27,16 +24,6 @@
   "python.testing.pytestArgs": ["."],
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
-  "sqlfluff.config": "${workspaceFolder}/pyproject.toml",{{if not (eq .use_devcontainer "yes")}}
-  "sqlfluff.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",{{end}}
-  "sqlfluff.ignoreLocalConfig": false,
-  "sqlfluff.ignoreParsing": true,
-  "sqlfluff.linter.run": "onType",
-  "sqlfluff.linter.diagnosticSeverity": "warning",
-  "sqlfluff.linter.lintEntireProject": true,
-  "sqlfluff.format.arguments": ["--FIX-EVEN-UNPARSABLE"],
-  "sqlfluff.format.enabled": true,
-  "sqlfluff.suppressNotifications": true,
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
@@ -49,11 +36,6 @@
   "notebook.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
-  },
-  "[sql]": {
-    "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": false
   },
   "[xml]": {
   "editor.defaultFormatter": "redhat.vscode-xml",
