@@ -15,8 +15,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "bandit>=1.8.3",{{if (eq .use_databricks_connect "yes")}}
-    "databricks-connect==15.4.*",{{end}}
+{{if (eq .use_databricks_connect "yes")}}    "databricks-connect==15.4.*",{{end}}
     "databricks-dlt{{if (eq .use_databricks_connect "no")}}==0.2.1{{else}}>=0.3.0{{end}}",
     "databricks-sdk>=0.45.0",{{if (eq .use_databricks_connect "yes")}}
     "ipykernel>=6.29.5",
@@ -107,11 +106,6 @@ pythonpath = ["src"]
 [tool.pydoclint]
 style = "numpy"
 exclude = ".git|.venv|scratch"
-
-[tool.bandit]
-targets = ["src"]
-skips = []
-exclude_dirs = [".venv", "archive", "scratch", "tests"]
 
 [tool.sqlfluff.core]
 dialect = "databricks"

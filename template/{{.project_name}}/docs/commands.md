@@ -95,7 +95,7 @@ Prior to deployment, it updates dependencies, builds the package, and runs pre-c
 
 ### `make lint`
 
-**Runs linters on the project code: `ruff`, `mypy`, `pydoclint`, `bandit`, and `sqlfluff`.**
+**Runs linters on the project code: `ruff`, `mypy`, `pydoclint`, and `sqlfluff`.**
 
 <details>
 <summary>example output</summary>
