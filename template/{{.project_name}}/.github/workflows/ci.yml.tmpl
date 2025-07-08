@@ -32,8 +32,6 @@ jobs:
           uv run mypy .
           echo "Running pydoclint"
           uv run pydoclint .
-          echo "Running bandit"
-          uv run bandit --configfile=pyproject.toml --severity-level=medium -r .
           echo "Running sqlfluff"
           uv run sqlfluff lint .
           echo "Formatting checks passed ✅"

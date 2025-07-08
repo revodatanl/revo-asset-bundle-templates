@@ -73,7 +73,6 @@ Generated projects use modern Python tooling:
 - **uv** for fast package management
 - **ruff** for linting and formatting
 - **mypy** for type checking
-- **bandit** for security scanning
 - **pre-commit** hooks for automated quality checks
 - **pytest** with coverage reporting
 - **mkdocs-material** for documentation
