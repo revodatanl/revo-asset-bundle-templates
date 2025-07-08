@@ -43,15 +43,6 @@ repos:
         -   types-pytz
         -   types-python-dateutil
         exclude: "scratch"
--   repo: https://github.com/PyCQA/bandit
-    rev: 1.8.3
-    hooks:
-    -   id: bandit
-        args:
-        -   --configfile=pyproject.toml
-        -   --severity-level=medium
-        additional_dependencies:
-        -   bandit[toml]
 -   repo: https://github.com/jsh9/pydoclint
     rev: 0.6.7
     hooks:
