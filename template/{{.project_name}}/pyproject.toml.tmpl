@@ -30,7 +30,6 @@ dev = [
     "pytest-mock>=3.14.0",
     "pytest>=8.3.5",
     "ruff>=0.11.9",
-    "sqlfluff>=3.3.1",
 ]
 
 [tool.uv]
@@ -106,21 +105,3 @@ pythonpath = ["src"]
 [tool.pydoclint]
 style = "numpy"
 exclude = ".git|.venv|scratch"
-
-[tool.sqlfluff.core]
-dialect = "databricks"
-templater = "jinja"
-max_line_length = 120
-ignore = "parsing"
-exclude_rules = [
-    "AM04",     # "Query produces an unknown number of result columns."
-    "LT01",     # "Expected single whitespace between magic start and magic line."
-]
-
-[tool.sqlfluff.indentation]
-indented_joins = false
-indented_using_on = true
-template_blocks_indent = false
-
-[tool.sqlfluff.rules.capitalisation.keywords]
-capitalisation_policy = "upper"

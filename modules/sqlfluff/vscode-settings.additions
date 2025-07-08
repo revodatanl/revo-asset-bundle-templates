@@ -1,0 +1,15 @@
+  "sqlfluff.config": "${workspaceFolder}/pyproject.toml",{{if not (eq .use_devcontainer "yes")}}
+  "sqlfluff.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",{{end}}
+  "sqlfluff.ignoreLocalConfig": false,
+  "sqlfluff.ignoreParsing": true,
+  "sqlfluff.linter.run": "onType",
+  "sqlfluff.linter.diagnosticSeverity": "warning",
+  "sqlfluff.linter.lintEntireProject": true,
+  "sqlfluff.format.arguments": ["--FIX-EVEN-UNPARSABLE"],
+  "sqlfluff.format.enabled": true,
+  "sqlfluff.suppressNotifications": true,
+  "[sql]": {
+    "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  },
