@@ -22,11 +22,10 @@ Ensure that the [`pre-commit`](https://pre-commit.com) hook defined in `.pre-com
 - [`ruff`](https://docs.astral.sh/ruff/) for linting and formatting.
 - [`mypy`](https://mypy.readthedocs.io/en/stable/) for static type checking (in `strict` mode)
 - [`pydoclint`](https://github.com/shmsi/pydoclint) to lint docstrings.
-- [`sqlfluff`](https://github.com/sqlfluff/sqlfluff) to lint SQL code.
 
 ### CI Pipeline
 
-This `CI` pipeline is triggered upon a pull request to any branch. It runs continuous integration tasks: setting up the environment, installing dependencies, running formatting checks with `ruff`, `mypy`, `pydoclint`, and `sqlfluff`, executing unit tests with coverage reporting, and finally building and validating the package to ensure consistency between source and built files.
+This `CI` pipeline is triggered upon a pull request to any branch. It runs continuous integration tasks: setting up the environment, installing dependencies, running formatting checks with `ruff`, `mypy`, and `pydoclint`, executing unit tests with coverage reporting, and finally building and validating the package to ensure consistency between source and built files.
 
 The pipeline configuration can be found here: {{if (eq .cicd_provider "azure")}}`.azuredevops/.azure-pipelines/ci.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/ci.yml`{{end}}`.
 

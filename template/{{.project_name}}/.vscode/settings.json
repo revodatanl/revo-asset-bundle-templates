@@ -28,16 +28,6 @@
   "python.testing.pytestArgs": ["."],
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
-  "sqlfluff.config": "${workspaceFolder}/pyproject.toml",{{if not (eq .use_devcontainer "yes")}}
-  "sqlfluff.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",{{end}}
-  "sqlfluff.ignoreLocalConfig": false,
-  "sqlfluff.ignoreParsing": true,
-  "sqlfluff.linter.run": "onType",
-  "sqlfluff.linter.diagnosticSeverity": "warning",
-  "sqlfluff.linter.lintEntireProject": true,
-  "sqlfluff.format.arguments": ["--FIX-EVEN-UNPARSABLE"],
-  "sqlfluff.format.enabled": true,
-  "sqlfluff.suppressNotifications": true,
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
@@ -45,6 +35,16 @@
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
     }
+  },
+  "notebook.formatOnSave.enabled": true,
+  "notebook.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "[xml]": {
+  "editor.defaultFormatter": "redhat.vscode-xml",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2
   },
   "[markdown]": {
     "editor.formatOnSave": true

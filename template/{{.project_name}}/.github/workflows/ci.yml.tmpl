@@ -32,8 +32,6 @@ jobs:
           uv run mypy .
           echo "Running pydoclint"
           uv run pydoclint .
-          echo "Running sqlfluff"
-          uv run sqlfluff lint .
           echo "Formatting checks passed ✅"
 
       - name: Build and validate package

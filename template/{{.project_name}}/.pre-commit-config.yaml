@@ -47,11 +47,6 @@ repos:
     rev: 0.6.7
     hooks:
     -   id: pydoclint
--   repo: https://github.com/sqlfluff/sqlfluff
-    rev: 3.4.0
-    hooks:
-    -   id: sqlfluff-lint
-    -   id: sqlfluff-fix
 -   repo: https://github.com/gitleaks/gitleaks
     rev: v8.26.0
     hooks:
