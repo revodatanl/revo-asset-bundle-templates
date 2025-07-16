@@ -3,17 +3,13 @@
 from collections.abc import Generator
 
 import pytest
-{{if (eq .use_databricks_connect "yes")}}from databricks.connect import DatabricksSession
-{{end}}from pyspark.sql import SparkSession
+from databricks.connect import DatabricksSession
+from pyspark.sql import SparkSession
 
 
 @pytest.fixture(scope="session")
-{{if (eq .use_databricks_connect "no")}}def spark() -> Generator[SparkSession, None, None]:
-    """Fixture for a SparkSession instance for testing."""
-    spark_session = SparkSession.builder.master("local[*]").appName("test").getOrCreate()
-    yield spark_session
-    spark_session.stop(){{else}}def spark() -> Generator[SparkSession, None, None]:
+def spark() -> Generator[SparkSession, None, None]:
     """Fixture for a serverless DatabricksSession instance for testing."""
     spark_serverless_session = DatabricksSession.builder.serverless(True).getOrCreate()
     yield spark_serverless_session
-    spark_serverless_session.stop(){{end}}
+    spark_serverless_session.stop()
