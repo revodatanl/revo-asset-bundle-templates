@@ -18,43 +18,37 @@ jobs:
             cloud_provider: azure
             include_example_jobs: yes
             use_devcontainer: no
-            use_databricks_connect: no
           - os: macos-latest
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
             use_devcontainer: no
-            use_databricks_connect: no
           # Non-default configuration
           - os: ubuntu-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
             use_devcontainer: no
-            use_databricks_connect: yes
           - os: macos-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
             use_devcontainer: no
-            use_databricks_connect: yes
           # DevContainer configurations
           - os: ubuntu-latest
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
             use_devcontainer: yes
-            use_databricks_connect: no
             container_name: revo-devcontainer-databricksruntime
-            container_tag: "15.4-LTS"
+            container_tag: 15.4-LTS
           - os: ubuntu-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
             use_devcontainer: yes
-            use_databricks_connect: yes
             container_name: revo-devcontainer-databricksruntime
-            container_tag: "15.4-LTS"
+            container_tag: 15.4-LTS
 
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -80,8 +74,7 @@ jobs:
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
             "include_example_jobs": "${{ matrix.include_example_jobs }}",
-            "use_devcontainer": "${{ matrix.use_devcontainer }}",
-            "use_databricks_connect": "${{ matrix.use_databricks_connect }}"
+            "use_devcontainer": "${{ matrix.use_devcontainer }}"
           }
           EOF
           cat init_params.json
@@ -297,8 +290,7 @@ jobs:
           matrix.cicd_provider == 'github' &&
           matrix.cloud_provider == 'azure' &&
           matrix.include_example_jobs == 'yes' &&
-          matrix.use_devcontainer == 'no'  &&
-          matrix.use_databricks_connect == 'no'
+          matrix.use_devcontainer == 'no'
         run: |
           cd revo-dabs-test-project
           echo ""
@@ -317,8 +309,7 @@ jobs:
           matrix.cicd_provider == 'github' &&
           matrix.cloud_provider == 'azure' &&
           matrix.include_example_jobs == 'yes' &&
-          matrix.use_devcontainer == 'no' &&
-          matrix.use_databricks_connect == 'no'
+          matrix.use_devcontainer == 'no'
         uses: actions/upload-artifact@v4
         with:
           name: revo-dabs-test-project
