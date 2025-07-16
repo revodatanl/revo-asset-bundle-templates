@@ -83,16 +83,6 @@ Prior to deployment, it updates dependencies, builds the package, and runs pre-c
 ![make-tree](images/make-tree.png)
 </details>
 
-### `make docs`
-
-**Generates documentation and starts a local server to view it.**
-
-<details>
-<summary>example output</summary>
-
-![make-docs](images/make-docs.png)
-</details>
-
 ### `make lint`
 
 **Runs linters on the project code: `ruff`, `mypy`, and `pydoclint`.**
