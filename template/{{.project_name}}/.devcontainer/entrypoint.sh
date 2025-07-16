@@ -14,7 +14,8 @@ if [ ! -d "/root/.ssh" ] || [ -z "$(ls -A /root/.ssh 2>/dev/null)" ]; then
 else
   echo "✅ SSH: /root/.ssh directory exists and contains files." >&2
   # Set appropriate security permissions for the mounted SSH keys
-  chmod 600 ~/.ssh/id_rsa 2>/dev/null || echo "   Note: id_rsa not found, skipping permissions setting" >&2
+  chmod 700 ~/.ssh 2>/dev/null || echo "   Note: Unable to set .ssh directory permissions" >&2
+  chmod 600 ~/.ssh/* 2>/dev/null || echo "   Note: Unable to set SSH key permissions" >&2
 fi
 
 # Check if the Databricks config exists as a regular file
