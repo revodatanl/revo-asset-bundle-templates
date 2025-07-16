@@ -1,0 +1,3 @@
+docs:
+	@echo "Generating HTML documentation..."
+	@uv run mkdocs serve

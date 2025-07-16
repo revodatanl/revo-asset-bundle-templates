@@ -1,0 +1,3 @@
+# MkDocs dependencies for documentation generation
+    "mkdocs-material>=9.6.7",
+    "mkdocs>=1.6.1",
