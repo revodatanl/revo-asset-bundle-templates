@@ -10,18 +10,17 @@ requires-python = ">=3.11,<4.0"
 scripts = { "main" = "{{.package_name}}.main:main" }
 classifiers = ["Programming Language :: Python :: 3.11", "Operating System :: OS Independent"]
 dependencies = [
-{{if (eq .use_databricks_connect "no")}}    "pyspark==3.5.0",  # Databricks Runtime 15.4-LTS{{end}}
 ]
 
 [dependency-groups]
 dev = [
-{{if (eq .use_databricks_connect "yes")}}    "databricks-connect==15.4.*",{{end}}
-    "databricks-dlt{{if (eq .use_databricks_connect "no")}}==0.2.1{{else}}>=0.3.0{{end}}",
-    "databricks-sdk>=0.45.0",{{if (eq .use_databricks_connect "yes")}}
+    "databricks-connect==15.4.*",
+    "databricks-dlt>=0.3.0",
+    "databricks-sdk>=0.45.0",
     "ipykernel>=6.29.5",
-    "jupyter>=1.1.1",{{end}}
-    "mypy>=1.15.0",{{if (eq .use_databricks_connect "yes")}}
-    "pip>=25.1.1",{{end}}
+    "jupyter>=1.1.1",
+    "mypy>=1.15.0",
+    "pip>=25.1.1",
     "pre-commit>=4.1.0",
     "pydoclint>=0.6.6",
     "pytest-cov>=6.0.0",
@@ -69,9 +68,6 @@ ignore = [
     "PD901",    # "Avoid using the generic variable name `df` for DataFrames"
     "PLR2004",  # "Magic value used in comparison, consider replacing with a constant variable"
     "TRY003"    # "Avoid specifying long messages outside the exception class"
-]
-unfixable = [
-    "F401",     # "Unused import" - disabled since it makes linting/formatting Jupyter notebooks messy
 ]
 
 [tool.ruff.lint.per-file-ignores]
