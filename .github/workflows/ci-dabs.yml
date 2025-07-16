@@ -74,7 +74,7 @@ jobs:
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
             "include_example_jobs": "${{ matrix.include_example_jobs }}",
-            "use_devcontainer": "${{ matrix.use_devcontainer }}",
+            "use_devcontainer": "${{ matrix.use_devcontainer }}"
           }
           EOF
           cat init_params.json
