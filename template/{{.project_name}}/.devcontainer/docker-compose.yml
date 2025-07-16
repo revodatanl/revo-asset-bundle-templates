@@ -3,7 +3,6 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
-    image: databricksruntime-development-container:latest
     volumes:
       # Mount the workspace directory
       - ../:/workspace:cached
