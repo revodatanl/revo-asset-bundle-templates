@@ -2,7 +2,7 @@
 
 This document explains how to set up a consistent development environment for Databricks Asset Bundles using DevContainers. This approach works on **Windows**, **macOS**, and **Linux** with minimal setup requirements.
 
-This approach sets up Databricks Runtime, Python environment, development tools, VS Code extensions, and configuration to match your production environment.
+This approach sets up Databricks Runtime, Python environment, development tools, VS Code extensions, and configuration to match your production environment. This guide has been written with **Windows** and **Azure DevOps** users in mind.
 
 ## Prerequisites
 
@@ -72,7 +72,6 @@ You need these tools installed on your system:
 
    This silently creates a `.databrickscfg` file in your home directory to authenticate the user. Note that the profile name is `DEFAULT` in this example. If you give it any other name, you will need to update it in the `Makefile`.
 
-
 4. **Clone Repo**
 
    Create a dedicated folder in your root folder and clone your project by running:
@@ -83,8 +82,7 @@ You need these tools installed on your system:
 
    There might be a question about the authenticity of the RSA key fingerprint you have just created; just type `yes` to continue.
 
-
-6. **Build and Start the Dev Container**
+5. **Build and Start the Dev Container**
 
    Open VS Code and navigate to the repo folder. Automatically it should pick up the `devcontainer.json` file and prompt you to build and reopen in container.
 
@@ -112,7 +110,7 @@ The container automatically mounts:
 Once your container is configured and running, you can:
 
 - Interact with Azure Repos using `git` commands
-- Run (`PySpark`) tests using the `make test` command
+- Run `PySpark` tests on `Databricks Connect` using the `make test` command
 - Deploy to Databricks using the `make deploy` command
 - Destroy Databricks resources using the `make destroy` command
 
