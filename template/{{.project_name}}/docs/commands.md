@@ -2,14 +2,11 @@
 
 The project contains a `Makefile` with several commands to simplify common development tasks.
 
-### `make`
+### `make (setup)`
 
 **Sets up the project development environment.**
 
-
-The command installs [`Homebrew`](https://brew.sh), [`Git`](https://git-scm.com), [`uv`](https://github.com/astral-sh/uv), and the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html), configures Python, sets up a virtual environment, and installs pre-commit hooks. The project configuration matches Databricks Runtime `15.4-LTS` (Python `3.11.11`, Apache Spark `3.5.0`).
-
-Can also be triggered by running `make setup`.
+The command installs [`Git`](https://git-scm.com), [`uv`](https://github.com/astral-sh/uv), and the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html), configures Python, sets up a virtual environment, and installs pre-commit hooks. The project configuration matches Databricks Runtime `15.4-LTS`.
 
 <details>
 <summary>example output</summary>
@@ -83,19 +80,9 @@ Prior to deployment, it updates dependencies, builds the package, and runs pre-c
 ![make-tree](images/make-tree.png)
 </details>
 
-### `make docs`
-
-**Generates documentation and starts a local server to view it.**
-
-<details>
-<summary>example output</summary>
-
-![make-docs](images/make-docs.png)
-</details>
-
 ### `make lint`
 
-**Runs linters on the project code: `ruff`, `mypy`, `pydoclint`, `bandit`, and `sqlfluff`.**
+**Runs linters on the project code: `ruff`, `mypy`, and `pydoclint`.**
 
 <details>
 <summary>example output</summary>

@@ -13,7 +13,15 @@
 
 The `RevoData Asset Bundle Templates` repo contains our own custom templates for Databricks Asset Bundles. The template provides a complete development environment for new Databricks projects, including CI/CD pipelines, pre-commit hooks, semantic release, and example pipelines and jobs that can directly be deployed to Databricks.
 
-Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing the foundation for this template!
+## Why This Template?
+
+This template solves common pain points in Databricks project setup:
+
+- **Streamlined Setup**: One command creates a fully configured development environment
+- **Modern Python Tooling**: Uses `uv` for fast package management, `ruff` for linting, and `mypy` for type checking (pending `ty` reaching production-ready status)
+- **Modular Architecture**: Core template is lightweight with optional modules for specialized needs
+- **CI/CD Ready**: Complete pipelines for GitHub Actions and Azure DevOps
+- **Development Environment**: DevContainer and WSL support for consistent development across platforms
 
 ## Getting started
 
@@ -47,4 +55,3 @@ Shout out to [Georgel Preput](https://github.com/GeorgelPreput) for providing th
     | `cloud_provider` | Cloud provider | `azure/aws` |
     | `include_example_jobs` | Whether to include example DLT pipeline and jobs | `yes/no` |
     | `use_devcontainer` | Whether to develop in a DevContainer (recommended for Windows users) | `yes/no` |
-    | `use_databricks_connect` | Whether to include support for [Databricks Connect](https://docs.databricks.com/aws/en/dev-tools/databricks-connect/) | `yes/no` |

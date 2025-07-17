@@ -1,11 +1,13 @@
 # Use the prebuilt image as the base
-FROM ghcr.io/revodatanl/databricksruntime-development-container:latest
+FROM ghcr.io/revodatanl/revo-devcontainer-databricks:15.4-LTS
 
 # Set environment variables
-ENV PATH="/databricks/python3/bin:$PATH" \
-    EDITOR=nano \
-    UV_PROJECT_ENVIRONMENT="/databricks/python3" \
-    UV_SYSTEM_PYTHON=true
+ENV EDITOR=nano \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    SHELL=/bin/zsh \
+    UV_CACHE_DIR=/uv-cache \
+    UV_LINK_MODE=copy
 
 # Set the working directory
 WORKDIR /workspace/

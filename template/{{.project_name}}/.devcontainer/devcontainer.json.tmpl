@@ -5,31 +5,30 @@
   "service": "databricks_container",
   "remoteUser": "root",
   "forwardPorts": [3000],
+  "mounts": [
+    "source=my-project-uv-cache,target=/uv-cache,type=volume"
+  ],
   "customizations": {
     "vscode": {
       "extensions": [
         "charliermarsh.ruff",
-        "davidanson.vscode-markdownlint",
-        "dorzey.vscode-sqlfluff",
-        "esbenp.prettier-vscode",
-        "mechatroner.rainbow-csv",
-        "ms-azuretools.vscode-docker",
+        "databricks.databricks",
         "ms-python.mypy-type-checker",
         "ms-python.vscode-pylance",
         "ms-toolsai.jupyter",
         "ms-vscode.makefile-tools",
         "njpwerner.autodocstring",
-        "redhat.vscode-xml",
         "redhat.vscode-yaml",
         "tamasfe.even-better-toml",
         "vscode-icons-team.vscode-icons"
       ]
     },
     "settings": {
-      "terminal.integrated.defaultProfile.linux": "bash",
-      "python.defaultInterpreterPath": "/databricks/python3/bin/python",
+      "python.defaultInterpreterPath": "./.venv/bin/python",
       "python.terminal.activateEnvInCurrentTerminal": true,
-      "python.terminal.activateEnvironment": true
+      "python.terminal.activateEnvironment": true,
+      "terminal.integrated.defaultProfile.linux": "zsh"
     }
-  }
+  },
+  "postCreateCommand": "make build"
 }
