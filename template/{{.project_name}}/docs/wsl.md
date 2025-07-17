@@ -10,7 +10,6 @@ Setting up managed versions of `Python` and other development tools on Windows n
 
 You need these tools installed on your system:
 
-- [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install)
 - [VS Code](https://code.visualstudio.com/)
 - [VS Code WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl)
 
@@ -134,7 +133,7 @@ Once your environment is configured and running, you can:
 
 - Run Python code within the WSL environment
 - Use Make commands to manage your project
-- Run Spark tests locally with `make test`
+- Run `PySpark` tests on `Databricks Connect` using the `make test` command
 - Use Git for version control
 - Deploy to Databricks using `make deploy`
 

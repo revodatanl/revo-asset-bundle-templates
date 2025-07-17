@@ -6,12 +6,30 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![pydocstyle](https://img.shields.io/badge/pydocstyle-enabled-AD4CD3)](http://www.pydocstyle.org/en/stable/)
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 {{if (eq .cicd_provider "github")}}[![ci](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml/badge.svg)](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml)
 [![semantic-release](https://github.com/revodatanl/{{.project_name}}/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/{{.project_name}}/actions/workflows/semantic-release.yml){{end}}
 
-The `{{.project_name}}` project was generated from [RevoData Asset Bundle Templates](https://github.com/revodatanl/revo-asset-bundle-templates) version `0.15.3`.
-
 {{.project_description}}
+
+## Quick Start
+
+- **[Getting Started](getting_started.md)** - Set up your development environment
+- **[DevContainer](devcontainer.md)** - Develop in a containerized environment
+- **[WSL](wsl.md)** - Windows Subsystem for Linux setup
+
+## Development
+
+- **[Development](development.md)** - Project structure, configuration, code quality, and (testing on) Databricks Connect
+- **[Bundle Deployment](deployment.md)** - Databricks Asset Bundle deployment, Git strategy, and CI/CD
+
+## Appendices
+
+- **[Coding Standards](coding_standard.md)** - Code style and conventions
+- **[Command Reference](commands.md)** - All available make commands
+
+## Troubleshooting
+
+- Review the [command reference](commands.md) for available tools
+- Refer to the [Databricks documentation](https://docs.databricks.com/dev-tools/bundles/index.html) for bundle-specific questions
