@@ -2,7 +2,7 @@
 
 .DEFAULT_GOAL := module
 
-# Add custom RevoData modules to the project
+# Interactive module deployment - select and deploy template modules
 module:
 	@echo "Select the module to deploy:"
 	@echo "1) Deploy Databricks Asset Bundle pipeline for GitHub"
@@ -15,6 +15,7 @@ module:
 		*) echo "Invalid choice. Exiting.";; \
 	esac
 
+# Deploy specific module by name (github-deploy-dab or azure-devops-deploy-dab)
 module_%:
 	@if [ "$*" != "github-deploy-dab" ] && [ "$*" != "azure-devops-deploy-dab" ]; then \
 		echo "Error: Invalid module. Use 'github-deploy-dab' or 'azure-devops-deploy-dab'."; \

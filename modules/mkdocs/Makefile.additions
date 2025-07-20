@@ -1,3 +1,4 @@
+# Generate and serve MkDocs documentation locally
 docs:
 	@echo "Generating HTML documentation..."
 	@uv run mkdocs serve

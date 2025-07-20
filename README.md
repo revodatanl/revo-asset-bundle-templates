@@ -54,4 +54,3 @@ This template solves common pain points in Databricks project setup:
     | `cicd_provider` | CI/CD provider | `github/azure` |
     | `cloud_provider` | Cloud provider | `azure/aws` |
     | `include_example_jobs` | Whether to include example DLT pipeline and jobs | `yes/no` |
-    | `use_devcontainer` | Whether to develop in a DevContainer (recommended for Windows users) | `yes/no` |

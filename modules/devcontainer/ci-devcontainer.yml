@@ -1,0 +1,190 @@
+name: CI DevContainer Module
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'modules/devcontainer/**'
+      - 'template/**'
+  workflow_dispatch:
+
+jobs:
+  test-devcontainer-module:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # DevContainer configurations
+          - cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
+            container_name: revo-devcontainer-databricksruntime
+            container_tag: 15.4-LTS
+          - cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+            container_name: revo-devcontainer-databricksruntime
+            container_tag: 15.4-LTS
+
+    env:
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+      CONTAINER_REGISTRY: ghcr.io
+      CONTAINER_NAME: ${{ matrix.container_name }}
+      CONTAINER_TAG: ${{ matrix.container_tag }}
+
+    steps:
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+          databricks version
+
+      - name: Create init parameters JSON
+        run: |
+          cat > init_params.json << EOF
+          {
+            "project_name": "revo-dabs-devcontainer-test",
+            "package_name": "revo_dabs_devcontainer",
+            "author": "Thomas Brouwer",
+            "email": "thomas.brouwer@revodata.nl",
+            "project_description": "DevContainer module test project.",
+            "cicd_provider": "${{ matrix.cicd_provider }}",
+            "cloud_provider": "${{ matrix.cloud_provider }}",
+            "include_example_jobs": "${{ matrix.include_example_jobs }}"
+          }
+          EOF
+          cat init_params.json
+
+      - name: Initialize Databricks Asset Bundle from template
+        run: |
+          echo "Using branch: $BRANCH_NAME"
+          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+
+      - name: Deploy DevContainer module
+        run: |
+          cd revo-dabs-devcontainer-test
+          echo "Deploying DevContainer module..."
+          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/devcontainer --branch $BRANCH_NAME
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull DevContainer image
+        run: |
+          echo "Pulling container image..."
+          docker pull ${{ env.CONTAINER_REGISTRY }}/${{ github.repository_owner }}/${{ env.CONTAINER_NAME }}:${{ env.CONTAINER_TAG }}
+
+      # Mount the project directory and run Make commands inside the container
+      - name: Build and test Databricks Asset Bundle with Makefile in container
+        run: |
+          cd revo-dabs-devcontainer-test
+          echo "Running commands in container..."
+          cat Makefile
+          cat pyproject.toml
+          set -e
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -e DATABRICKS_HOST="${{ secrets.DATABRICKS_HOST }}" \
+            -e DATABRICKS_CLIENT_ID="${{ secrets.DATABRICKS_CLIENT_ID }}" \
+            -e DATABRICKS_CLIENT_SECRET="${{ secrets.DATABRICKS_CLIENT_SECRET }}" \
+            -e PATH="/databricks/python3/bin:$PATH" \
+            -e UV_PROJECT_ENVIRONMENT="/databricks/python3" \
+            -e UV_SYSTEM_PYTHON=true \
+            -w /workspace/revo-dabs-devcontainer-test \
+            ${{ env.CONTAINER_REGISTRY }}/${{ github.repository_owner }}/${{ env.CONTAINER_NAME }}:${{ env.CONTAINER_TAG }} \
+            bash -c "
+              set -e
+              cd /workspace/revo-dabs-devcontainer-test
+
+              echo \"Setting Git configuration...\"
+              git config --global user.email \"pipeline@github.com\"
+              git config --global user.name \"GitHub Actions\"
+
+              echo \"Adding workspace to Git safe.directory to fix ownership issues...\"
+              git config --global --add safe.directory /workspace/revo-dabs-devcontainer-test
+              git config --global --add safe.directory '*'
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"=============== BUILD PROJECT (WITH DEFAULT TARGET) ==============\"
+              echo \"==================================================================\"
+              make
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"================ SETUP PROJECT (WITH SETUP TARGET) ===============\"
+              echo \"==================================================================\"
+              make setup
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"=============== BUILD PROJECT (WITH BUILD TARGET) ================\"
+              echo \"==================================================================\"
+              make build
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"==================== COMMIT ALL FILES ============================\"
+              echo \"==================================================================\"
+              uv run pre-commit autoupdate || true
+              git add .
+              git commit -m \"feat: initial commit\"
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== GENERATE TREE ===========================\"
+              echo \"==================================================================\"
+              make tree
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== LINT PROJECT ============================\"
+              echo \"==================================================================\"
+              make lint
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"========================= RUN TESTS ==============================\"
+              echo \"==================================================================\"
+              make test
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== CLEAN PROJECT ===========================\"
+              echo \"==================================================================\"
+              make clean
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"=============== RE-BUILD PROJECT (AFTER CLEAN) ===================\"
+              echo \"==================================================================\"
+              make build
+
+              echo \"\"
+              echo \"==================================================================\"
+              echo \"======================== VALIDATE BUNDLE =========================\"
+              echo \"==================================================================\"
+              databricks bundle validate
+
+              # Exit with status code from the last command
+              exit \$?
+            "
+
+          # Capture Docker exit status
+          DOCKER_EXIT_CODE=$?
+          if [ $DOCKER_EXIT_CODE -ne 0 ]; then
+            echo "Container commands failed with exit code: $DOCKER_EXIT_CODE"
+            exit $DOCKER_EXIT_CODE
+          fi
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
