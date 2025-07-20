@@ -11,7 +11,7 @@ This is **RevoData Asset Bundle Templates** - a template repository for generati
 ### Template System
 
 - Templates use Go template syntax with conditional logic based on user parameters
-- Core configuration in `databricks_template_schema.json` defines 9 key parameters:
+- Core configuration in `databricks_template_schema.json` defines 8 key parameters:
   - `project_name`
   - `package_name`
   - `author`
@@ -20,7 +20,6 @@ This is **RevoData Asset Bundle Templates** - a template repository for generati
   - `cicd_provider` (GitHub/Azure DevOps)
   - `cloud_provider` (Azure/AWS)
   - `include_example_jobs`
-  - `use_devcontainer`
 
 ### Generated Project Structure
 
@@ -40,6 +39,7 @@ The template now includes a modular system for optional components:
 - **Modules**: Optional components that can be added based on project needs
   - `modules/sqlfluff/` - SQL linting and formatting with SQLFluff
   - `modules/mkdocs/` - MkDocs documentation system
+  - `modules/devcontainer/` - DevContainer configuration for containerized development
 - **Module Installation**: Interactive `modules/Makefile` for easy module deployment
 - **Benefits**: Smaller core template, customizable based on project requirements
 
@@ -134,6 +134,7 @@ Generated projects contain CI/CD pipelines with parity between GitHub Actions an
 - `modules/Makefile` - Interactive module deployment system
 - `modules/sqlfluff/` - SQL linting and formatting module
 - `modules/mkdocs/` - Documentation generation module
+- `modules/devcontainer/` - DevContainer configuration and build target module
 
 ### Template Logic Patterns
 Templates use Go template syntax with conditional logic:

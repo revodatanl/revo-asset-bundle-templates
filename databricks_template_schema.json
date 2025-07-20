@@ -51,13 +51,6 @@
       "enum": ["no", "yes"],
       "description": "Include example jobs (Delta Live Tables pipeline and example job) in '{{.project_name}}{{path_separator}}resources{{path_separator}}example'",
       "order": 8
-    },
-    "use_devcontainer": {
-      "type": "string",
-      "default": "no",
-      "enum": ["no", "yes"],
-      "description": "Include devcontainer (recommended for Windows users)",
-      "order": 9
     }
   },
   "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in 'databricks.yml' and configure 'PROFILE_NAME' in the 'Makefile')\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"

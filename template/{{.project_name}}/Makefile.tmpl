@@ -3,7 +3,8 @@
 .DEFAULT_GOAL := setup
 
 PROFILE_NAME := DEFAULT  # .databrickscfg profile name
-{{if (eq .use_devcontainer "no")}}
+
+# Install system dependencies (git, uv, tree) on macOS and Linux
 install:
 	@CURRENT_OS=$$(uname -s); \
 	echo "Current OS: $$CURRENT_OS"; \
@@ -44,6 +45,7 @@ install:
 	fi; \
 	echo "All tools installed successfully."
 
+# Complete project setup: install tools, dependencies, git, and pre-commit hooks
 setup:
 	@echo "Installing tools..."
 	@{ \
@@ -57,41 +59,7 @@ setup:
 	@echo "All tools installed successfully."
 
 	@echo "Setting up the project..."
-	@uv lock;
-	@uv sync;
-
-	@if [ ! -d ".git" ]; then \
-		echo "Setting up git..."; \
-		git init -b main > /dev/null; \
-	fi
-
-	@echo "Setting up pre-commit..."
-	@uv run pre-commit autoupdate || true
-	@uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
-
-	@echo "Setup completed successfully!"
-{{end}}
-{{if (eq .use_devcontainer "yes")}}
-build: setup
-	@echo "Updating pre-commit hooks..."
-	@uv run pre-commit autoupdate || true
-	@if git diff --name-only | grep -q ".pre-commit-config.yaml"; then \
-		echo "Committing pre-commit config updates..."; \
-		git add .pre-commit-config.yaml; \
-		git config --get user.name > /dev/null 2>&1 || git config --local user.name "Setup Script"; \
-		git config --get user.email > /dev/null 2>&1 || git config --local user.email "setup@example.com"; \
-		git commit -m "chore: update pre-commit hooks" || true; \
-	fi
-	@echo "Installing pre-commit environments..."
-	@uv run pre-commit install-hooks
-
-	@echo "Build completed successfully!"
-
-setup:
-	@echo "Setting up the project..."
 	@uv lock
-	@rm -rf .venv
-	@uv venv --system-site-packages
 	@uv sync
 
 	@if [ ! -d ".git" ]; then \
@@ -100,10 +68,12 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit..."
+	@uv run pre-commit autoupdate || true
 	@uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
 
 	@echo "Setup completed successfully!"
-{{end}}
+
+# Clean project artifacts and rebuild virtual environment
 clean:
 	@echo "Uninstalling local packages..."
 	@rm -rf uv.lock
@@ -120,12 +90,11 @@ clean:
 		-name "*.egg-info" \) \
 		-type d -exec rm -rf {} + 2>/dev/null || true
 	@find . -name ".coverage" -type f -delete 2>/dev/null || true
-	@echo "Rebuilding the project..."{{if (eq .use_devcontainer "yes")}}
-	@rm -rf .venv
-	@uv venv --system-site-packages{{end}}
+	@echo "Rebuilding the project..."
 	@uv sync
 	@echo "Cleanup completed."
 
+# Run pre-commit hooks, build package, and execute tests with coverage
 test:
 	@echo "Running tests..."
 	@uv run pre-commit run --all-files
@@ -133,6 +102,7 @@ test:
 	@uv sync
 	@uv run pytest -v tests --cov=src --cov-report=term
 
+# Validate Databricks bundle configuration and resources
 validate:
 	@echo "Validating resources..."
 	@uv run pre-commit run --all-files
@@ -142,6 +112,7 @@ validate:
 	fi
 	@databricks bundle validate --profile $(PROFILE_NAME) --target dev; \
 
+# Deploy Databricks bundle to development environment
 deploy:
 	@echo "Deploying resources..."
 	@uv run pre-commit run --all-files
@@ -151,6 +122,7 @@ deploy:
 	fi
 	@databricks bundle deploy --profile $(PROFILE_NAME) --target dev; \
 
+# Destroy all deployed Databricks resources in development environment
 destroy:
 	@echo "Destroying resources..."
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
@@ -159,10 +131,12 @@ destroy:
 	fi
 	@databricks bundle destroy --profile $(PROFILE_NAME) --target dev; \
 
+# Generate and display project directory structure
 tree:
 	@echo "Generating project tree..."
 	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a
 
+# Run code quality checks: ruff linting, mypy type checking, and pydoclint
 lint:
 	@echo "Linting the project..."
 	@uv sync
@@ -180,6 +154,7 @@ update-pre-commit:
 	@echo "Updating pre-commit hooks..."
 	@uv run pre-commit autoupdate
 
+# Update virtual environment dependencies to latest compatible versions
 update-venv:
 	@echo "Updating virtual environment dependencies..."
 	@uv sync --upgrade

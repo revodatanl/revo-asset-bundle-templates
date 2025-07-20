@@ -1,5 +1,5 @@
-  "sqlfluff.config": "${workspaceFolder}/pyproject.toml",{{if not (eq .use_devcontainer "yes")}}
-  "sqlfluff.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",{{end}}
+  "sqlfluff.config": "${workspaceFolder}/pyproject.toml",
+  "sqlfluff.executablePath": "${workspaceFolder}/.venv/bin/sqlfluff",
   "sqlfluff.ignoreLocalConfig": false,
   "sqlfluff.ignoreParsing": true,
   "sqlfluff.linter.run": "onType",
