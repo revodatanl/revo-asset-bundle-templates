@@ -1,8 +1,6 @@
-.PHONY: install setup clean test validate deploy destroy tree lint
+.PHONY: install setup clean test validate deploy destroy tree lint update-pre-commit update-venv validate-update update
 
 .DEFAULT_GOAL := setup
-
-SHELL := /bin/bash
 
 PROFILE_NAME := DEFAULT  # .databrickscfg profile name
 {{if (eq .use_devcontainer "no")}}
@@ -87,15 +85,14 @@ build: setup
 	@echo "Installing pre-commit environments..."
 	@uv run pre-commit install-hooks
 
-	@echo "Running pre-commit..."
-	@uv run pre-commit run --all-files
-
 	@echo "Build completed successfully!"
 
 setup:
 	@echo "Setting up the project..."
-	@uv lock;
-	@uv sync --inexact;
+	@uv lock
+	@rm -rf .venv
+	@uv venv --system-site-packages
+	@uv sync
 
 	@if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
@@ -110,7 +107,7 @@ setup:
 clean:
 	@echo "Uninstalling local packages..."
 	@rm -rf uv.lock
-	@echo -e "Cleaning up project artifacts..."
+	@echo "Cleaning up project artifacts..."
 	@find . \( \
 		-name "__pycache__" -o \
 		-name ".ipynb_checkpoints" -o \
@@ -123,18 +120,17 @@ clean:
 		-name "*.egg-info" \) \
 		-type d -exec rm -rf {} + 2>/dev/null || true
 	@find . -name ".coverage" -type f -delete 2>/dev/null || true
-	@echo "Rebuilding the project..."
-	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
+	@echo "Rebuilding the project..."{{if (eq .use_devcontainer "yes")}}
+	@rm -rf .venv
+	@uv venv --system-site-packages{{end}}
+	@uv sync
 	@echo "Cleanup completed."
 
 test:
 	@echo "Running tests..."
 	@uv run pre-commit run --all-files
-	@echo "Building the project..."
 	@uv build > /dev/null 2>&1
-	@echo "Syncing the project..."
-	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
-	@echo "Running tests..."
+	@uv sync
 	@uv run pytest -v tests --cov=src --cov-report=term
 
 validate:
@@ -144,7 +140,7 @@ validate:
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
 	fi
-	databricks bundle validate --profile $(PROFILE_NAME) --target dev; \
+	@databricks bundle validate --profile $(PROFILE_NAME) --target dev; \
 
 deploy:
 	@echo "Deploying resources..."
@@ -153,7 +149,7 @@ deploy:
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
 	fi
-	databricks bundle deploy --profile $(PROFILE_NAME) --target dev; \
+	@databricks bundle deploy --profile $(PROFILE_NAME) --target dev; \
 
 destroy:
 	@echo "Destroying resources..."
@@ -161,7 +157,7 @@ destroy:
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
 	fi
-	databricks bundle destroy --profile $(PROFILE_NAME) --target dev; \
+	@databricks bundle destroy --profile $(PROFILE_NAME) --target dev; \
 
 tree:
 	@echo "Generating project tree..."
@@ -169,8 +165,7 @@ tree:
 
 lint:
 	@echo "Linting the project..."
-	@uv sync{{if (eq .use_devcontainer "yes")}} --inexact{{end}}
-	@echo "Building the project..."
+	@uv sync
 	@uv build > /dev/null 2>&1
 	@echo "Running ruff..."
 	@uv run ruff check --output-format=concise .
@@ -179,3 +174,28 @@ lint:
 	@echo "Running pydoclint..."
 	@uv run pydoclint .
 	@echo "Linting completed successfully!"
+
+# Update pre-commit hooks to latest versions
+update-pre-commit:
+	@echo "Updating pre-commit hooks..."
+	@uv run pre-commit autoupdate
+
+update-venv:
+	@echo "Updating virtual environment dependencies..."
+	@uv sync --upgrade
+
+# Validate synchronization between venv and pre-commit hook versions
+validate-update:
+	@for tool in ruff mypy pydoclint; do \
+		pc_ver_full=$$(grep -A1 "$$tool" .pre-commit-config.yaml | grep rev | sed 's/.*v//' | tr -d ' ' | sed 's/://'); \
+		uv_ver_full=$$(awk '/\[\[package\]\]/{p=0} /name = "'"$$tool"'"/{p=1} p && /version = /{print $$NF; exit}' uv.lock | tr -d '"'); \
+		pc_ver=$$(echo $$pc_ver_full | cut -d. -f1-2); \
+		uv_ver=$$(echo $$uv_ver_full | cut -d. -f1-2); \
+		if [ "$$pc_ver" != "$$uv_ver" ]; then \
+			echo "❌ $$tool: pre-commit=$$pc_ver_full vs uv.lock=$$uv_ver_full (major/minor mismatch)"; \
+		fi; \
+	done; true
+
+# Update both pre-commit hooks and virtual environment dependencies
+update: update-pre-commit update-venv validate-update
+	@echo "All dependencies updated and synced"
