@@ -4,14 +4,11 @@ on:
   push:
     branches:
       - main
-      - release/**
 
 jobs:
   deploy_test:
     name: Deploy to test
-    if: startsWith(github.ref, 'refs/heads/main')
     runs-on: ubuntu-latest
-    timeout-minutes: 720 # 12 hours
     environment: test
     steps:
       - name: Checkout repository
@@ -30,8 +27,9 @@ jobs:
   # in your GitHub repository settings. Go to Settings → Environments → `prod` and add required reviewers.
   wait_for_approval:
     name: Await production approval
-    if: startsWith(github.ref, 'refs/heads/release/')
+    needs: deploy_test
     runs-on: ubuntu-latest
+    timeout-minutes: 720 # 12 hours
     environment: prod
     steps:
       - name: Wait for approval
@@ -40,7 +38,6 @@ jobs:
 
   deploy_prod:
     name: Deploy to production
-    if: startsWith(github.ref, 'refs/heads/release/')
     needs: wait_for_approval
     runs-on: ubuntu-latest
     environment: prod

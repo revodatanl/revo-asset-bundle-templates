@@ -1,10 +1,9 @@
-name: Deploy Databricks Asset Bundle
+name: CD
 
 trigger:
   branches:
     include:
       - main
-      - release/*
 
 pool:
   vmImage: ubuntu-latest
@@ -18,7 +17,6 @@ variables:
 stages:
   - stage: deploy_test
     displayName: Deploy Databricks Asset Bundle to test environment
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/main')
     jobs:
       - deployment: deploy_Databricks_Asset_Bundle_test
         displayName: Deploy Databricks Asset Bundle to `test`
@@ -29,14 +27,14 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: templates/deploy-dab-template.yml
+                - template: templates/cd-template.yml
                   parameters:
                     azureSubscription: ${{ variables.azureSubscription }}_test
                     deployTarget: test
 
   - stage: wait_for_approval
     displayName: Manual validation
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
+    dependsOn: deploy_test
     jobs:
       - job: manual_validation
         pool: server
@@ -52,8 +50,7 @@ stages:
 
   - stage: deploy_prod
     displayName: Deploy Databricks Asset Bundle to prod environment
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
-    dependsOn: deploy_test
+    dependsOn: wait_for_approval
     jobs:
       - deployment: deploy_Databricks_Asset_Bundle_prod
         displayName: Deploy Databricks Asset Bundle to `prod`
