@@ -18,10 +18,10 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
         displayName: Install uv
 
-      # Install dev dependencies
+      # Install development environment from uv.lock
       - script: |
-          uv sync --group dev
-        displayName: Install dev dependencies
+          uv sync --frozen
+        displayName: Install development environment from uv.lock
 
       # Run formatting checks
       - script: |

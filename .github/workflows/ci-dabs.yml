@@ -73,8 +73,7 @@ jobs:
             "project_description": "This project is generated using our own RevoData Asset Bundle Templates.",
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
-            "include_example_jobs": "${{ matrix.include_example_jobs }}",
-            "use_devcontainer": "${{ matrix.use_devcontainer }}"
+            "include_example_jobs": "${{ matrix.include_example_jobs }}"
           }
           EOF
           cat init_params.json
@@ -150,6 +149,12 @@ jobs:
           echo "=========== RE-BUILD PROJECT (AFTER CLEAN) ======================="
           echo "=================================================================="
           make
+
+          echo ""
+          echo "=================================================================="
+          echo "======================== UPDATE TARGETS =========================="
+          echo "=================================================================="
+          make update
 
           echo ""
           echo "=================================================================="
