@@ -6,7 +6,6 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![pydocstyle](https://img.shields.io/badge/pydocstyle-enabled-AD4CD3)](http://www.pydocstyle.org/en/stable/)
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 {{if (eq .cicd_provider "github")}}[![ci](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml/badge.svg)](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml)
@@ -20,42 +19,24 @@ The `{{.project_name}}` project was generated from [RevoData Asset Bundle Templa
 
 This project heavily depends on the provided `Makefile` for various tasks. Without [`make`](https://www.gnu.org/software/make) installed, you will need to run the commands described in the `Makefile` manually.
 
-The project is natively built for **Linux** or **macOS**. For **Windows** we suggest developing in a DevContainer or setting up a Windows Subsystem for Linux (WSL) environment. Specific instructions can be found in the following documents:
+The project is natively built for **Linux** or **macOS**. For **Windows** we suggest developing in a **[DevContainer](devcontainer.md) (recommended)** or setting up a **[Windows Subsystem for Linux (WSL)](wsl.md)** environment.
 
-#### ‣ [DevContainer](devcontainer.md) (recommended)
-#### ‣ [WSL](wsl.md)
-
-## Getting Started
-
-With [make](https://www.gnu.org/software/make) installed, run the following command to set up a fully configured development environment:
+## Quick Start
 
 ```bash
-make setup
+make setup    # Set up development environment
+make lint     # Run linting
+make test     # Run tests
+make deploy   # Deploy bundle to default workspace
+make destroy  # Destroy bundle resources on default workspace
 ```
 
-This installs [`Homebrew`](https://brew.sh), [`Git`](https://git-scm.com), [`uv`](https://github.com/astral-sh/uv), and the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html), configures Python, sets up a virtual environment, and installs pre-commit hooks.
+## DocumentationD
 
-The project configuration matches Databricks Runtime 15.4 LTS (Python 3.11.11, Apache Spark 3.5.0).
+Comprehensive documentation can be found [here](docs/README.md).
 
-## Command Reference
-
-The following additional commands are available to make development easy:
-
-| Command | Description |
-|---------|-------------|
-| `make clean` | Removes virtual environment, lock files, and caches |
-| `make test` | Runs a full test suite including coverage reporting |
-| `make deploy` | Deploys bundle to the `dev` Databricks workspace |
-| `make destroy` | Removes bundle from `dev` Databricks workspace |
-
-## Documentation
-
-Project documentation is available in the `docs/` folder:
-
-- [Getting Started](docs/getting_started.md) - Setup and installation guide
-- [Bundle Deployment](docs/bundle_deployment.md) - Deployment process and CI/CD
-- [Coding Standards](docs/coding_standards.md) - Code quality and testing guidelines
-- [Command Reference](docs/commands.md) - Available Make commands
-- [DevContainer](docs/devcontainer.md) - Development container setup
-- [Databricks Connect](docs/databricks_connect.md) - Local development with Databricks
-- [WSL](docs/wsl.md) - Windows Subsystem for Linux setup
+- [Getting Started](docs/getting_started.md) - Setup and installation
+- [Development](docs/development.md) - Code quality and testing
+- [Deployment](docs/deployment.md) - Databricks deployment
+- [Command Reference](docs/commands.md) - Available `Make` commands
+- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
