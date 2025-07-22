@@ -36,16 +36,6 @@
       "source.organizeImports": "explicit"
     }
   },
-  "notebook.formatOnSave.enabled": true,
-  "notebook.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit"
-  },
-  "[xml]": {
-  "editor.defaultFormatter": "redhat.vscode-xml",
-  "editor.formatOnSave": true,
-  "editor.tabSize": 2
-  },
   "[markdown]": {
     "editor.formatOnSave": true
   },
