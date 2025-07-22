@@ -54,3 +54,21 @@ This template solves common pain points in Databricks project setup:
     | `cicd_provider` | CI/CD provider | `github/azure` |
     | `cloud_provider` | Cloud provider | `azure/aws` |
     | `include_example_jobs` | Whether to include example DLT pipeline and jobs | `yes/no` |
+
+## Developing the Template
+
+Databricks Asset Bundle Templates use `Go` template syntax with conditional logic based on the parameters above.
+
+Key development files:
+
+- `template/__preamble.tmpl` - Controls file inclusion using `{{skip}}` directives
+- `databricks_template_schema.json` - Defines template variables and validation
+- Files with `.tmpl` extension are rendered with `{{.parameter_name}}` replaced accordingly
+
+Test locally using:
+
+```bash
+databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch <branch_name>
+```
+
+Changes are protected by comprehensive CI-DABS pipeline testing all template configurations.
