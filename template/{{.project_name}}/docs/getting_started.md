@@ -6,17 +6,17 @@ This project heavily depends on the provided `Makefile` for various tasks. Witho
 
 ### Prerequisites on Windows
 
-The project is natively built for **Linux** or **macOS**. For **Windows** we suggest developing in a **[DevContainer](devcontainer.md) (recommended)** or setting up a **[Windows Subsystem for Linux (WSL)](wsl.md)** environment.
+The project is natively built for **Linux** or **macOS**. For **Windows** we suggest developing in a **DevContainer** or setting up a **[Windows Subsystem for Linux (WSL)](wsl.md)** environment (recommended).
 
 ## Quick Setup
 
-Run the following command to set up a fully configured development environment:
+Set up a fully configured development environment by running:
 
 ```bash
 make (setup)
 ```
 
-This single command installs:
+This installs:
 
 - [`Git`](https://git-scm.com)
 - [`uv`](https://github.com/astral-sh/uv)

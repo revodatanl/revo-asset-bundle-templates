@@ -7,8 +7,8 @@
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
-
-{{if (eq .cicd_provider "github")}}[![ci](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml/badge.svg)](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml)
+{{if (eq .cicd_provider "github")}}
+[![ci](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml/badge.svg)](https://github.com/revodatanl/{{.project_name}}/actions/workflows/ci.yml)
 [![semantic-release](https://github.com/revodatanl/{{.project_name}}/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/{{.project_name}}/actions/workflows/semantic-release.yml){{end}}
 
 {{.project_description}}
@@ -19,24 +19,34 @@ The `{{.project_name}}` project was generated from [RevoData Asset Bundle Templa
 
 This project heavily depends on the provided `Makefile` for various tasks. Without [`make`](https://www.gnu.org/software/make) installed, you will need to run the commands described in the `Makefile` manually.
 
-The project is natively built for **Linux** or **macOS**. For **Windows** we suggest developing in a **[DevContainer](devcontainer.md) (recommended)** or setting up a **[Windows Subsystem for Linux (WSL)](wsl.md)** environment.
+The project is natively built for **Linux** or **macOS**. For **Windows** we suggest developing in a **DevContainer** or setting up a **[Windows Subsystem for Linux (WSL)](wsl.md)** environment (recommended).
 
 ## Quick Start
 
+Set up a fully configured development environment by running:
+
 ```bash
-make setup    # Set up development environment
+make (setup)
+```
+
+You may need to update the `PROFILE_NAME` variable in the `Makefile` to match your Databricks profile name.  In addition, ensure that the host URL in `bundle/targets.yml` matches your Databricks profile URL.
+
+Additional `make` commands are available for various tasks:
+
+```bash
 make lint     # Run linting
 make test     # Run tests
+make validate # Validate bundle on default workspace
 make deploy   # Deploy bundle to default workspace
 make destroy  # Destroy bundle resources on default workspace
 ```
 
-## DocumentationD
+## Documentation
 
 Comprehensive documentation can be found [here](docs/README.md).
 
 - [Getting Started](docs/getting_started.md) - Setup and installation
 - [Development](docs/development.md) - Code quality and testing
-- [Deployment](docs/deployment.md) - Databricks deployment
+- [Bundle Deployment](docs/bundle_deployment.md) - Databricks deployment
 - [Command Reference](docs/commands.md) - Available `Make` commands
 - [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
