@@ -10,6 +10,12 @@
 - Use `.py` files rather than `ipynb` files for notebooks (easier to review).
 - Consistency within a module/pipeline is most important.
 
+## Testing
+
+- Tests are located in the `tests` directory
+- All tests have a leading `test_` (or `_test` suffix) to the function and/or class - following the [`pytest`](https://docs.pytest.org/en/stable/) convention
+- We aim for at least 80% test coverage, quantified by [`pytest-cov`](https://pytest-cov.readthedocs.io/en/latest/)
+
 ## Commit Conventions
 
 We write our commit messages following the [Conventional Commits](https://www.conventionalcommits.org) standard, and follow the [Angular Commit Message Conventions](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format). Conventional Commits are enfordced by pre-commit hooks.
@@ -42,7 +48,7 @@ The type must be one of the following:
 | `build`    | Changes that affect the build system or external dependencies | None |
 | `ci`       | Changes to our CI configuration files and scripts | None |
 | `chore`    | Other changes that don't modify src or test files | None |
-| `revert`   | Reverts a previous commit | Depends on the reverted commit |
+| `revert`   | Reverts a previous commit | None |
 
 #### Scope
 
@@ -54,17 +60,11 @@ The subject contains a succinct description of the change:
 
 - Use the imperative, present tense: "change" not "changed" or "changes"
 - Do not capitalize the first letter
-- Do not end with a period (.)
+- Do not end with a period
 
-#### Breaking Changes
+#### BREAKING CHANGES
 
 Breaking changes should be indicated by:
 
 1. Adding an exclamation mark after the type/scope: `feat!: introduce breaking change`
 2. Adding a `BREAKING CHANGE:` footer with description: `BREAKING CHANGE: environment variables now take precedence over config files`
-
-## Testing
-
-- Tests are located in the `tests` directory
-- All tests have a leading `test_` (or `_test` suffix) to the function and/or class - following the [`pytest`](https://docs.pytest.org/en/stable/) convention
-- We aim for at least 80% test coverage, quantified by [`pytest-cov`](https://pytest-cov.readthedocs.io/en/latest/)

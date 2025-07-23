@@ -14,7 +14,7 @@ The project is structured as follows:
 ├── notebooks/                      # Databricks notebooks
 ├── resources/                      # Databricks resources (jobs, pipelines)
 ├── scratch/                        # Personal, exploratory notebooks (gitignored)
-├── src/{{.package_name}}/          # Source code
+├── src/                            # Source code
 ├── tests/                          # Tests
 ├── .gitignore                      # Git ignore patterns
 ├── .pre-commit-config.yaml         # Pre-commit hooks configuration
@@ -56,7 +56,7 @@ The Python project configuration file that defines:
 
 ## Code Quality
 
-We enforce code quality by pre-commit hooks and the CI pipeline.
+We ~~encourage~~ enforce code quality with pre-commit hooks and the CI pipeline.
 
 ### Pre-commit Hooks
 
@@ -72,14 +72,14 @@ Ensure that the [`pre-commit`](https://pre-commit.com) hook defined in `.pre-com
 
 We use GitHub's Dependabot to automatically check for updates to GitHub Actions and Python dependencies. It performs daily checks and groups dependencies as follows:
 
-- **GitHub Actions**: All dependencies within GitHub Actions are monitored and updated daily.
+- **GitHub Actions**: All dependencies within GitHub Actions are monitored and updated weekly.
 - **Python Dependencies**:
-  - **Development Dependencies**: Development-specific dependencies are updated daily.
-  - **Production Dependencies**: Production-specific dependencies are also checked daily.
+  - **Development Dependencies**: Development-specific dependencies are updated weekly.
+  - **Production Dependencies**: Production-specific dependencies are also checked weekly.
 
 This ensures dependencies are regularly maintained while adhering to the fixed environment constraints.{{end}}
 
-## Databricks Connect
+## Local Development with Databricks Connect
 
 Run local code on Databricks compute. Four connection methods:
 
@@ -88,13 +88,11 @@ Run local code on Databricks compute. Four connection methods:
 | **VS Code Extension** | Visual cluster selection | [Install extension](https://marketplace.visualstudio.com/items?itemName=databricks.databricks) |
 | **Serverless** ⭐ | Development, testing | `DatabricksSession.builder.serverless(True).getOrCreate()` |
 | **Profile-based** | Multiple workspaces | `Config(profile="<name>", cluster_id="<id>")` |
-| **Environment** | CI/CD pipelines | Set `DATABRICKS_CONFIG_PROFILE` or `DATABRICKS_HOST` in `.env` |
+| **Environment** | CI/CD pipelines | Set `DATABRICKS_CONFIG_PROFILE` and `DATABRICKS_HOST` in `.env` |
 
 ### Testing on (serverless) Databricks Connect
 
 Tests are configured to automatically run on (serverless) Databricks Connect. This is configured in the `tests/conftest.py` file, which is automatically discovered by `pytest`. A spark session for testing is created using the `DatabricksSession` builder with serverless mode enabled.
-
-```bash
 
 ```python
 from databricks.connect import DatabricksSession
@@ -110,3 +108,7 @@ Common issues and solutions:
 3. **Cluster access**: Verify you have permission to access the specified cluster or serverless compute
 4. **Version compatibility**: Ensure your local Databricks Connect version is compatible with your workspace
 5. **Conflict with PySpark**: [Databricks Connect conflicts with PySpark](https://docs.databricks.com/aws/en/dev-tools/databricks-connect/python/troubleshooting#conflicting-pyspark-installations). Having both installed will cause errors when initializing the Spark context in Python.
+
+...and of course:
+
+![it-crowd](images/it-crowd.png)

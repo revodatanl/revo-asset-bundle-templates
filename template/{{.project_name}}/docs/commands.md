@@ -6,7 +6,7 @@ The project contains a `Makefile` with several commands to simplify common devel
 
 **Sets up the project development environment.**
 
-The command installs [`Git`](https://git-scm.com), [`uv`](https://github.com/astral-sh/uv), and the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html), configures Python, sets up a virtual environment, and installs pre-commit hooks. The project configuration matches Databricks Runtime `15.4-LTS`.
+The command installs [`Git`](https://git-scm.com), [`uv`](https://github.com/astral-sh/uv), and the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/databricks-cli.html), configures Python, sets up a virtual environment, and installs pre-commit hooks. The current project configuration matches Databricks Runtime `15.4-LTS`.
 
 <details>
 <summary>example output</summary>
@@ -28,7 +28,7 @@ The command installs [`Git`](https://git-scm.com), [`uv`](https://github.com/ast
 
 **Runs a full test suite and generates a coverage report using `pytest`.**
 
-Prior to running the test suite, it updates dependencies, builds the package, and runs pre-commit hooks over all files - to mimic functionality during CI.
+Prior to running the test suite, it updates dependencies, builds the package, and runs pre-commit hooks over all files, to mimic functionality during CI.
 
 <details>
 <summary>example output</summary>
@@ -40,7 +40,7 @@ Prior to running the test suite, it updates dependencies, builds the package, an
 
 **Validates the bundle resources.**
 
-Prior to validation, it updates dependencies, builds the package, and runs pre-commit hooks over all files - to mimic functionality during CI.
+Prior to validation, it updates dependencies, builds the package, and runs pre-commit hooks over all files, to mimic functionality during CI.
 
 <details>
 <summary>example output</summary>
@@ -52,7 +52,7 @@ Prior to validation, it updates dependencies, builds the package, and runs pre-c
 
 **Deploys bundle resources to the default Databricks environment.**
 
-Prior to deployment, it updates dependencies, builds the package, and runs pre-commit hooks over all files - to mimic functionality during CI.
+Prior to deployment, it updates dependencies, builds the package, and runs pre-commit hooks over all files, to mimic functionality during CI.
 
 <details>
 <summary>example output</summary>
