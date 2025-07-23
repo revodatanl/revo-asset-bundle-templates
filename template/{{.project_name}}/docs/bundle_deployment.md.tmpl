@@ -58,13 +58,15 @@ The bundle deployment process follows a progressive promotion strategy:
    - **Models**: Release branch creation
    - Pipeline: `cd.yml`
 
-![git-strategy](images/git_strategy.png)
+![git-strategy](images/git-strategy.png)
 
 ## Model Deployment
 
 Models require more sophisticated deployment strategies due to frequent updates and the need for A/B testing:
 
 ### Model Deployment Flow
+
+In this example we are referring to the champion model by `M1` and the challenger model by `M2`.
 
 1. **Development Phase**
    - Model challenger developed on feature branches
@@ -85,11 +87,11 @@ Models require more sophisticated deployment strategies due to frequent updates 
      - Model marked as champion becomes challenger, processes data subset
    - Release branches remain read-only and permanent
 
-![model-strategy](images/model_strategy.png)
+![model-strategy](images/model-strategy.jpg)
 
 ## CI/CD
 
-Our automated pipeline orchestrates testing, deployment, and versioning across all environments. A graphical overview of full CI/CD process is shown below.
+Our automated pipeline orchestrates testing, deployment, and versioning across all environments. Three main pipelines are defined in our workflow. A graphical overview of the full CI/CD process is shown at the bottom of the page.
 
 ### Continuous Integration (CI)
 
@@ -142,3 +144,7 @@ The appropriate version number is then automatically updated in the repository.
 #### Automated `CHANGELOG` Generation
 
 As part of the release process, we auto-generate a comprehensive `CHANGELOG`. The `CHANGELOG` is automatically updated with each release, capturing all notable changes, enhancements, bug fixes, and breaking changes based on the commit messages.
+
+### Graphical Overview
+
+![cicd](images/cicd.jpg)
