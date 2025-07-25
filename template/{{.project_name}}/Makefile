@@ -4,47 +4,6 @@
 
 PROFILE_NAME := DEFAULT  # .databrickscfg profile name
 
-# Install system dependencies (git, uv, tree) on macOS and Linux
-install:
-	@CURRENT_OS=$$(uname -s); \
-	echo "Current OS: $$CURRENT_OS"; \
-	if [ "$$CURRENT_OS" = "Darwin" ]; then \
-		echo "Verifying if Homebrew is installed..."; \
-		which brew > /dev/null || (echo "Homebrew is not installed. Installing Homebrew..." && /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"); \
-		echo "Installing tools..."; \
-		for tool in git uv tree; do \
-			if ! command -v $$tool >/dev/null 2>&1; then \
-				echo "Installing $$tool..."; \
-				brew install $$tool; \
-			else \
-				echo "$$tool is already installed. Skipping."; \
-			fi; \
-		done; \
-	elif [ "$$CURRENT_OS" = "Linux" ]; then \
-		echo "Installing tools..."; \
-		sudo apt update; \
-		for tool in git tree; do \
-			if ! command -v $$tool >/dev/null 2>&1; then \
-				echo "Installing $$tool..."; \
-				 sudo apt install -y $$tool; \
-			else \
-				echo "$$tool is already installed. Skipping."; \
-			fi; \
-		done; \
-		if ! command -v uv >/dev/null 2>&1; then \
-			echo "Installing uv..."; \
-			curl -LsSf https://astral.sh/uv/install.sh | sh; \
-			echo "Sourcing ~/.bashrc to update shell environment..."; \
-			source ~/.bashrc || true; \
-		else \
-			echo "uv is already installed. Skipping."; \
-		fi; \
-	else \
-		echo "Unsupported OS. Currently supported kernels are either Darwin (macOS) or Linux (ubuntu22.04)."; \
-		exit 1; \
-	fi; \
-	echo "All tools installed successfully."
-
 # Complete project setup: install tools, dependencies, git, and pre-commit hooks
 setup:
 	@echo "Installing tools..."
@@ -59,7 +18,6 @@ setup:
 	@echo "All tools installed successfully."
 
 	@echo "Setting up the project..."
-	@uv lock
 	@uv sync
 
 	@if [ ! -d ".git" ]; then \
@@ -68,7 +26,6 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit..."
-	@uv run pre-commit autoupdate || true
 	@uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
 
 	@echo "Setup completed successfully!"
