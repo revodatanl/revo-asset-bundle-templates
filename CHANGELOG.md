@@ -1,3 +1,25 @@
+# [0.16.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.3...v0.16.0) (2025-07-25)
+
+
+### Bug Fixes
+
+* manually install uv and Databricks CLI in CI pipeline ([b4c2c98](https://github.com/revodatanl/revo-asset-bundle-templates/commit/b4c2c9800cef4bc0ab6807af01acd0adfc027b38))
+* remove unnecessary .tmpl anchors ([e782134](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e78213401ca3c8694bd8b0474cbf3b7bfec9280b))
+* update DevContainer configuration to match updated lean image ([4c85ecc](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4c85ecc3a4f38d932ff326cf54b48049537b90c8))
+* update devcontainer tag ([ce068a0](https://github.com/revodatanl/revo-asset-bundle-templates/commit/ce068a02c9bfcdb7da6e08df61ca8f576b808bf6))
+* update vscode settings ([7ce376d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/7ce376d8e444da8df5c354f0e04dec242358ea15))
+
+
+### Features
+
+* default to always use databricks-connect ([a5c8565](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a5c85650887e6ddaf5cfbec7502d596e67f824a8))
+* isolate bandit from core template ([67709d9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/67709d9436b672612f967dfd1e1a598f16bae640))
+* isolate devcontainer from core template ([bbf84f9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/bbf84f96fc8fea4b6f1304dd4ce19b57bbdc7c5f))
+* isolate SQLFluff from core template ([aef2a2d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/aef2a2ddb26b32da076ff72d9b902d854ba051c1))
+* remove bandit security scanning from core template ([1508e7d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/1508e7d0a9d6d0d7d6b3ce804dda62bec9455f49))
+* synchronize pre-commit, CI, and local development environments ([6327360](https://github.com/revodatanl/revo-asset-bundle-templates/commit/63273602e0a6f7577ef5f129c2e5001fb396775a))
+* update documentation in absence of MkDocs ([c976c55](https://github.com/revodatanl/revo-asset-bundle-templates/commit/c976c550aed2536cc49e0cc6b8ac44813248221e))
+
 ## [0.15.3](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.2...v0.15.3) (2025-06-10)
 
 
