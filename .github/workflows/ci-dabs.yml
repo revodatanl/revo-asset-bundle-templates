@@ -38,7 +38,12 @@ jobs:
       - name: Install Databricks CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
-          databricks version
+          databricks --version
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv --version
 
       - name: Create init parameters JSON
         run: |
@@ -76,12 +81,6 @@ jobs:
 
           echo ""
           echo "=================================================================="
-          echo "=============== RE-INSTALL DEPENDENCIES ========================="
-          echo "=================================================================="
-          make install
-
-          echo ""
-          echo "=================================================================="
           echo "=============== RE-BUILD PROJECT (WITH SETUP TARGET) ============="
           echo "=================================================================="
           make setup
@@ -95,12 +94,6 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add .
           git commit -m "feat: initial commit"
-
-          echo ""
-          echo "=================================================================="
-          echo "======================== GENERATE TREE ==========================="
-          echo "=================================================================="
-          make tree
 
           echo ""
           echo "=================================================================="
