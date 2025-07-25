@@ -1,5 +1,5 @@
 # Use the prebuilt image as the base
-FROM ghcr.io/revodatanl/revo-devcontainer-databricks:15.4-LTS
+FROM ghcr.io/revodatanl/revo-devcontainer-databricks:latest
 
 # Set environment variables
 ENV EDITOR=nano \
