@@ -119,13 +119,11 @@ update-venv:
 # Validate synchronization between venv and pre-commit hook versions
 validate-update:
 	@for tool in ruff mypy pydoclint; do \
-		pc_ver_full=$$(grep -A1 "$$tool" .pre-commit-config.yaml | grep rev | sed 's/.*v//' | tr -d ' ' | sed 's/://'); \
-		uv_ver_full=$$(awk '/\[\[package\]\]/{p=0} /name = "'"$$tool"'"/{p=1} p && /version = /{print $$NF; exit}' uv.lock | tr -d '"'); \
-		pc_ver=$$(echo $$pc_ver_full | cut -d. -f1-2); \
-		uv_ver=$$(echo $$uv_ver_full | cut -d. -f1-2); \
-		if [ "$$pc_ver" != "$$uv_ver" ]; then \
-			echo "❌ $$tool: pre-commit=$$pc_ver_full vs uv.lock=$$uv_ver_full (major/minor mismatch)"; \
-		fi; \
+		pc_ver=$$(grep -v '^\s*#' .pre-commit-config.yaml | grep -A1 "$$tool" | grep rev | sed 's/.*v//' | tr -d ' ' | sed 's/://'); \
+		uv_ver=$$(awk '/\[\[package\]\]/{p=0} /name = "'"$$tool"'"/{p=1} p && /version = /{print $$NF; exit}' uv.lock | tr -d '"'); \
+		[ -n "$$pc_ver" ] && [ -n "$$uv_ver" ] && \
+		[ "$$(echo $$pc_ver | cut -d. -f1-2)" != "$$(echo $$uv_ver | cut -d. -f1-2)" ] && \
+		echo "❌ $$tool: $$pc_ver vs $$uv_ver"; \
 	done; true
 
 # Update both pre-commit hooks and virtual environment dependencies
