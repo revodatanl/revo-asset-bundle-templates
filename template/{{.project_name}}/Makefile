@@ -2,7 +2,7 @@
 
 .DEFAULT_GOAL := setup
 
-PROFILE_NAME := DEFAULT  # .databrickscfg profile name
+PROFILE_NAME := DEFAULT
 
 # Complete project setup: install tools, dependencies, git, and pre-commit hooks
 setup:
