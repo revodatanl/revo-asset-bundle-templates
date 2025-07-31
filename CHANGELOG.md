@@ -1,3 +1,11 @@
+## [0.16.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.0...v0.16.1) (2025-07-31)
+
+
+### Bug Fixes
+
+* improve robustness of make update target ([bfa4d9d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/bfa4d9d73a82dcedd33ad18f5638e5269ad182b0))
+* reset profile name in Makefile ([aea6a7f](https://github.com/revodatanl/revo-asset-bundle-templates/commit/aea6a7f1d3d4b3e3d7d8aef0b45e97a79e567397))
+
 # [0.16.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.3...v0.16.0) (2025-07-25)
 
 
