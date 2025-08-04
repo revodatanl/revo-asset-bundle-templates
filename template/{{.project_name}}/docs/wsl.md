@@ -4,7 +4,7 @@ This document explains how to set up a consistent development environment for Da
 
 ### Why Not Native Windows?
 
-Setting up managed versions of `Python` and other development tools on Windows natively can be complicated. In addition, on Windows there is no access to tools that make your life easy, such as `Make`. **WSL (Ubuntu)** provides a more consistent, Linux-like environment that works well with `Python`, `uv`, `Make`, and other CLI tools.
+Setting up managed versions of `Python` and other development tools on native Windows can be complicated. In addition, on Windows there is limited access to tools that make your life easy such as `Make`. **WSL (Ubuntu)** provides a Linux-like environment that works well with `Python`, `uv`, `Make`, and other CLI tools, and is consistent with Databricks.
 
 ## Prerequisites
 
@@ -38,25 +38,13 @@ You need these tools installed on your system:
 
    ```bash
    # Install Make
-   sudo apt update
-   sudo apt install make
+   sudo apt update && sudo apt install make
 
-   # Install Homebrew
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-   # Add Homebrew to your path
-   echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
-   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-   # Install build essentials and GCC
-   sudo apt install build-essential
-   brew install gcc
-
-   # Install Java for Spark
-   sudo apt install openjdk-21-jre-headless
+   # Install Databricks CLI
+   sudo curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
 
    # Install uv
-   curl -LsSf https://astral.sh/uv/install.sh | sh
+   sudo curl -LsSf https://astral.sh/uv/install.sh | sudo sh
    ```
 
 3. **Authenticate your local machine**
@@ -121,18 +109,17 @@ You need these tools installed on your system:
    From within VS Code running in WSL, open a terminal and run:
 
    ```bash
-   make install
-   make setup
+   make (setup)
    ```
 
-   This will set up the correct versions of `Python`, `uv`, `git`, and the Databricks CLI, and create your virtual environment.
+   This will set up a fully configured development environment.
 
 ## Using the Development Environment
 
 Once your environment is configured and running, you can:
 
 - Run Python code within the WSL environment
-- Use Make commands to manage your project
+- Use `Make` commands to manage your project
 - Run `PySpark` tests on `Databricks Connect` using the `make test` command
 - Use Git for version control
 - Deploy to Databricks using `make deploy`
