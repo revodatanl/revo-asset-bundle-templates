@@ -4,19 +4,8 @@
 
 PROFILE_NAME := DEFAULT
 
-# Complete project setup: install tools, dependencies, git, and pre-commit hooks
+# Complete project setup: sync dependencies, set up git, and pre-commit hooks
 setup:
-	@echo "Installing tools..."
-	@{ \
-		output=$$($(MAKE) install 2>&1); \
-		exit_code=$$?; \
-		if [ $$exit_code -ne 0 ]; then \
-			echo "$$output"; \
-			exit $$exit_code; \
-		fi; \
-	}
-	@echo "All tools installed successfully."
-
 	@echo "Setting up the project..."
 	@uv sync
 
@@ -67,7 +56,7 @@ validate:
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
 	fi
-	@databricks bundle validate --profile $(PROFILE_NAME) --target dev; \
+	@databricks bundle validate --profile $(PROFILE_NAME) --target dev;
 
 # Deploy Databricks bundle to development environment
 deploy:
@@ -77,7 +66,7 @@ deploy:
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
 	fi
-	@databricks bundle deploy --profile $(PROFILE_NAME) --target dev; \
+	@databricks bundle deploy --profile $(PROFILE_NAME) --target dev;
 
 # Destroy all deployed Databricks resources in development environment
 destroy:
@@ -86,7 +75,7 @@ destroy:
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
 	fi
-	@databricks bundle destroy --profile $(PROFILE_NAME) --target dev; \
+	@databricks bundle destroy --profile $(PROFILE_NAME) --target dev;
 
 # Generate and display project directory structure
 tree:
