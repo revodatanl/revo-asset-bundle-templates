@@ -1,3 +1,10 @@
+## [0.16.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.1...v0.16.2) (2025-08-04)
+
+
+### Bug Fixes
+
+* clean up Makefile ([5518f25](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5518f258d37bb6e22f9cafe75ee1ad023e7ca178))
+
 ## [0.16.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.0...v0.16.1) (2025-07-31)
 
 
