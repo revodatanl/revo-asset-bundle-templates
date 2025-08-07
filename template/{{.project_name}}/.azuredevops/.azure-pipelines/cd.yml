@@ -61,7 +61,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: templates/deploy-dab-template.yml
+                - template: templates/cd-template.yml
                   parameters:
                     azureSubscription: ${{ variables.azureSubscription }}_prod
                     deployTarget: prod
