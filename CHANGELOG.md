@@ -1,3 +1,10 @@
+## [0.16.4](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.3...v0.16.4) (2025-08-07)
+
+
+### Bug Fixes
+
+* ruff output in Azure CI ([e19eeaa](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e19eeaacf2506220712cbb6994baf71778c9a2b1))
+
 ## [0.16.3](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.2...v0.16.3) (2025-08-07)
 
 
