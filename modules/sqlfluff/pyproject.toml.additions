@@ -4,9 +4,8 @@
 # SQLFluff configuration
 [tool.sqlfluff.core]
 dialect = "databricks"
-templater = "jinja"
+templater = "placeholder"
 max_line_length = 120
-ignore = "parsing"
 exclude_rules = [
     "AM04",     # "Query produces an unknown number of result columns."
     "LT01",     # "Expected single whitespace between magic start and magic line."
@@ -16,6 +15,9 @@ exclude_rules = [
 indented_joins = false
 indented_using_on = true
 template_blocks_indent = false
+
+[tool.sqlfluff.templater.placeholder]
+param_regex = "\\$"
 
 [tool.sqlfluff.rules.capitalisation.keywords]
 capitalisation_policy = "upper"
