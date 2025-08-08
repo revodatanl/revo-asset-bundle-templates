@@ -1,3 +1,10 @@
+## [0.16.5](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.4...v0.16.5) (2025-08-08)
+
+
+### Bug Fixes
+
+* update sqlfluff settings to allow `$catalog_name`.`$schema_name`.`$table_name` ([2bf1b3d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2bf1b3d9e9cc477fee70625cb82c57107ba28d8a))
+
 ## [0.16.4](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.3...v0.16.4) (2025-08-07)
 
 
