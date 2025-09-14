@@ -1,12 +1,7 @@
-defaults: &default_task_config
-  job_cluster_key: job_cluster
-  libraries:
-  - whl: ../dist/*.whl
-
 resources:
   jobs:
-    example-workflow:
-      name: example-workflow
+    example-job:
+      name: example-job
 
       schedule:
         # Run every day at 8:37 AM
@@ -23,9 +18,11 @@ resources:
 
       tasks:
         - task_key: notebook_task
-          <<: *default_task_config
+          job_cluster_key: job_cluster
+          libraries:
+          - whl: ../dist/*.whl
           notebook_task:
-            notebook_path: ../notebooks/example_notebook.py
+            notebook_path: ../notebooks/example_job.py
         - task_key: wheel_task
           depends_on:
             - task_key: notebook_task

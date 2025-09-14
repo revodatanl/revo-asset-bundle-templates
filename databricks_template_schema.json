@@ -35,21 +35,21 @@
       "type": "string",
       "default": "github",
       "enum": ["github", "azure"],
-      "description": "CI/CD provider",
+      "description": "Select CI/CD platform",
       "order": 6
     },
     "cloud_provider": {
       "type": "string",
       "default": "azure",
       "enum": ["azure", "aws"],
-      "description": "Cloud provider",
+      "description": "Select cloud provider",
       "order": 7
     },
     "include_example_jobs": {
       "type": "string",
       "default": "no",
       "enum": ["no", "yes"],
-      "description": "Include example jobs (Delta Live Tables pipeline and example job) in '{{.project_name}}{{path_separator}}resources{{path_separator}}example'",
+      "description": "Include example pipelines and jobs in '{{.project_name}}{{path_separator}}resources'",
       "order": 8
     }
   },

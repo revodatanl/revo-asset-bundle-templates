@@ -1,24 +1,11 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Example Notebook
-
-# COMMAND ----------
-
-# DBTITLE 1,Notebook-scoped wheel path
-# MAGIC dbutils.widgets.text(
-# MAGIC     "wheel_path",
-# MAGIC     "/Workspace/Users/{{.email}}/.bundle/{{.project_name}}/dev/artifacts/.internal/*.whl",
-# MAGIC )
-
-# COMMAND ----------
-
-# DBTITLE 1,Notebook-scoped wheel installation
-# MAGIC %pip install --no-deps --force-reinstall {dbutils.widgets.get("wheel_path")}
+# MAGIC # Example Job
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC #### Import wheel function
+# MAGIC #### Import wheel package function
 
 # COMMAND ----------
 

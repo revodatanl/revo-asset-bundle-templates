@@ -116,7 +116,7 @@ jobs:
 
           echo ""
           echo "=================================================================="
-          echo "=========== RE-BUILD PROJECT (AFTER CLEAN) ======================="
+          echo "================ RE-BUILD PROJECT (AFTER CLEAN) =================="
           echo "=================================================================="
           make
 
@@ -168,8 +168,7 @@ jobs:
           retention-days: 1
 
 
-# Run example workflow in parallel with the example DLT pipeline workflow
-  run-example-workflow:
+  run-example-job:
     needs: ci-dabs
     if: success()
     runs-on: ubuntu-latest
@@ -185,30 +184,30 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
           databricks version
 
-      - name: Run Example Workflow
+      - name: Run Example Job
         run: |
           cd revo-dabs-test-project
           echo ""
           echo "=================================================================="
-          echo "==================== RUN EXAMPLE WORKFLOW ========================"
+          echo "======================== RUN EXAMPLE JOB ========================="
           echo "=================================================================="
-          echo "Starting 'example-workflow'... (this may take a while)"
-          EXAMPLE_WORKFLOW_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-workflow")) | .job_id')
-          echo "Example workflow ID: $EXAMPLE_WORKFLOW_ID"
+          echo "Starting 'example-job' job... (this may take a while)"
+          EXAMPLE_JOB_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-job")) | .job_id')
+          echo "Example job ID: $EXAMPLE_JOB_ID"
 
-          if [ -z "$EXAMPLE_WORKFLOW_ID" ]; then
-            echo "Error: Could not find example-workflow"
+          if [ -z "$EXAMPLE_JOB_ID" ]; then
+            echo "Error: Could not find example-job"
             databricks jobs list --output text
             exit 1
           fi
 
-          RESULT_STATE=$(databricks jobs run-now $EXAMPLE_WORKFLOW_ID | jq -r '.state.result_state')
-          echo "Workflow result state: $RESULT_STATE"
+          RESULT_STATE=$(databricks jobs run-now $EXAMPLE_JOB_ID | jq -r '.state.result_state')
+          echo "Job result state: $RESULT_STATE"
 
           if [[ "$RESULT_STATE" == "SUCCESS" ]]; then
-            echo "Workflow completed successfully!"
+            echo "Job completed successfully!"
           else
-            echo "Workflow failed with status: $RESULT_STATE"
+            echo "Job failed with status: $RESULT_STATE"
             exit 1
           fi
         env:
@@ -217,8 +216,7 @@ jobs:
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
 
-# Run example DLT pipeline workflow in parallel with the example workflow
-  run-example-dlt-workflow:
+  run-example-pipeline-job:
     needs: ci-dabs
     if: success()
     runs-on: ubuntu-latest
@@ -234,30 +232,30 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
           databricks version
 
-      - name: Run example DLT pipeline workflow
+      - name: Run example pipeline job
         run: |
           cd revo-dabs-test-project
           echo ""
           echo "=================================================================="
-          echo "=============== RUN EXAMPLE DLT PIPELINE WORKFLOW ================"
+          echo "================ RUN EXAMPLE PIPELINE JOB ========================"
           echo "=================================================================="
-          echo "Starting 'example-dlt-pipeline-workflow'... (this may take a while)"
-          DLT_PIPELINE_WORKFLOW_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-dlt-pipeline-workflow")) | .job_id')
-          echo "Example DLT pipeline ID: $DLT_PIPELINE_WORKFLOW_ID"
+          echo "Starting 'example-pipeline-job'... (this may take a while)"
+          PIPELINE_JOB_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-pipeline-job")) | .job_id')
+          echo "Pipeline job ID: $PIPELINE_JOB_ID"
 
-          if [ -z "$DLT_PIPELINE_WORKFLOW_ID" ]; then
-            echo "Error: Could not find example-dlt-pipeline-workflow"
+          if [ -z "$PIPELINE_JOB_ID" ]; then
+            echo "Error: Could not find example-pipeline-job"
             databricks jobs list --output text
             exit 1
           fi
 
-          DLT_PIPELINE_RESULT_STATE=$(databricks jobs run-now $DLT_PIPELINE_WORKFLOW_ID | jq -r '.state.result_state')
-          echo "DLT pipeline result state: $DLT_PIPELINE_RESULT_STATE"
+          PIPELINE_RESULT_STATE=$(databricks jobs run-now $PIPELINE_JOB_ID | jq -r '.state.result_state')
+          echo "Pipeline result state: $PIPELINE_RESULT_STATE"
 
-          if [[ "$DLT_PIPELINE_RESULT_STATE" == "SUCCESS" ]]; then
-            echo "DLT pipeline completed successfully!"
+          if [[ "$PIPELINE_RESULT_STATE" == "SUCCESS" ]]; then
+            echo "Pipeline job completed successfully!"
           else
-            echo "DLT pipeline failed with status: $DLT_PIPELINE_RESULT_STATE"
+            echo "Pipeline job failed with status: $PIPELINE_RESULT_STATE"
             exit 1
           fi
         env:
@@ -266,9 +264,9 @@ jobs:
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
 
-# Destroy bundle regardless of the outcome of the other workflows
+# Destroy bundle regardless of the outcome of both jobs
   destroy-bundle:
-    needs: [run-example-workflow, run-example-dlt-workflow]
+    needs: [run-example-job, run-example-pipeline-job]
     if: always()
     runs-on: ubuntu-latest
     steps:
