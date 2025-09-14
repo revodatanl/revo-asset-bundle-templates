@@ -1,21 +1,21 @@
 resources:
   jobs:
-    example-dlt-pipeline-workflow:
-      name: example-dlt-pipeline-workflow
+    example-pipeline-job:
+      name: example-pipeline-job
 
       tasks:
-        - task_key: example-dlt-pipeline-task
+        - task_key: pipeline-task
           pipeline_task:
-            pipeline_id: ${resources.pipelines.example-dlt-pipeline.id}
+            pipeline_id: ${resources.pipelines.example-pipeline.id}
 
   pipelines:
-    example-dlt-pipeline:
-      name: example-dlt-pipeline
+    example-pipeline:
+      name: example-pipeline
       # catalog: main  # configure catalog in Unity Catalog
-      target: {{.package_name}}_${bundle.environment}
+      schema: {{.package_name}}_${bundle.environment}
       libraries:
-        - notebook:
-            path: ../notebooks/example_dlt_pipeline_notebook.py
+        - glob:
+            include: ../notebooks/pipelines/**
 
       clusters:
        - label: default
@@ -26,7 +26,6 @@ resources:
         wheel_path: ${var.wheel_path}
         table: nyctaxi
         autoloader_path: dbfs:/databricks-datasets/nyctaxi-with-zipcodes/subsampled
-        pipelines.allowCustomSchemaForPython: true
         pipelines.clusterShutdown.delay: 20min
 
       continuous: false

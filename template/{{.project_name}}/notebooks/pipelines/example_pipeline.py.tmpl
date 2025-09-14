@@ -4,13 +4,12 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC # Data ingestion with Delta Live Tables
-# MAGIC
+# MAGIC # Example Pipeline
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC #### Load libraries and functions
+# MAGIC #### Load libraries and wheel functions
 # MAGIC
 
 # COMMAND ----------
@@ -36,11 +35,11 @@ autoloader_path = spark.conf.get("autoloader_path")
 
 # MAGIC %md
 # MAGIC ## Ingest data with the Auto Loader
-# MAGIC Only for demonstration purposes, we made the ingestion dependent on the `main` function of our wheel.
+# MAGIC We made the ingestion dependent on the `main` function of our wheel for demonstration purposes.
 
 # COMMAND ----------
 
-# since main() returns `True` this condition only serves as an example on how to import functions from the package
+# Since main() always returns `True` this condition will always be met
 if main():
 
     @dlt.table(
@@ -62,7 +61,7 @@ if main():
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Set [expectations](https://learn.microsoft.com/en-us/azure/databricks/delta-live-tables/expectations) to ensure bronze data quality
+# MAGIC ## Set [expectations](https://learn.microsoft.com/en-us/azure/databricks/dlt/expectations) to ensure bronze data quality
 # MAGIC
 
 # COMMAND ----------

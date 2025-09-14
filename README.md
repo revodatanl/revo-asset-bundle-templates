@@ -53,7 +53,7 @@ This template solves common pain points in Databricks project setup:
     | `project_description` | Brief description of the project | `This project is generated using our own RevoData Asset Bundle Templates.` |
     | `cicd_provider` | CI/CD provider | `github/azure` |
     | `cloud_provider` | Cloud provider | `azure/aws` |
-    | `include_example_jobs` | Whether to include example DLT pipeline and jobs | `yes/no` |
+    | `include_example_jobs` | Whether to include example pipelines and jobs | `yes/no` |
 
 ## Developing the Template
 
