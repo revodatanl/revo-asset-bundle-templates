@@ -50,7 +50,6 @@ jobs:
           cat > init_params.json << EOF
           {
             "project_name": "revo-dabs-test-project",
-            "package_name": "revo_dabs",
             "author": "Thomas Brouwer",
             "email": "thomas.brouwer@revodata.nl",
             "project_description": "This project is generated using our own RevoData Asset Bundle Templates.",
