@@ -7,13 +7,6 @@
       "pattern": "^[A-Za-z0-9-]+$",
       "pattern_match_failure_message": "Project name must consist of letters, numbers, and dashes."
     },
-    "package_name": {
-      "type": "string",
-      "description": "Package name (use underscores)",
-      "order": 2,
-      "pattern": "^[A-Za-z0-9_]+$",
-      "pattern_match_failure_message": "Package name must consist of letters, numbers, and underscores."
-    },
     "author": {
       "type": "string",
       "description": "Author",

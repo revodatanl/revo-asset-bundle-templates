@@ -140,4 +140,4 @@ Generated projects contain CI/CD pipelines with parity between GitHub Actions an
 Templates use Go template syntax with conditional logic:
 - `{{if eq .cicd_provider "github"}}` - Include GitHub-specific files
 - `{{if eq .include_example_jobs "yes"}}` - Include example jobs and notebooks
-- `{{.project_name}}` and `{{.package_name}}` - Parameter substitution
+- `{{.project_name}}` and `{{template "package_name" .}}` - Parameter substitution

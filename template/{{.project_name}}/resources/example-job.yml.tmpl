@@ -28,10 +28,10 @@ resources:
             - task_key: notebook_task
           job_cluster_key: job_cluster
           python_wheel_task:
-            package_name: {{.package_name}}
+            package_name: {{template "package_name" .}}
             entry_point: main
           libraries:
-            # By default we just include the .whl file generated for the {{.package_name}} package.
+            # By default we just include the .whl file generated for the {{template "package_name" .}} package.
             # See https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
             # for more information on how to add other libraries.
             - whl: ../dist/*.whl

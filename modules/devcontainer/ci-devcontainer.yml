@@ -44,7 +44,6 @@ jobs:
           cat > init_params.json << EOF
           {
             "project_name": "revo-dabs-devcontainer-test",
-            "package_name": "revo_dabs_devcontainer",
             "author": "Thomas Brouwer",
             "email": "thomas.brouwer@revodata.nl",
             "project_description": "DevContainer module test project.",
