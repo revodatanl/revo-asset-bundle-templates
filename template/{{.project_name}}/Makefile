@@ -31,6 +31,7 @@ setup:
 	@uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
 
 	@echo "Setup completed successfully!"
+	@echo "💡 Run 'make update' to ensure you have the latest pre-commit hooks and dependencies."
 
 # Clean project artifacts and rebuild virtual environment
 clean:
