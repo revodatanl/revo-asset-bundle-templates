@@ -1,15 +1,23 @@
 name: Deploy Databricks Asset Bundle
 
+# Before using this workflow, create the following in your GitHub repository:
+# 1. Go to Settings → Environments
+# 2. Create environments: 'test' and 'prod'
+# 3. For 'prod' environment add required reviewers under Protection rules
+# 4. Ensure the following environment-specific secrets are set:
+#    - DATABRICKS_HOST
+#    - DATABRICKS_CLIENT_ID
+#    - DATABRICKS_CLIENT_SECRET
+
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
 
 jobs:
   deploy_test:
     name: Deploy to test
     runs-on: ubuntu-latest
-    environment: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,14 +31,11 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-  # Make sure to configure environment protection rules to enable the manual approval
-  # in your GitHub repository settings. Go to Settings → Environments → `prod` and add required reviewers.
   wait_for_approval:
     name: Await production approval
     needs: deploy_test
     runs-on: ubuntu-latest
     timeout-minutes: 720 # 12 hours
-    environment: prod
     steps:
       - name: Wait for approval
         run: |
@@ -40,7 +45,6 @@ jobs:
     name: Deploy to production
     needs: wait_for_approval
     runs-on: ubuntu-latest
-    environment: prod
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

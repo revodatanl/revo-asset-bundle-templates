@@ -56,13 +56,3 @@ jobs:
           echo "Unit tests passed ✅"
         env:
           PYTHONPATH: ${{ "{{" }} github.workspace {{ "}}" }}/src
-
-      - name: Publish coverage report to Codecov 📈
-        uses: codecov/codecov-action@v5
-        with:
-          fail_ci_if_error: true
-          files: coverage.xml
-          flags: unittests
-          name: codecov-umbrella
-          verbose: true
-          use_oidc: true

@@ -1,9 +1,9 @@
 name: CD
 
 trigger:
-  branches:
+  tags:
     include:
-      - main
+      - '*'
 
 pool:
   vmImage: ubuntu-latest
