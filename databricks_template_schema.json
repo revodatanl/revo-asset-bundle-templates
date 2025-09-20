@@ -1,8 +1,10 @@
 {
+  "welcome_message": "Welcome to RevoData Asset Bundle Templates!",
+  "min_databricks_cli_version": "v0.236.0",
   "properties": {
     "project_name": {
       "type": "string",
-      "description": "Project name (use dashes)",
+      "description": "{{if false}}\n\nERROR: This template is not supported by your current Databricks CLI version.\nPlease hit control-C and go to https://docs.databricks.com/en/dev-tools/cli/install.html for instructions on upgrading the CLI to the minimum version (v0.236.0) supported by RevoData Asset Bundle Templates.\n\n\n{{end}}Project name (use dashes)",
       "order": 1,
       "pattern": "^[A-Za-z0-9-]+$",
       "pattern_match_failure_message": "Project name must consist of letters, numbers, and dashes."
@@ -10,18 +12,25 @@
     "author": {
       "type": "string",
       "description": "Author",
-      "order": 3
+      "order": 2
     },
     "email": {
       "type": "string",
       "description": "Email address of the author",
       "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
       "pattern_match_failure_message": "Invalid email address.",
-      "order": 4
+      "order": 3
     },
     "project_description": {
       "type": "string",
       "description": "Description of the project",
+      "order": 4
+    },
+    "include_cicd": {
+      "type": "string",
+      "default": "yes",
+      "enum": ["yes", "no"],
+      "description": "Set up CI/CD pipelines",
       "order": 5
     },
     "cicd_provider": {
@@ -29,14 +38,28 @@
       "default": "github",
       "enum": ["github", "azure"],
       "description": "Select CI/CD platform",
-      "order": 6
+      "order": 6,
+      "skip_prompt_if": {
+        "properties": {
+          "include_cicd": {
+            "const": "no"
+          }
+        }
+      }
     },
     "cloud_provider": {
       "type": "string",
       "default": "azure",
       "enum": ["azure", "aws"],
       "description": "Select cloud provider",
-      "order": 7
+      "order": 7,
+      "skip_prompt_if": {
+        "properties": {
+          "include_cicd": {
+            "const": "no"
+          }
+        }
+      }
     },
     "include_example_jobs": {
       "type": "string",

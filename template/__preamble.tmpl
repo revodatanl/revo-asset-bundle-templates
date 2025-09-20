@@ -4,12 +4,16 @@ This file only provides template directives; it is skipped for the actual output
 
 {{skip "__preamble"}}
 
-{{if not (eq .cicd_provider "github")}}
+{{if not (eq .include_cicd "yes")}}
   {{skip "{{.project_name}}/.github"}}
-{{end}}
-
-{{if not (eq .cicd_provider "azure")}}
   {{skip "{{.project_name}}/.azuredevops"}}
+{{else}}
+  {{if not (eq .cicd_provider "github")}}
+    {{skip "{{.project_name}}/.github"}}
+  {{end}}
+  {{if not (eq .cicd_provider "azure")}}
+    {{skip "{{.project_name}}/.azuredevops"}}
+  {{end}}
 {{end}}
 
 {{if not (eq .include_example_jobs "yes")}}

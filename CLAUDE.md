@@ -12,14 +12,14 @@ This is **RevoData Asset Bundle Templates** - a template repository for generati
 
 - Templates use Go template syntax with conditional logic based on user parameters
 - Core configuration in `databricks_template_schema.json` defines 8 key parameters:
-  - `project_name`
-  - `package_name`
-  - `author`
-  - `email`
-  - `project_description`
-  - `cicd_provider` (GitHub/Azure DevOps)
-  - `cloud_provider` (Azure/AWS)
-  - `include_example_jobs`
+  - `project_name` - Project name using dashes (validated with regex)
+  - `author` - Author name
+  - `email` - Author email (validated with regex)
+  - `project_description` - Brief project description
+  - `include_cicd` - Include CI/CD pipelines: `yes` or `no` (default: `yes`)
+  - `cicd_provider` - CI/CD platform choice: `github` or `azure` (default: `github`, conditional on `include_cicd`)
+  - `cloud_provider` - Cloud platform choice: `azure` or `aws` (default: `azure`, conditional on `include_cicd`)
+  - `include_example_jobs` - Include example pipelines/jobs: `yes` or `no` (default: `no`)
 
 ### Generated Project Structure
 
@@ -121,8 +121,8 @@ Generated projects contain CI/CD pipelines with parity between GitHub Actions an
 ## Key Files to Understand
 
 ### Template Configuration
-- `databricks_template_schema.json` - Defines 9 template parameters and validation rules
-- `template/__preamble.tmpl` - Controls conditional file inclusion based on user parameters
+- `databricks_template_schema.json` - Defines 8 template parameters and validation rules with conditional prompting
+- `template/__preamble.tmpl` - Controls conditional file inclusion using `{{skip}}` directives based on user parameters
 
 ### Core Template Structure
 - `template/{{.project_name}}/databricks.yml.tmpl` - Databricks Asset Bundle configuration
@@ -138,6 +138,14 @@ Generated projects contain CI/CD pipelines with parity between GitHub Actions an
 
 ### Template Logic Patterns
 Templates use Go template syntax with conditional logic:
-- `{{if eq .cicd_provider "github"}}` - Include GitHub-specific files
+- `{{if eq .include_cicd "yes"}}` - Include CI/CD files when enabled
+- `{{if eq .cicd_provider "github"}}` - Include GitHub-specific files (when CI/CD enabled)
 - `{{if eq .include_example_jobs "yes"}}` - Include example jobs and notebooks
 - `{{.project_name}}` and `{{template "package_name" .}}` - Parameter substitution
+- `skip_prompt_if` - JSON schema feature to conditionally skip parameter prompts
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
