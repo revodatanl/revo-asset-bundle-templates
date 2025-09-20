@@ -5,18 +5,18 @@ repos:
     -   id: conventional-pre-commit
         stages: [commit-msg]
 -   repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.7.8
+    rev: 0.8.19
     hooks:
     -   id: uv-lock
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-json
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev:  v0.11.12
+    rev:  v0.13.1
     hooks:
     -   id: ruff-check
         args:
@@ -26,7 +26,7 @@ repos:
     -   id: ruff-format
         types_or: [python, pyi, jupyter]
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.16.0
+    rev: v1.18.2
     hooks:
     -   id: mypy
         language_version: python3.11
@@ -38,10 +38,10 @@ repos:
         -   types-python-dateutil
         exclude: "scratch"
 -   repo: https://github.com/jsh9/pydoclint
-    rev: 0.6.7
+    rev: 0.7.3
     hooks:
     -   id: pydoclint
 -   repo: https://github.com/gitleaks/gitleaks
-    rev: v8.26.0
+    rev: v8.28.0
     hooks:
     -   id: gitleaks
