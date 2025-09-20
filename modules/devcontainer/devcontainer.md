@@ -92,9 +92,7 @@ You need these tools installed on your system:
 
    ![reopen-in-container](images/reopen-in-container.png)
 
-   The first time you do this, VS Code will build the container (this might take a few minutes). Note that `Docker Desktop` is supposed to be running. When the container is running, you will see it in the bottom-left corner of VS Code:
-
-   ![opened-in-container](images/opened-in-container.png)
+   The first time you do this, VS Code will build the container (this might take a few minutes). Note that `Docker Desktop` is supposed to be running. When the container is running, you will see it in the bottom-left corner of VS Code.
 
 ## Using the Development Environment
 
