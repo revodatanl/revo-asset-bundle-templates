@@ -6,6 +6,19 @@ PROFILE_NAME := DEFAULT
 
 # Complete project setup: sync dependencies, set up git, and pre-commit hooks
 setup:
+	@set -e; \
+	missing_tools=""; \
+	for tool in uv git databricks; do \
+		if ! command -v $$tool >/dev/null 2>&1; then \
+			echo "❌ Error: Prerequisite '$$tool' is not installed. Please install manually."; \
+			missing_tools="$$missing_tools $$tool"; \
+		fi; \
+	done; \
+	if [ -n "$$missing_tools" ]; then \
+		echo "Exiting..."; \
+		exit 1; \
+	fi
+
 	@echo "Setting up the project..."
 	@uv sync
 
