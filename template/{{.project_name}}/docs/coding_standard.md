@@ -2,13 +2,17 @@
 
 ## Style Guide
 
-- Follow `PEP 8` for Python code style.
-- Use type hints for function signatures.
-- Preferably use functions over classes, unless you have a good reason to use classes (e.g. test classes).
-- Write docstrings for all functions and classes, following the `numpy` style.
-- Make sure that your functions have clear inputs and outputs, are testable, and are are well-documented.
-- Use `.py` files rather than `ipynb` files for notebooks (easier to review).
-- Consistency within a module/pipeline is most important.
+- Follow `PEP 8` for Python code style
+- Always lint and format your code
+- Always use type hints for function signatures
+- Prefer functions over classes (except for _e.g._ test classes)
+- Write testable code, and test using `pytest`
+- Write `numpy`-style docstrings for all functions and classes
+- Use `.py` files for notebooks (easier to review than `.ipynb`)
+- Always `import pyspark.sql.functions as F`
+- Use `UpperCamelCase` for classes, use `snake_case` for variables/functions
+- Explicit names over abbreviations
+- Consistency is most important
 
 ## Testing
 

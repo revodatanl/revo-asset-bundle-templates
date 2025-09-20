@@ -6,38 +6,47 @@ A bundle contains:
 
 - Cloud infrastructure and workspace configurations
 - Business logic (notebooks, Python files)
-- Resource definitions (jobs, Lakeflow Declarative Pipelines, Model Serving endpoints, MLflow experiments)
+- Resource definitions (jobs, pipelines, Model Serving endpoints, MLflow experiments)
 - Unit and integration tests
 
 The following diagram provides a high-level view of a development and CI/CD pipeline with bundles:
 
-![bundle-deployment](images/bundles-cicd.png)
+![bundle-development](images/bundle-development.png)
 
 ## Git Strategy
 
-We follow an adaptation of the [**Microsoft Release Flow**](https://learn.microsoft.com/en-us/devops/develop/how-microsoft-develops-devops), a trunk-based branching strategy with three branch types:
+We use a **hybrid trunk-based approach**:
 
-| Branch | Purpose | Lifecycle |
-|--------|---------|-----------|
-| **main** | Integration branch, always buildable | Permanent |
-| **feature** | Feature development and bug fixes | Short-lived (days) |
-| **release** | Production releases | Permanent, read-only |
+- **Jobs/Pipelines** follow a [**GitHub Flow**](https://docs.github.com/en/get-started/using-github/github-flow) process (deploy from `main` with an approval gate; no persistent release branches).
+- **Models** follow [**Microsoft Release Flow**](https://learn.microsoft.com/en-us/devops/develop/how-microsoft-develops-devops) (cut `release/*` branches for production; hotfix on release and merge-forward).
+
+Across both, we keep branches short-lived and integrate via `main`.
+
+### Branch types used
+
+| Branch | Purpose | Lifecycle | Used by |
+|--------|---------|-----------|---------|
+| **main** | Integration branch, always buildable | Permanent | Jobs/Pipelines & Models |
+| **feature** | Feature development and bug fixes | Short-lived (days) | Jobs/Pipelines & Models |
+| **release/\*** | Production release and servicing line | Long-lived (read-only after tagging) | **Models only** |
 
 ### Core Principles
 
-- **Short-lived features**: Merge within days, not weeks
-- **Main-first approach**: All changes flow through main
-- **Unified workflow**: Hotfixes follow the same process as features
-- **Semantic versioning**: Automated version bumps based on commit type
+- **Short-lived features**: Merge within days, not weeks.
+- **Main-first**: All development flows through `main`.
+- **Hotfixes**:
+  - **Jobs/Pipelines** → fix on a branch → PR to `main` → redeploy latest.
+  - **Models** → fix on a branch off the affected `release/*` → PR back to that release → **merge-forward** to newer release branches and `main`.
+- **Semantic versioning**: Automated version bumps based on commit type.
 
 ### Deployment Strategy
 
 Our projects typically have two components with different deployment cadences:
 
-- **Pipelines**: Data processing logic (infrequent updates)
+- **Jobs/Pipelines**: Data processing logic (infrequent updates)
 - **Models**: Prediction services (regular updates)
 
-Both follow the same Git workflow but use different production gates. This process ensures code quality through automated testing at each stage while maintaining control over production releases through manual gates or explicit release branches.
+Both share the same trunk-first workflow and CI/CD, but **only models use release branches**; jobs/pipelines use an approval gate on `main` for production.
 
 ## Bundle Deployment
 
@@ -46,23 +55,23 @@ The bundle deployment process follows a progressive promotion strategy:
 1. **Development** (`dev`)
    - Manual deployment from feature branches
    - Isolated testing environment
-   - Command: `make deploy`
+   - Deployment through command: `databricks bundle deploy` (or `make deploy`)
 
 2. **Test** (`test`)
-   - Automatic deployment on merge to main
+   - Automatic deployment on updated repo tag
    - Integration testing and validation
-   - Pipeline: `cd.yml`
+   - Deployment through pipeline: `cd.yml`
 
 3. **Production** (`prod`)
-   - **Pipelines**: Manual approval gate after test validation
-   - **Models**: Release branch creation
-   - Pipeline: `cd.yml`
+   - **Jobs/Pipelines**: Manual approval gate after test validation (deploy from `main`, no release branch)
+   - **Models**: Create a `release/*` branch from `main` to trigger production deployment (Release Flow)
+   - Deployment through pipeline: `cd.yml`
 
 ![git-strategy](images/git-strategy.png)
 
 ## Model Deployment
 
-Models require more sophisticated deployment strategies due to frequent updates and the need for A/B testing:
+Models require more sophisticated deployment strategies due to frequent updates and the need for A/B testing, therefore **Models follow Microsoft Release Flow.**
 
 ### Model Deployment Flow
 
@@ -77,17 +86,18 @@ In this example we are referring to the champion model by `M1` and the challenge
    - Merge to `main` triggers deployment to `test`
    - **Champion/Challenger pattern**:
      - Model marked as champion processes all data
-     - Model marked as challenger processes data subset
+     - Model marked as challenger processes a data subset
    - Performance comparison metrics evaluated
 
-3. **Production Release**
-   - Create release branch from `main` to trigger production deployment
+3. **Production Release (Release Flow)**
+   - Create a `release/*` branch from `main` to trigger production deployment
    - **Role reversal**:
-     - Model marked as challenger becomes champion, processes all data
-     - Model marked as champion becomes challenger, processes data subset
-   - Release branches remain read-only and permanent
+     - Challenger becomes champion and processes all data
+     - Former champion becomes challenger and processes a subset
+   - **Servicing**: Hotfixes are made on the relevant `release/*` branch and **merged forward** to newer release branches and `main`
+   - Release branches are long-lived and read-only outside servicing
 
-![model-strategy](images/model-strategy.jpg)
+![model-strategy](images/model-strategy.png)
 
 ## CI/CD
 
@@ -119,7 +129,7 @@ The `CD` pipeline automates Databricks Asset Bundle deployments across environme
 1. Automatic Databricks Asset Bundle deployment to test environment
 2. Integration test execution
 3. Manual approval gate (12-hour timeout)
-4. Production deployment upon approval
+4. Production deployment upon approval (**from `main` for jobs/pipelines; from `release/*` for models**)
 
 ### Semantic Release
 
@@ -133,11 +143,11 @@ The `semantic-release` pipeline automates versioning and changelog generation ba
 
 The pipeline analyzes commit messages to determine the next version number:
 
-| Commit Type                               | Description                                     | Example                     |
-|-------------------------------------------|-------------------------------------------------|-----------------------------|
-| `fix:`                                    | triggers a **patch** version update             | `1.0.0` --> `1.0.1`         |
-| `feat:`                                   | triggers a **minor** version update             | `1.0.0` --> `1.1.0`         |
-| `*!:`                                     | triggers a **major** version update             | `1.0.0` --> `2.0.0`         |
+| Commit Type | Description | Example |
+|---|---|---|
+| `fix:` | triggers a **patch** version update | `1.0.0` → `1.0.1` |
+| `feat:` | triggers a **minor** version update | `1.0.0` → `1.1.0` |
+| `*!:` | triggers a **major** version update | `1.0.0` → `2.0.0` |
 
 The appropriate version number is then automatically updated in the repository.
 
@@ -147,4 +157,12 @@ As part of the release process, we auto-generate a comprehensive `CHANGELOG`. Th
 
 ### Graphical Overview
 
-![cicd](images/cicd.jpg)
+This figure illustrates the ideal end-to-end flow from code change to production. A developer creates a `feature` branch, commits changes, then opens a pull request (PR). The three pipelines now run in succession:
+
+1. The `CI` pipeline runs automatically on the PR; only when it passes can the PR be merged to `main`.
+2. The `semantic-release` pipeline is triggered on the merge event, which interprets commit messages to bump the version, updates the `CHANGELOG`, and applies a git tag.
+3. The `CD` pipeline is triggered on the tagging event, which deploys the bundle through `test` and on to `prod` per manual approval gates.
+
+![cicd](images/cicd.png)
+
+> **Note on Semantic Release:** in many organizations the `main` branch is protected, so commits for the version bump and updated `CHANGELOG` may be disallowed or hard to set up. In those cases, configure Semantic Release to publish a tag-only release.
