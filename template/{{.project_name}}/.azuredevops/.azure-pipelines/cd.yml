@@ -3,7 +3,7 @@ name: CD
 trigger:
   tags:
     include:
-      - '*'
+      - 'v*'
 
 pool:
   vmImage: ubuntu-latest

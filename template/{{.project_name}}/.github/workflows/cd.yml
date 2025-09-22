@@ -12,7 +12,7 @@ name: Deploy Databricks Asset Bundle
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
   deploy_test:
