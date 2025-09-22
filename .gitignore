@@ -188,3 +188,6 @@ spark-warehouse/
 .databricks/
 scratch/**
 !scratch/README.md
+
+# Claude files
+.claude/
