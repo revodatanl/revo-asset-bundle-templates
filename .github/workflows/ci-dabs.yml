@@ -21,6 +21,10 @@ jobs:
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
+          - os: windows-latest
+            cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
           # Non-default configuration
           - os: ubuntu-latest
             cicd_provider: azure
@@ -30,25 +34,27 @@ jobs:
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
+          - os: windows-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
 
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
     steps:
       - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
-          databricks --version
+        uses: databricks/setup-cli@main
 
       - name: Install uv
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv --version
+        uses: astral-sh/setup-uv@v6
+        with:
+          ignore-empty-workdir: true
+          enable-cache: false
 
       - name: Create init parameters JSON
         run: |
-          cat > init_params.json << EOF
-          {
+          echo '{
             "project_name": "revo-dabs-test-project",
             "author": "Thomas Brouwer",
             "email": "thomas.brouwer@revodata.nl",
@@ -56,20 +62,21 @@ jobs:
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
             "include_example_jobs": "${{ matrix.include_example_jobs }}"
-          }
-          EOF
-          cat init_params.json
+          }' > init_params.json
 
       - name: Initialize Databricks Asset Bundle from template
         run: |
           echo "Using branch: $BRANCH_NAME"
           databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
+        shell: bash
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
+      # The following functionality tests are not supported on Windows
       - name: Build and test Databricks Asset Bundle with Makefile
+        if: matrix.os != 'windows-latest'
         run: |
           cd revo-dabs-test-project
           echo ""

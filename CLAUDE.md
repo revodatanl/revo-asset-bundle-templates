@@ -141,7 +141,7 @@ Templates use Go template syntax with conditional logic:
 - `{{if eq .include_cicd "yes"}}` - Include CI/CD files when enabled
 - `{{if eq .cicd_provider "github"}}` - Include GitHub-specific files (when CI/CD enabled)
 - `{{if eq .include_example_jobs "yes"}}` - Include example jobs and notebooks
-- `{{.project_name}}` and `{{template "package_name" .}}` - Parameter substitution
+- `{{.project_name}}` and `{{template `package_name` .}}` - Parameter substitution
 - `skip_prompt_if` - JSON schema feature to conditionally skip parameter prompts
 
 # important-instruction-reminders

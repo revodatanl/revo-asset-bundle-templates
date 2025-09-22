@@ -1,5 +1,5 @@
 [project]
-name = "{{template "package_name" .}}"
+name = "{{template `package_name` .}}"
 version = "0.1.0"
 description = "{{.project_description}}"
 authors = [
@@ -7,7 +7,7 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.11,<4.0"
-scripts = { "main" = "{{template "package_name" .}}.main:main" }
+scripts = { "main" = "{{template `package_name` .}}.main:main" }
 classifiers = ["Programming Language :: Python :: 3.11", "Operating System :: OS Independent"]
 dependencies = []
 
