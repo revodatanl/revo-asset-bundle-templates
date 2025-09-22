@@ -12,7 +12,7 @@ resources:
     example-pipeline:
       name: example-pipeline
       # catalog: main  # configure catalog in Unity Catalog
-      schema: {{template "package_name" .}}_${bundle.environment}
+      schema: {{template `package_name` .}}_${bundle.environment}
       libraries:
         - glob:
             include: ../notebooks/pipelines/**
