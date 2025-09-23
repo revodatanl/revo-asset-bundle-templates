@@ -7,6 +7,15 @@ inputs:
   target:
     description: Bundle target (test | prod)
     required: true
+  databricks_host:
+    description: Databricks host URL
+    required: true
+  databricks_client_id:
+    description: Databricks client ID
+    required: true
+  databricks_client_secret:
+    description: Databricks client secret
+    required: true
 
 runs:
   using: "composite"
@@ -23,17 +32,10 @@ runs:
         curl -LsSf https://astral.sh/uv/install.sh | sh
         uv --version
 
-    - name: Authenticate Databricks
-      shell: bash
-      run: |
-        cat > ~/.databrickscfg << EOF
-        [DEFAULT]
-        host = $DATABRICKS_HOST
-        client_id = $DATABRICKS_CLIENT_ID
-        client_secret = $DATABRICKS_CLIENT_SECRET
-        EOF
-        chmod 600 ~/.databrickscfg
-
     - name: Deploy Databricks bundle
       shell: bash
       run: databricks bundle deploy --target "${{ inputs.target }}"
+      env:
+        DATABRICKS_HOST: ${{ inputs.databricks_host }}
+        DATABRICKS_CLIENT_ID: ${{ inputs.databricks_client_id }}
+        DATABRICKS_CLIENT_SECRET: ${{ inputs.databricks_client_secret }}
