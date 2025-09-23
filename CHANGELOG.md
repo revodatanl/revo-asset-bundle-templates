@@ -1,3 +1,21 @@
+# [0.17.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.5...v0.17.0) (2025-09-23)
+
+
+### Bug Fixes
+
+* align Databricks authentication with best practices ([10aecf7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/10aecf736baa88edfcf2df513fb490010ef30561))
+* include missing prerequisite tools check in setup target ([e9b34b0](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e9b34b0ec913fc0fcd27f1d0b0feeb1b0c6b9b57))
+* replace DLT with Lakeflow Declarative Pipelines nomenclature ([06baeeb](https://github.com/revodatanl/revo-asset-bundle-templates/commit/06baeebe5ac3a7693e2ffa8c155cd24ab59060a4))
+* update CD pipelines to trigger on tags and fix GitHub Actions environment errors ([2dbf6b2](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2dbf6b2beab0daad4e9f1fd87478643304156158))
+* update template package_name replacement ensuring Windows compatability ([8081560](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8081560bb106e30bd829c36e3023d448d0e4eb59))
+
+
+### Features
+
+* add conditional CI/CD setup and enhanced template validation ([11c1580](https://github.com/revodatanl/revo-asset-bundle-templates/commit/11c1580365747860d6628f4bce01c7abeb65daf3))
+* remove package_name from the bundle initialization parameter ([36527c7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/36527c702ae0b84fc4c2d44bcc170f7e2185f201))
+* remove tree functionality from template ([03a8b52](https://github.com/revodatanl/revo-asset-bundle-templates/commit/03a8b520b620b368cee59481fc590df9f0723bff))
+
 ## [0.16.5](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.4...v0.16.5) (2025-08-08)
 
 
