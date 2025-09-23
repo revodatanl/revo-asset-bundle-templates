@@ -37,35 +37,17 @@ You need these tools installed on your system:
    Run the following commands in the Ubuntu shell:
 
    ```bash
-   # Install Make
-   sudo apt update && sudo apt install make
+   # Install Make and unzip
+   sudo apt update && sudo apt install make unzip
 
    # Install Databricks CLI
    sudo curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
 
    # Install uv
-   sudo curl -LsSf https://astral.sh/uv/install.sh | sudo sh
+   curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
 
-3. **Authenticate your local machine**
-
-   Set up authentication via `SSH` following this guide: [Use SSH keys to authenticate to Azure Repos](https://learn.microsoft.com/en-us/azure/devops/repos/git/use-ssh-keys-to-authenticate?view=azure-devops).
-
-   Open a terminal and generate keys by running:
-
-   ```bash
-   ssh-keygen -t rsa-sha2-256
-   ```
-
-   Don't bother to create a passphrase, just press `Enter` to skip it. Display the contents of the public key by running:
-
-   ```bash
-   cat ~/.ssh/id_rsa.pub
-   ```
-
-   Copy the key to your Azure DevOps account by following the instructions in the guide.
-
-4. **Configure Git**
+3. **Configure Git**
 
    To configure Git with your correct name and email run:
 
@@ -80,19 +62,27 @@ You need these tools installed on your system:
    git config --list
    ```
 
-5. **Clone Your Repo**
+4. **Initialize a New Project from Template**
 
-   Create a dedicated folder in your WSL environment and clone your project:
+   Create a new project using the Databricks Asset Bundle template:
 
    ```bash
    mkdir ~/code
    cd ~/code
-   git clone <your-repository-url>
+   databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
+   ```
+
+   Follow the prompts to configure your project. This will create a new project directory with all necessary files.
+
+   Change to your newly created project directory:
+
+   ```bash
+   cd <your-project-name>
    ```
 
    Note that this folder resides on the Ubuntu WSL file system, not in the Windows file system.
 
-6. **Launch VS Code in WSL**
+5. **Launch VS Code in WSL**
 
    From your project folder in the Ubuntu shell, run:
 
@@ -104,7 +94,7 @@ You need these tools installed on your system:
 
    Validate by checking that the bottom left corner of VS Code says "WSL: Ubuntu".
 
-7. **Configure Your Project**
+6. **Configure Your Project**
 
    From within VS Code running in WSL, open a terminal and run:
 
