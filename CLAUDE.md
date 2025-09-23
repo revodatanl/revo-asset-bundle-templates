@@ -83,7 +83,6 @@ Projects created from this template include a comprehensive Makefile with:
 ### Documentation
 
 - Static documentation in `docs/` folder
-- `make tree` - Generate project structure
 
 ## Tooling Stack
 
