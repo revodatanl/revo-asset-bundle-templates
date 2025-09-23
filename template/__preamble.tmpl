@@ -6,13 +6,13 @@ This file only provides template directives; it is skipped for the actual output
 
 {{if not (eq .include_cicd "yes")}}
   {{skip "{{.project_name}}/.github"}}
-  {{skip "{{.project_name}}/.azuredevops"}}
+  {{skip "{{.project_name}}/.azure"}}
 {{else}}
   {{if not (eq .cicd_provider "github")}}
     {{skip "{{.project_name}}/.github"}}
   {{end}}
   {{if not (eq .cicd_provider "azure")}}
-    {{skip "{{.project_name}}/.azuredevops"}}
+    {{skip "{{.project_name}}/.azure"}}
   {{end}}
 {{end}}
 

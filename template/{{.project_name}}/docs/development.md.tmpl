@@ -6,7 +6,7 @@ The project is structured as follows:
 
 ```text
 {{.project_name}}/{{if (eq .cicd_provider "azure")}}
-├── .azuredevops/                   # Azure DevOps pipelines{{end}}{{if (eq .cicd_provider "github")}}
+├── .azure/                   # Azure DevOps pipelines{{end}}{{if (eq .cicd_provider "github")}}
 ├── .github/                        # GitHub Actions workflows{{end}}
 ├── .vscode/                        # VSCode settings
 ├── bundle/                         # Bundle targets/variables configuration

@@ -114,9 +114,9 @@ Generated projects contain CI/CD pipelines with parity between GitHub Actions an
 - `.github/workflows/semantic-release.yml` - Automated versioning and releases
 
 #### Azure DevOps (when `cicd_provider: azure`)
-- `.azuredevops/cd.yml` - Databricks Asset Bundle deployments to test/prod
-- `.azuredevops/ci.yml` - Quality checks, security scanning, and validation
-- `.azuredevops/semantic-release.yml` - Automated versioning and releases
+- `.azure/cd.yml` - Databricks Asset Bundle deployments to test/prod
+- `.azure/ci.yml` - Quality checks, security scanning, and validation
+- `.azure/semantic-release.yml` - Automated versioning and releases
 
 ## Key Files to Understand
 

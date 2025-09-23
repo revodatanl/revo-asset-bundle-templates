@@ -108,7 +108,7 @@ Our automated pipeline orchestrates testing, deployment, and versioning across a
 The `CI` pipeline ensures code quality and bundle functionality before merging.
 
 **Trigger**: Pull request to any branch
-**Pipeline**: {{if (eq .cicd_provider "azure")}}`.azuredevops/.azure-pipelines/ci.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/ci.yml`{{end}}
+**Pipeline**: {{if (eq .cicd_provider "azure")}}`.azure/.azure-pipelines/ci.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/ci.yml`{{end}}
 
 **Steps**:
 
@@ -122,7 +122,7 @@ The `CI` pipeline ensures code quality and bundle functionality before merging.
 The `CD` pipeline automates Databricks Asset Bundle deployments across environments. The pipeline ensures consistent deployments while maintaining proper governance through environment-specific configurations and approval workflows.
 
 **Trigger**: Merge to main branch
-**Pipeline**: {{if (eq .cicd_provider "azure")}}`.azuredevops/.azure-pipelines/cd.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/cd.yml`{{end}}
+**Pipeline**: {{if (eq .cicd_provider "azure")}}`.azure/.azure-pipelines/cd.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/cd.yml`{{end}}
 
 **Flow**:
 
@@ -136,7 +136,7 @@ The `CD` pipeline automates Databricks Asset Bundle deployments across environme
 The `semantic-release` pipeline automates versioning and changelog generation based on commit messages, ensuring consistent and predictable releases.
 
 **Trigger**: Merge to main branch
-**Pipeline**: {{if (eq .cicd_provider "azure")}}`.azuredevops/.azure-pipelines/semantic-release.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/semantic-release.yml`{{end}}
+**Pipeline**: {{if (eq .cicd_provider "azure")}}`.azure/.azure-pipelines/semantic-release.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/semantic-release.yml`{{end}}
 **Configuration**: `release.config.mjs`
 
 **Flow**:
