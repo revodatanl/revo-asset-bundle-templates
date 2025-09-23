@@ -17,7 +17,7 @@ The project is natively built for **Linux** or **macOS**. For **Windows** users 
 Set up a fully configured development environment by running:
 
 ```bash
-make (setup)
+make
 ```
 
 This will:

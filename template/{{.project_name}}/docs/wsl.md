@@ -99,7 +99,7 @@ You need these tools installed on your system:
    From within VS Code running in WSL, open a terminal and run:
 
    ```bash
-   make (setup)
+   make
    ```
 
    This will set up a fully configured development environment.
