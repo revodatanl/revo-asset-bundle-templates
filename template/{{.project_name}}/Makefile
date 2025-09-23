@@ -1,4 +1,4 @@
-.PHONY: install setup clean test validate deploy destroy tree lint update-pre-commit update-venv validate-update update
+.PHONY: install setup clean test validate deploy destroy lint update-pre-commit update-venv validate-update update
 
 .DEFAULT_GOAL := setup
 
@@ -90,11 +90,6 @@ destroy:
 		databricks configure --profile $(PROFILE_NAME); \
 	fi
 	@databricks bundle destroy --profile $(PROFILE_NAME) --target dev;
-
-# Generate and display project directory structure
-tree:
-	@echo "Generating project tree..."
-	@tree -I '.venv|__pycache__|archive|scratch|.databricks|.ruff_cache|.mypy_cache|.pytest_cache|.git|htmlcov|site|dist|.DS_Store|fixtures' -a
 
 # Run code quality checks: ruff linting, mypy type checking, and pydoclint
 lint:
