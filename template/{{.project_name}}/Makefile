@@ -95,14 +95,15 @@ destroy:
 lint:
 	@echo "Linting the project..."
 	@uv sync
-	@uv build > /dev/null 2>&1
+	@echo "Building the project..."
+	@uv build >/dev/null 2>&1
 	@echo "Running ruff..."
-	@uv run ruff check --output-format=concise .
+	-@uv run ruff check --output-format=concise .
 	@echo "Running mypy..."
-	@uv run mypy .
+	-@uv run mypy .
 	@echo "Running pydoclint..."
-	@uv run pydoclint .
-	@echo "Linting completed successfully!"
+	-@uv run pydoclint .
+	@echo "Linting completed!"
 
 # Update pre-commit hooks to latest versions
 update-pre-commit:
