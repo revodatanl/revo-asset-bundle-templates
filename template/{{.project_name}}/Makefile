@@ -28,7 +28,7 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit..."
-	@uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
+	@uv run pre-commit install
 
 	@echo "Setup completed successfully!"
 	@echo "💡 Run 'make update' to ensure you have the latest pre-commit hooks and dependencies."
