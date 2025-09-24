@@ -1,5 +1,4 @@
 variables:
-
   spark_version:
     description: Default Spark version to use for jobs
     default: 15.4.x-scala2.12

@@ -5,11 +5,13 @@ repos:
     -   id: pre-commit-update
         args:
         -   --verbose
--   repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v4.2.0
+-   repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.9.1
     hooks:
-    -   id: conventional-pre-commit
-        stages: [commit-msg]
+    -   id: commitizen
+    -   id: commitizen-branch
+        stages:
+        -   pre-push
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
