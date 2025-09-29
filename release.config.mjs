@@ -12,7 +12,7 @@ export default {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: "sed -i 's/version `[0-9]\\+\\.[0-9]\\+\\.[0-9]\\+`/version `${nextRelease.version}`/g' template/{{.project_name}}/README.md.tmpl template/{{.project_name}}/docs/index.md.tmpl || true",
+        prepareCmd: "sed -i 's/version `[0-9]\\+\\.[0-9]\\+\\.[0-9]\\+`/version `${nextRelease.version}`/g' template/{{.project_name}}/README.md.tmpl template/{{.project_name}}/docs/README.md.tmpl || true",
       },
     ],
     [
