@@ -1,3 +1,10 @@
+## [0.17.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.1...v0.17.2) (2025-09-29)
+
+
+### Bug Fixes
+
+* update release.config.mjs to reference correct docs filename ([e42487c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e42487c3ec2cd9b80e9a9737ca70af79f735f26e))
+
 ## [0.17.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.0...v0.17.1) (2025-09-29)
 
 
