@@ -1,3 +1,13 @@
+## [0.17.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.0...v0.17.1) (2025-09-29)
+
+
+### Bug Fixes
+
+* enforce conventional commits using Commitizen ([5464a52](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5464a5242bfc142bdc15a4852645de42225fc0d8))
+* enforce conventional commits using Commitizen in downstream template ([22a959b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/22a959bf17ab6723788ddb0032accbaf210b0943))
+* improve linting target in Makefile ([5b85de4](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5b85de46ad4f1a4b2da922493bc496704f58de91))
+* simplify pre-commit installation in Makefile ([15877fe](https://github.com/revodatanl/revo-asset-bundle-templates/commit/15877fe0ef4ca5afe81988f2d337b661885ba648))
+
 # [0.17.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.5...v0.17.0) (2025-09-23)
 
 
