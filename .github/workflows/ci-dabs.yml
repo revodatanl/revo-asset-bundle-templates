@@ -180,7 +180,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
@@ -228,7 +228,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
@@ -277,7 +277,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
