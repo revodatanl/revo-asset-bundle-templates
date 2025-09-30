@@ -35,15 +35,8 @@ repos:
         args:
         -   --config-file=pyproject.toml
         -   --ignore-missing-imports
-        additional_dependencies:
-        -   types-pytz
-        -   types-python-dateutil
         exclude: "scratch"
 -   repo: https://github.com/jsh9/pydoclint
     rev: 0.7.3
     hooks:
     -   id: pydoclint
--   repo: https://github.com/gitleaks/gitleaks
-    rev: v8.28.0
-    hooks:
-    -   id: gitleaks
