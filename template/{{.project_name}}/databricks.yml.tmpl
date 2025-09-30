@@ -2,8 +2,6 @@ bundle:
   name: {{.project_name}}
 
 include:
-  - bundle/variables.yml
-  - bundle/targets.yml
   - resources/*.yml
 
 artifacts:
@@ -11,3 +9,37 @@ artifacts:
     type: whl
     path: .
     build: uv build
+
+variables:
+  spark_version:
+    description: Default Spark version to use for jobs
+    default: 15.4.x-scala2.12
+  wheel_path:
+    description: Path of the wheel file
+    default: ${workspace.root_path}/artifacts/.internal/*.whl
+
+targets:
+  # The 'dev' target, for development purposes. This target is the default.
+  dev:
+    # We use 'mode: development' to indicate this is a personal development copy:
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default
+    # - The 'development' mode is used for pipelines
+    mode: development
+    default: true
+    workspace:
+      host: {{workspace_host}}  # auto-detected from the DEFAULT profile
+
+  # The 'test' target, used for testing deployment.
+  test:
+    # We use 'mode: production' to mimic behavior of production deployment.
+    mode: production
+    workspace:
+      root_path: /Shared/{{.project_name}}/
+
+  # The 'prod' target, used for production deployment.
+  prod:
+    # We use 'mode: production' to indicate this is a production deployment.
+    mode: production
+    workspace:
+      root_path: /Shared/{{.project_name}}/
