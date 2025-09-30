@@ -11,7 +11,7 @@ A bundle contains:
 
 The following diagram provides a high-level view of a development and CI/CD pipeline with bundles:
 
-![bundle-development](images/bundle-development.png)
+![dabs](images/dabs.png)
 
 ## Git Strategy
 
@@ -50,6 +50,10 @@ Both share the same trunk-first workflow and CI/CD, but **only models use releas
 
 ## Bundle Deployment
 
+<write 1 sentec here>
+
+![bundle-deployment](images/bundle-deployment.png)
+
 The bundle deployment process follows a progressive promotion strategy:
 
 1. **Development** (`dev`)
@@ -67,13 +71,11 @@ The bundle deployment process follows a progressive promotion strategy:
    - **Models**: Create a `release/*` branch from `main` to trigger production deployment (Release Flow)
    - Deployment through pipeline: `cd.yml`
 
-![git-strategy](images/git-strategy.png)
+## MLOps Deployment
 
-## Model Deployment
+Models require more sophisticated deployment strategies due to frequent updates, the need for A/B testing, champion/challenger patterns; therefore **Models follow Microsoft Release Flow.**
 
-Models require more sophisticated deployment strategies due to frequent updates and the need for A/B testing, therefore **Models follow Microsoft Release Flow.**
-
-### Model Deployment Flow
+![mlops-deployment](images/mlops-deployment.png)
 
 In this example we are referring to the champion model by `M1` and the challenger model by `M2`.
 
@@ -96,8 +98,6 @@ In this example we are referring to the champion model by `M1` and the challenge
      - Former champion becomes challenger and processes a subset
    - **Servicing**: Hotfixes are made on the relevant `release/*` branch and **merged forward** to newer release branches and `main`
    - Release branches are long-lived and read-only outside servicing
-
-![model-strategy](images/model-strategy.png)
 
 ## CI/CD
 
