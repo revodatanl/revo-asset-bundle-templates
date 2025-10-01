@@ -46,6 +46,12 @@ jobs:
       - name: Install Databricks CLI
         uses: databricks/setup-cli@main
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          ignore-empty-workdir: true
+          enable-cache: false
+
       - name: Create init parameters JSON
         run: |
           echo '{
