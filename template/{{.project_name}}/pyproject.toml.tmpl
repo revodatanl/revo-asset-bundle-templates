@@ -6,19 +6,19 @@ authors = [
     { name = "{{.author}}", email = "{{.email}}" },
 ]
 readme = "README.md"
-requires-python = ">=3.11,<4.0"
+requires-python = ">=3.12,<4.0"
 scripts = { "main" = "{{template `package_name` .}}.main:main" }
-classifiers = ["Programming Language :: Python :: 3.11", "Operating System :: OS Independent"]
+classifiers = ["Programming Language :: Python :: 3.12", "Operating System :: OS Independent"]
 dependencies = []
 
 [dependency-groups]
 dev = [
-    "databricks-connect==15.4.*",
+    "databricks-connect==16.4.*",
     "databricks-dlt>=0.3.0",
     "databricks-sdk>=0.65.0",
     "mypy>=1.18.2",
     "pip>=25.2",
-    "pre-commit>=4.3.0",
+    "prek>=0.2.5",
     "pydoclint>=0.7.3",
     "pytest-cov>=7.0.0",
     "pytest-mock>=3.15.1",
@@ -30,7 +30,7 @@ dev = [
 package = true
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 line-length = 100
 extend-include = ["*.ipynb"]
 extend-exclude = ["scratch"]
@@ -41,29 +41,27 @@ pydocstyle.convention = "numpy"
 external = ["DOC"]
 select = ["ALL"]
 ignore = [
-    # RevoData's standard exceptions
-    "COM812",   # "Checks for the absence of trailing commas" - redundant when used in tandem with the formatter
-    "D203",     # "One blank line required before class docstring" - should be disabled by default
-    "D213",     # "Multi-line docstring summary should start at the second line" - should be disabled by default
-    "E501",     # "Line too long"
-    "ERA001",   # "Found commented out code"
-    "FBT001",   # "Boolean positional arg in function definition"
-    "FBT002",   # "Boolean default value in function definition"
-    "FBT003",   # "Boolean positional value in function call"
-    "ISC001",   # "Implicit string concatenation" - conflicts with the formatter
-    "N812",     # "Lowercase `functions` imported as non-lowercase"
-    "T201",     # "`print` found"
-    # RevoData's nitpicky exceptions - comment out when productionalizing your code
     "BLE001",   # "Do not catch blind exception: `Exception`"
+    "COM812",   # "Checks for the absence of trailing commas" - redundant when used in tandem with the formatter
     "D100",     # "Missing docstring in public module"
     "D104",     # "Missing docstring in public package"
     "D105",     # "Missing docstring in magic method"
     "D106",     # "Missing docstring in public nested class"
     "D107",     # "Missing docstring in __init__"
+    "D203",     # "One blank line required before class docstring" - should be disabled by default
+    "D213",     # "Multi-line docstring summary should start at the second line" - should be disabled by default
     "D400",     # "First line should end with a period"
     "D401",     # "First line of docstring should be in imperative mood"
+    "E501",     # "Line too long"
+    "ERA001",   # "Found commented out code"
+    "FBT001",   # "Boolean positional arg in function definition"
+    "FBT002",   # "Boolean default value in function definition"
+    "FBT003",   # "Boolean positional value in function call"
     "G004",     # "Logging statement uses f-string"
+    "ISC001",   # "Implicit string concatenation" - conflicts with the formatter
+    "N812",     # "Lowercase `functions` imported as non-lowercase"
     "PLR2004",  # "Magic value used in comparison, consider replacing with a constant variable"
+    "T201",     # "`print` found"
     "TRY003"    # "Avoid specifying long messages outside the exception class"
 ]
 
@@ -80,7 +78,7 @@ ignore = [
 [tool.mypy]
 packages = ["src"]
 mypy_path = "src"
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 disallow_untyped_decorators = false
 exclude = "scratch"
@@ -92,6 +90,9 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.coverage.run]
+omit = ["*/__init__.py"]
 
 [tool.pydoclint]
 style = "numpy"
