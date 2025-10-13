@@ -28,6 +28,22 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit hooks (with prek)..."
+	@hooks_path=$$(git config --get core.hooksPath 2>/dev/null || echo ""); \
+	if [ -n "$$hooks_path" ]; then \
+		echo "❌ Error: Pre-commit installation blocked due to Git hooks configuration."; \
+		echo "   'core.hooksPath' is set to: $$hooks_path"; \
+		echo ""; \
+		echo "   This prevents pre-commit hooks from being installed in this repository."; \
+		echo "   To fix this, you have two options:"; \
+		echo ""; \
+		echo "   1. Remove the global configuration (recommended):"; \
+		echo "      git config --global --unset core.hooksPath"; \
+		echo ""; \
+		echo "   2. Override it for this repository only:"; \
+		echo "      git config --local core.hooksPath \"\""; \
+		echo ""; \
+		exit 1; \
+	fi
 	@uv run prek install --install-hooks
 	@uv run prek autoupdate
 
