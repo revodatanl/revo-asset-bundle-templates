@@ -20,12 +20,12 @@ jobs:
             cloud_provider: azure
             include_example_jobs: yes
             container_name: revo-devcontainer-databricksruntime
-            container_tag: 15.4-LTS
+            container_tag: latest
           - cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
             container_name: revo-devcontainer-databricksruntime
-            container_tag: 15.4-LTS
+            container_tag: latest
 
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
