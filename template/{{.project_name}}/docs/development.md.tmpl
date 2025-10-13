@@ -11,10 +11,10 @@ The project is structured as follows:
 ├── .vscode/                        # VSCode settings
 ├── bundle/                         # Bundle targets/variables configuration
 ├── docs/                           # Documentation
+├── notebooks/                      # Databricks notebooks
 ├── resources/                      # Databricks resources (jobs, pipelines)
 ├── scratch/                        # Personal, exploratory notebooks (gitignored)
 ├── src/                            # Source code
-│   └── notebooks/                  # Databricks notebooks
 ├── tests/                          # Tests
 ├── .gitignore                      # Git ignore patterns
 ├── .pre-commit-config.yaml         # Pre-commit hooks configuration
@@ -47,7 +47,7 @@ The Python project configuration file that defines:
 - **Dependencies**: Core dependencies are minimal by default, with comprehensive development dependencies including:
   - `databricks-connect` for local Databricks development
   - `databricks-sdk` and `databricks-dlt` for Databricks integration
-  - Python tooling: `ruff`, `mypy`, `pytest`, `pre-commit`
+  - Python tooling: `ruff`, `mypy`, `pytest`, `prek`, `commitizen`
 - **Tool configuration**:
   - **Ruff**: Linting and formatting with RevoData's coding standards
   - **MyPy**: Type checking with strict mode enabled
@@ -62,11 +62,10 @@ We ~~encourage~~ enforce code quality with pre-commit hooks and the CI pipeline.
 
 Ensure that the [`pre-commit`](https://pre-commit.com) hook defined in `.pre-commit-config.yaml` passes successfully:
 
-- [`conventional-pre-commit`](https://github.com/compilerla/conventional-pre-commit) to enforce conventional commit standards.
+- [`commitizen`](https://github.com/commitizen-tools/commitizen) to enforce conventional commit standards.
 - [`ruff`](https://docs.astral.sh/ruff/) for linting and formatting.
 - [`mypy`](https://mypy.readthedocs.io/en/stable/) for static type checking (in `strict` mode)
 - [`pydoclint`](https://github.com/shmsi/pydoclint) to lint docstrings.
-- [`gitleaks`](https://github.com/gitleaks/gitleaks) to prevent sensitive information from being committed.
 
 {{if (eq .cicd_provider "github")}}### Dependabot
 
