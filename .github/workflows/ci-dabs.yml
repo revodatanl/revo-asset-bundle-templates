@@ -95,7 +95,7 @@ jobs:
           echo "=================================================================="
           echo "==================== COMMIT ALL FILES ============================"
           echo "=================================================================="
-          uv run pre-commit autoupdate || true
+          uv run prek autoupdate || true
           git config --global user.email "pipeline@github.com"
           git config --global user.name "GitHub Actions"
           git add .
