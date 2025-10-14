@@ -16,6 +16,7 @@ dev = [
     "databricks-connect==16.4.*",
     "databricks-dlt>=0.3.0",
     "databricks-sdk>=0.65.0",
+    "commitizen>=4.9.1",
     "mypy>=1.18.2",
     "pip>=25.2",
     "prek>=0.2.5",
@@ -97,3 +98,10 @@ omit = ["*/__init__.py"]
 [tool.pydoclint]
 style = "numpy"
 exclude = ".git|.venv|scratch"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "uv"
+update_changelog_on_bump = true
