@@ -4,8 +4,7 @@ repos:
     hooks:
     -   id: commitizen
     -   id: commitizen-branch
-        stages:
-        -   pre-push
+        stages: [pre-push]
 -   repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.9.2
     hooks:
