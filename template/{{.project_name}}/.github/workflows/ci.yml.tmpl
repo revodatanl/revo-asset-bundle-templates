@@ -60,14 +60,14 @@ jobs:
           echo "Unit tests passed ✅"
         env:
           PYTHONPATH: ${{ "{{" }} github.workspace {{ "}}" }}/src
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+          DATABRICKS_HOST: ${{ "{{" }} secrets.DATABRICKS_HOST {{ "}}" }}
+          DATABRICKS_CLIENT_ID: ${{ "{{" }} secrets.DATABRICKS_CLIENT_ID {{ "}}" }}
+          DATABRICKS_CLIENT_SECRET: ${{ "{{" }} secrets.DATABRICKS_CLIENT_SECRET {{ "}}" }}
 
       - name: Validate Databricks bundle
         shell: bash
         run: databricks bundle validate --target test
         env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+          DATABRICKS_HOST: ${{ "{{" }} secrets.DATABRICKS_HOST {{ "}}" }}
+          DATABRICKS_CLIENT_ID: ${{ "{{" }} secrets.DATABRICKS_CLIENT_ID {{ "}}" }}
+          DATABRICKS_CLIENT_SECRET: ${{ "{{" }} secrets.DATABRICKS_CLIENT_SECRET {{ "}}" }}
