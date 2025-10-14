@@ -10,14 +10,20 @@ name: Deploy Databricks Asset Bundle
 #    - DATABRICKS_CLIENT_SECRET
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_run:
+    workflows:
+      - Semantic Release
+    types:
+      - completed
+
+permissions:
+  contents: read
 
 jobs:
   deploy_test:
     name: Deploy to test
     runs-on: ubuntu-latest
+    environment: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,25 +32,16 @@ jobs:
         uses: ./.github/actions/cd
         with:
           target: test
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-
-  wait_for_approval:
-    name: Await production approval
-    needs: deploy_test
-    runs-on: ubuntu-latest
-    timeout-minutes: 720 # 12 hours
-    steps:
-      - name: Wait for approval
-        run: |
-          echo "Production deployment for ${{ github.ref_name }} has been approved and will proceed"
+          databricks_host: ${{ secrets.DATABRICKS_HOST }}
+          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
   deploy_prod:
     name: Deploy to production
-    needs: wait_for_approval
+    needs: deploy_test
     runs-on: ubuntu-latest
+    environment: prod
+    if: needs.deploy_test.result == 'success'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -53,7 +50,6 @@ jobs:
         uses: ./.github/actions/cd
         with:
           target: prod
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+          databricks_host: ${{ secrets.DATABRICKS_HOST }}
+          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
