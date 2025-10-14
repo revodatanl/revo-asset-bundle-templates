@@ -27,6 +27,13 @@ setup:
 		git init -b main > /dev/null; \
 	fi
 
+	@hooks_path=$$(git config --get core.hooksPath 2>/dev/null || true); \
+	if [ -n "$$hooks_path" ]; then \
+		echo "❌ Error: Git core.hooksPath is set to '$$hooks_path'."; \
+		echo "   Please run 'git config --unset-all core.hooksPath' (use --global if set globally) and retry."; \
+		exit 1; \
+	fi
+
 	@echo "Setting up pre-commit hooks (with prek)..."
 	@uv run prek install --hook-type commit-msg --hook-type pre-push
 	@uv run prek autoupdate
