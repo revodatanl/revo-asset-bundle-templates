@@ -2,30 +2,30 @@
 
 .DEFAULT_GOAL := module
 
-# Interactive module deployment - select and deploy template modules
-module:
-	@echo "Select the module to deploy:"
+# Interactive module deployment - select and deploy template accelerators
+accelerator:
+	@echo "Select the accelerator to deploy:"
 	@echo "1) Deploy Databricks Asset Bundle pipeline for GitHub"
 	@echo "2) Deploy Databricks Asset Bundle pipeline for Azure DevOps"
-	@echo "Enter the number of the module you want to deploy: "
+	@echo "Enter the number of the accelerator you want to deploy: "
 	@read choice; \
 	case "$$choice" in \
-		1) $(MAKE) module_github-deploy-dab ;; \
-		2) $(MAKE) module_azure-devops-deploy-dab ;; \
+		1) $(MAKE) accelerator_github-deploy-dab ;; \
+		2) $(MAKE) accelerator_azure-devops-deploy-dab ;; \
 		*) echo "Invalid choice. Exiting.";; \
 	esac
 
-# Deploy specific module by name (github-deploy-dab or azure-devops-deploy-dab)
-module_%:
+# Deploy specific accelerator by name (github-deploy-dab or azure-devops-deploy-dab)
+accelerator_%:
 	@if [ "$*" != "github-deploy-dab" ] && [ "$*" != "azure-devops-deploy-dab" ]; then \
-		echo "Error: Invalid module. Use 'github-deploy-dab' or 'azure-devops-deploy-dab'."; \
+		echo "Error: Invalid accelerator. Use 'github-deploy-dab' or 'azure-devops-deploy-dab'."; \
 		exit 1; \
 	fi
 	@{ \
 		set -e; \
 		trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 		if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-		if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/$* 2>&1; then \
+		if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir accelerators/$* 2>&1; then \
 			echo "Exiting." >&2; \
 		fi; \
 	}

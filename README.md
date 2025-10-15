@@ -19,7 +19,7 @@ This template solves common pain points in Databricks project setup:
 
 - **Streamlined Setup**: One command creates a fully configured development environment
 - **Modern Python Tooling**: Uses `uv` for fast package management, `ruff` for linting, and `mypy` for type checking (pending `ty` reaching production-ready status)
-- **Modular Architecture**: Core template is lightweight with optional modules for specialized needs
+- **Modular Architecture**: Core template is lightweight with optional accelerators for specialized needs
 - **CI/CD Ready**: Complete pipelines for GitHub Actions and Azure DevOps
 - **Development Environment**: DevContainer and WSL support for consistent development across platforms
 

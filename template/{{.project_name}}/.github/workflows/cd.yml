@@ -32,9 +32,9 @@ jobs:
         uses: ./.github/actions/cd
         with:
           target: test
-          databricks_host: ${{ secrets.DATABRICKS_HOST }}
-          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+          databricks_host: ${{ "{{" }} secrets.DATABRICKS_HOST {{ "}}" }}
+          databricks_client_id: ${{ "{{" }} secrets.DATABRICKS_CLIENT_ID {{ "}}" }}
+          databricks_client_secret: ${{ "{{" }} secrets.DATABRICKS_CLIENT_SECRET {{ "}}" }}
 
   deploy_prod:
     name: Deploy to production
@@ -50,6 +50,6 @@ jobs:
         uses: ./.github/actions/cd
         with:
           target: prod
-          databricks_host: ${{ secrets.DATABRICKS_HOST }}
-          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+          databricks_host: ${{ "{{" }} secrets.DATABRICKS_HOST {{ "}}" }}
+          databricks_client_id: ${{ "{{" }} secrets.DATABRICKS_CLIENT_ID {{ "}}" }}
+          databricks_client_secret: ${{ "{{" }} secrets.DATABRICKS_CLIENT_SECRET {{ "}}" }}
