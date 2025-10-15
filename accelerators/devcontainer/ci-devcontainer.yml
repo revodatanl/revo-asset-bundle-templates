@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'modules/devcontainer/**'
+      - 'accelerators/devcontainer/**'
       - 'template/**'
   workflow_dispatch:
 
@@ -66,8 +66,8 @@ jobs:
       - name: Deploy DevContainer module
         run: |
           cd revo-dabs-devcontainer-test
-          echo "Deploying DevContainer module..."
-          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir modules/devcontainer --branch $BRANCH_NAME
+          echo "Deploying DevContainer accelerator..."
+          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir accelerators/devcontainer --branch $BRANCH_NAME
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
