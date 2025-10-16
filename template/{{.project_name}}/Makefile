@@ -1,8 +1,14 @@
-.PHONY: install setup clean test validate deploy destroy lint
+.PHONY: _prepare install setup clean test validate deploy destroy lint
 
 .DEFAULT_GOAL := setup
 
 PROFILE_NAME := DEFAULT
+
+# Internal target: sync dependencies, build package, and run pre-commit hooks
+_prepare:
+	@uv sync
+	@uv build > /dev/null 2>&1
+	@uv run prek run --all-files
 
 # Complete project setup: sync dependencies, set up git, and pre-commit hooks
 setup:
@@ -62,18 +68,13 @@ clean:
 	@echo "Cleanup completed."
 
 # Run pre-commit hooks, build package, and execute tests with coverage
-test:
+test: _prepare
 	@echo "Running tests..."
-	@uv sync
-	@uv build > /dev/null 2>&1
-	@uv run prek run --all-files
 	@uv run pytest -v tests --cov=src --cov-report=term
 
 # Validate Databricks bundle configuration and resources
-validate:
+validate: _prepare
 	@echo "Validating resources..."
-	@uv sync
-	@uv run prek run --all-files
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
@@ -81,10 +82,8 @@ validate:
 	@databricks bundle validate --profile $(PROFILE_NAME) --target dev;
 
 # Deploy Databricks bundle to development environment
-deploy:
+deploy: _prepare
 	@echo "Deploying resources..."
-	@uv sync
-	@uv run prek run --all-files
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
