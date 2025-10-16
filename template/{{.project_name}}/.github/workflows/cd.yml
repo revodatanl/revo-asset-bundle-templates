@@ -1,13 +1,11 @@
 name: Deploy Databricks Asset Bundle
 
-# Before using this workflow, create the following in your GitHub repository:
-# 1. Go to Settings → Environments
-# 2. Create environments: 'test' and 'prod'
-# 3. For 'prod' environment add required reviewers under Protection rules
-# 4. Ensure the following environment-specific secrets are set:
-#    - DATABRICKS_HOST
-#    - DATABRICKS_CLIENT_ID
-#    - DATABRICKS_CLIENT_SECRET
+# Before using this pipeline:
+# 1. Update variables: groupName, environmentName, keyVaultName, azureSubscription
+# 2. Create Library Groups in Azure DevOps: {groupName}_test and {groupName}_prod; store DATABRICKS_HOST
+# 3. Create Environments in Azure DevOps: {environmentName}_test and {environmentName}_prod
+# 4. Add approvers to {environmentName}_prod environment
+# 5. Store secrets in Azure Key Vault: DATABRICKS_CLIENT_ID, DATABRICKS_CLIENT_SECRET
 
 on:
   workflow_run:
@@ -32,9 +30,9 @@ jobs:
         uses: ./.github/actions/cd
         with:
           target: test
-          databricks_host: ${{ "{{" }} secrets.DATABRICKS_HOST {{ "}}" }}
-          databricks_client_id: ${{ "{{" }} secrets.DATABRICKS_CLIENT_ID {{ "}}" }}
-          databricks_client_secret: ${{ "{{" }} secrets.DATABRICKS_CLIENT_SECRET {{ "}}" }}
+          databricks_host: ${{ secrets.DATABRICKS_HOST }}
+          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
   deploy_prod:
     name: Deploy to production
@@ -50,6 +48,6 @@ jobs:
         uses: ./.github/actions/cd
         with:
           target: prod
-          databricks_host: ${{ "{{" }} secrets.DATABRICKS_HOST {{ "}}" }}
-          databricks_client_id: ${{ "{{" }} secrets.DATABRICKS_CLIENT_ID {{ "}}" }}
-          databricks_client_secret: ${{ "{{" }} secrets.DATABRICKS_CLIENT_SECRET {{ "}}" }}
+          databricks_host: ${{ secrets.DATABRICKS_HOST }}
+          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
