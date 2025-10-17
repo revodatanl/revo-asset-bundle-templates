@@ -157,7 +157,7 @@ As part of the release process, we auto-generate a comprehensive `CHANGELOG`. Th
 
 ### Graphical Overview
 
-This figure illustrates the ideal end-to-end flow from code change to production. A developer creates a `feature` branch, commits changes, then opens a pull request (PR). The three pipelines now run in succession:
+This figure illustrates the ideal end-to-end flow from code change to production. A developer creates a `feature` branch, commits changes (protected by pre-commit hooks), then opens a pull request (PR). The three pipelines now run in succession:
 
 1. The `CI` pipeline runs automatically on the PR; only when it passes can the PR be merged to `main`.
 2. The `semantic-release` pipeline is triggered on the merge event, which interprets commit messages to bump the version, updates the `CHANGELOG`, and applies a git tag.
