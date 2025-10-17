@@ -1,7 +1,7 @@
 # RevoData Asset Bundle Templates
 
-![Databricks Runtime](https://img.shields.io/badge/Databricks%20Runtime-15.4--LTS-%231B3139)
-[![python](https://img.shields.io/badge/python-3.11-g)](https://www.python.org)
+![Databricks Runtime](https://img.shields.io/badge/Databricks%20Runtime-16.4--LTS-%231B3139)
+[![python](https://img.shields.io/badge/python-3.12-g)](https://www.python.org)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
@@ -19,7 +19,7 @@ This template solves common pain points in Databricks project setup:
 
 - **Streamlined Setup**: One command creates a fully configured development environment
 - **Modern Python Tooling**: Uses `uv` for fast package management, `ruff` for linting, and `mypy` for type checking (pending `ty` reaching production-ready status)
-- **Modular Architecture**: Core template is lightweight with optional modules for specialized needs
+- **Modular Architecture**: Core template is lightweight with optional accelerators for specialized needs
 - **CI/CD Ready**: Complete pipelines for GitHub Actions and Azure DevOps
 - **Development Environment**: DevContainer and WSL support for consistent development across platforms
 
@@ -50,11 +50,18 @@ This template solves common pain points in Databricks project setup:
     | `author` | Name of the author | `Thomas Brouwer` |
     | `email` | Email address of the author | `thomas.brouwer@revodata.nl` |
     | `project_description` | Brief description of the project | `This project is generated using our own RevoData Asset Bundle Templates.` |
-    | `cicd_provider` | CI/CD provider | `github/azure` |
-    | `cloud_provider` | Cloud provider | `azure/aws` |
+    | `include_cicd` | Set up CI/CD pipeines | `yes/no` |
+    | `cicd_provider` | CI/CD provider (skipped if `include_cicd` = `no`) | `github/azure` |
+    | `cloud_provider` | Cloud provider (skipped if `include_cicd` = `no`) | `azure/aws` |
     | `include_example_jobs` | Whether to include example pipelines and jobs | `yes/no` |
 
-> Previously, specifying a `package_name` was required. The `package_name` is now automatically generated from the `project_name` by replacing dashes (`-`) with underscores (`_`) following Python package naming conventions.
+    > Previously, specifying a `package_name` was required. The `package_name` is now automatically generated from the `project_name` by replacing dashes (`-`) with underscores (`_`) following Python package naming conventions.
+
+3. Set up a fully configured development environment by running:
+
+    ```bash
+    make
+    ```
 
 ## Developing the Template
 

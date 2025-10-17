@@ -47,7 +47,7 @@ jobs:
         uses: databricks/setup-cli@main
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           ignore-empty-workdir: true
           enable-cache: false
@@ -95,7 +95,7 @@ jobs:
           echo "=================================================================="
           echo "==================== COMMIT ALL FILES ============================"
           echo "=================================================================="
-          uv run pre-commit autoupdate || true
+          uv run prek autoupdate || true
           git config --global user.email "pipeline@github.com"
           git config --global user.name "GitHub Actions"
           git add .
@@ -125,12 +125,6 @@ jobs:
           echo "================ RE-BUILD PROJECT (AFTER CLEAN) =================="
           echo "=================================================================="
           make
-
-          echo ""
-          echo "=================================================================="
-          echo "======================== UPDATE TARGETS =========================="
-          echo "=================================================================="
-          make update
 
           echo ""
           echo "=================================================================="
@@ -180,7 +174,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
@@ -228,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
@@ -277,7 +271,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project

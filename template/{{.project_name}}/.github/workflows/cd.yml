@@ -1,23 +1,27 @@
 name: Deploy Databricks Asset Bundle
 
-# Before using this workflow, create the following in your GitHub repository:
-# 1. Go to Settings → Environments
-# 2. Create environments: 'test' and 'prod'
-# 3. For 'prod' environment add required reviewers under Protection rules
-# 4. Ensure the following environment-specific secrets are set:
-#    - DATABRICKS_HOST
-#    - DATABRICKS_CLIENT_ID
-#    - DATABRICKS_CLIENT_SECRET
+# Before using this pipeline:
+# 1. Update variables: groupName, environmentName, keyVaultName, azureSubscription
+# 2. Create Library Groups in Azure DevOps: {groupName}_test and {groupName}_prod; store DATABRICKS_HOST
+# 3. Create Environments in Azure DevOps: {environmentName}_test and {environmentName}_prod
+# 4. Add approvers to {environmentName}_prod environment
+# 5. Store secrets in Azure Key Vault: DATABRICKS_CLIENT_ID, DATABRICKS_CLIENT_SECRET
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_run:
+    workflows:
+      - Semantic Release
+    types:
+      - completed
+
+permissions:
+  contents: read
 
 jobs:
   deploy_test:
     name: Deploy to test
     runs-on: ubuntu-latest
+    environment: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,25 +30,16 @@ jobs:
         uses: ./.github/actions/cd
         with:
           target: test
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-
-  wait_for_approval:
-    name: Await production approval
-    needs: deploy_test
-    runs-on: ubuntu-latest
-    timeout-minutes: 720 # 12 hours
-    steps:
-      - name: Wait for approval
-        run: |
-          echo "Production deployment for ${{ github.ref_name }} has been approved and will proceed"
+          databricks_host: ${{ secrets.DATABRICKS_HOST }}
+          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
   deploy_prod:
     name: Deploy to production
-    needs: wait_for_approval
+    needs: deploy_test
     runs-on: ubuntu-latest
+    environment: prod
+    if: needs.deploy_test.result == 'success'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -53,7 +48,6 @@ jobs:
         uses: ./.github/actions/cd
         with:
           target: prod
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+          databricks_host: ${{ secrets.DATABRICKS_HOST }}
+          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}

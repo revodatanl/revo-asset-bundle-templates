@@ -1,8 +1,14 @@
-.PHONY: install setup clean test validate deploy destroy lint update-pre-commit update-venv validate-update update
+.PHONY: _prepare install setup clean test validate deploy destroy lint
 
 .DEFAULT_GOAL := setup
 
 PROFILE_NAME := DEFAULT
+
+# Internal target: sync dependencies, build package, and run pre-commit hooks
+_prepare:
+	@uv sync
+	@uv build > /dev/null 2>&1
+	@uv run prek run --all-files
 
 # Complete project setup: sync dependencies, set up git, and pre-commit hooks
 setup:
@@ -27,11 +33,18 @@ setup:
 		git init -b main > /dev/null; \
 	fi
 
-	@echo "Setting up pre-commit..."
-	@uv run pre-commit install
+	@hooks_path=$$(git config --get core.hooksPath 2>/dev/null || true); \
+	if [ -n "$$hooks_path" ]; then \
+		echo "❌ Error: Git core.hooksPath is set to '$$hooks_path'."; \
+		echo "   Please run 'git config --unset-all core.hooksPath' (use --global if set globally) and retry."; \
+		exit 1; \
+	fi
+
+	@echo "Setting up pre-commit hooks (with prek)..."
+	@uv run prek install --hook-type commit-msg --hook-type pre-push
+	@uv run prek autoupdate
 
 	@echo "Setup completed successfully!"
-	@echo "💡 Run 'make update' to ensure you have the latest pre-commit hooks and dependencies."
 
 # Clean project artifacts and rebuild virtual environment
 clean:
@@ -55,17 +68,13 @@ clean:
 	@echo "Cleanup completed."
 
 # Run pre-commit hooks, build package, and execute tests with coverage
-test:
+test: _prepare
 	@echo "Running tests..."
-	@uv run pre-commit run --all-files
-	@uv build > /dev/null 2>&1
-	@uv sync
 	@uv run pytest -v tests --cov=src --cov-report=term
 
 # Validate Databricks bundle configuration and resources
-validate:
+validate: _prepare
 	@echo "Validating resources..."
-	@uv run pre-commit run --all-files
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
@@ -73,9 +82,8 @@ validate:
 	@databricks bundle validate --profile $(PROFILE_NAME) --target dev;
 
 # Deploy Databricks bundle to development environment
-deploy:
+deploy: _prepare
 	@echo "Deploying resources..."
-	@uv run pre-commit run --all-files
 	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
 	if [[ $$output == *"Error: resolve:"* ]]; then \
 		databricks configure --profile $(PROFILE_NAME); \
@@ -104,27 +112,3 @@ lint:
 	@echo "Running pydoclint..."
 	-@uv run pydoclint .
 	@echo "Linting completed!"
-
-# Update pre-commit hooks to latest versions
-update-pre-commit:
-	@echo "Updating pre-commit hooks..."
-	@uv run pre-commit autoupdate
-
-# Update virtual environment dependencies to latest compatible versions
-update-venv:
-	@echo "Updating virtual environment dependencies..."
-	@uv sync --upgrade
-
-# Validate synchronization between venv and pre-commit hook versions
-validate-update:
-	@for tool in ruff mypy pydoclint; do \
-		pc_ver=$$(grep -v '^\s*#' .pre-commit-config.yaml | grep -A1 "$$tool" | grep rev | sed 's/.*v//' | tr -d ' ' | sed 's/://'); \
-		uv_ver=$$(awk '/\[\[package\]\]/{p=0} /name = "'"$$tool"'"/{p=1} p && /version = /{print $$NF; exit}' uv.lock | tr -d '"'); \
-		[ -n "$$pc_ver" ] && [ -n "$$uv_ver" ] && \
-		[ "$$(echo $$pc_ver | cut -d. -f1-2)" != "$$(echo $$uv_ver | cut -d. -f1-2)" ] && \
-		echo "❌ $$tool: $$pc_ver vs $$uv_ver"; \
-	done; true
-
-# Update both pre-commit hooks and virtual environment dependencies
-update: update-pre-commit update-venv validate-update
-	@echo "All dependencies updated and synced"
