@@ -13,9 +13,9 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-    "databricks-connect==16.4.*",
-    "databricks-dlt>=0.3.0",
-    "databricks-sdk>=0.65.0",
+    "databricks-connect==16.4.*",{{if (eq .include_example_jobs "yes")}}
+    "databricks-dlt>=0.3.0",{{end}}
+    "databricks-sdk>=0.67.0",
     "commitizen>=4.9.1",
     "mypy>=1.18.2",
     "pip>=25.2",
