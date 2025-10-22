@@ -21,4 +21,6 @@ This file only provides template directives; it is skipped for the actual output
   {{skip "{{.project_name}}/notebooks/pipelines"}}
   {{skip "{{.project_name}}/resources/example-job.yml"}}
   {{skip "{{.project_name}}/resources/example-pipeline-job.yml"}}
+{{else}}
+  {{skip "{{.project_name}}/resources/.gitkeep"}}
 {{end}}
