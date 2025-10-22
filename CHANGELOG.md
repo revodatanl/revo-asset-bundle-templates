@@ -1,3 +1,10 @@
+## [0.18.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.0...v0.18.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* include resources folder regardless of include_example_jobs parameter ([cf61aef](https://github.com/revodatanl/revo-asset-bundle-templates/commit/cf61aef2d9c38af95eff3ae489a929c9a9292882))
+
 # [0.18.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.2...v0.18.0) (2025-10-22)
 
 
