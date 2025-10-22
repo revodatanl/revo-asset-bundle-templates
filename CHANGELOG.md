@@ -1,3 +1,28 @@
+# [0.18.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.2...v0.18.0) (2025-10-22)
+
+
+### Bug Fixes
+
+* enhance CI/CD workflows with Databricks integration and improved deployment ([69bae6b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/69bae6b0e76f611d813deff2c6a0b4d6943559be))
+* remove redundant update targets step in CI workflow ([66bed64](https://github.com/revodatanl/revo-asset-bundle-templates/commit/66bed644e611bf6de1abdab16b6042ec93af9160))
+* remove redundant uv installation from CI DABs pipeline ([43fb73f](https://github.com/revodatanl/revo-asset-bundle-templates/commit/43fb73fd6519d51680e5d82ef0cdfe67cf8967dd))
+* set up core.hooksPath error handling in Makefile ([5b109ea](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5b109eaf7e575d1b140cba016b6d537cace132d2))
+* syntax for variable references in CI/CD pipeline configurations ([aaaf144](https://github.com/revodatanl/revo-asset-bundle-templates/commit/aaaf14402a2f3eb134bbcb44c9fbfeff43cea2d5))
+* update tmpl syntax in CI workflow ([123d90b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/123d90b91da6ec84a428977f9453aaae6cb77b2c))
+
+
+### Features
+
+* integrate bundle content in databricks.yml ([629d89c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/629d89cfde52d397590edc7a3f24c1987dcacef1))
+* remove gitleaks hook from pre-commit hooks ([2ce3a40](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2ce3a4023bc546e8885d9e13146303bd729ea2bb))
+* update to Databricks runtime 16.4-LTS (with corresponding Python versions) in templates and configuration files ([6c41cc4](https://github.com/revodatanl/revo-asset-bundle-templates/commit/6c41cc4f03811c36abd69b90df9617f46ed098c1))
+* utilize the system venv for most of the pre-commit hooks and use `prek` over `pre-commit` ([302a7c7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/302a7c72ed8292e5aab0d7986a9d4d45da6f16ad))
+
+
+### Reverts
+
+* restore uv installation in CI DABs pipeline ([76f1caa](https://github.com/revodatanl/revo-asset-bundle-templates/commit/76f1caaee92fdc42345d2d0d240ab1995dcbfaf1))
+
 ## [0.17.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.1...v0.17.2) (2025-09-29)
 
 
