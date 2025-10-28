@@ -1,3 +1,10 @@
+## [0.18.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.1...v0.18.2) (2025-10-28)
+
+
+### Bug Fixes
+
+* use default workspace root_path for test/prod ([8f5cf92](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8f5cf9222e03862c227035821b1e2067c73d5fd2))
+
 ## [0.18.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.0...v0.18.1) (2025-10-22)
 
 
