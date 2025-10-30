@@ -1,3 +1,10 @@
+## [0.18.3](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.2...v0.18.3) (2025-10-30)
+
+
+### Bug Fixes
+
+* minor update to welcome screen databricks_template_schema ([d50c620](https://github.com/revodatanl/revo-asset-bundle-templates/commit/d50c620d905d6863f2966a1dcf94e631695602f1))
+
 ## [0.18.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.1...v0.18.2) (2025-10-28)
 
 
