@@ -4,7 +4,7 @@
   "properties": {
     "project_name": {
       "type": "string",
-      "description": "{{if false}}\n\nERROR: This template is not supported by your current Databricks CLI version.\nPlease hit control-C and go to https://docs.databricks.com/en/dev-tools/cli/install.html for instructions on upgrading the CLI to the minimum version (v0.236.0) supported by RevoData Asset Bundle Templates.\n\n\n{{end}}Project name:",
+      "description": "{{if false}}\n\nERROR: This template is not supported by your current Databricks CLI version.\nPlease hit control-C and go to https://docs.databricks.com/en/dev-tools/cli/install.html for instructions on upgrading the CLI to the minimum version (v0.236.0) supported by RevoData Asset Bundle Templates.\n\n\n{{end}}Project name",
       "order": 1,
       "pattern": "^[A-Za-z0-9_-]+$",
       "pattern_match_failure_message": "Project name must consist of letters, numbers, dashes, or underscores."

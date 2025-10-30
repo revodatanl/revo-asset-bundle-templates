@@ -1,4 +1,4 @@
-.PHONY: _prepare install setup clean test validate deploy destroy lint
+.PHONY: _prepare setup clean test validate deploy destroy lint
 
 .DEFAULT_GOAL := setup
 
