@@ -161,7 +161,7 @@ jobs:
           matrix.cicd_provider == 'github' &&
           matrix.cloud_provider == 'azure' &&
           matrix.include_example_jobs == 'yes'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
@@ -174,7 +174,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
@@ -222,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
@@ -271,7 +271,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download project artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
