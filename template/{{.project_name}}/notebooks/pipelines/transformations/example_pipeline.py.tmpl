@@ -14,8 +14,9 @@
 
 # COMMAND ----------
 
-import dlt
 from databricks.sdk.runtime import spark
+from pyspark import pipelines as dp  # type: ignore[attr-defined]
+from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
 from {{template `package_name` .}}.main import main
@@ -42,13 +43,12 @@ autoloader_path = spark.conf.get("autoloader_path")
 # Since main() always returns `True` this condition will always be met
 if main():
 
-    @dlt.table(
+    @dp.table(
         name=f"raw_{table}",
-        temporary=False,
         table_properties={"quality": "raw"},
         comment="Data loaded from Landing Zone",
     )
-    def ingest() -> dlt.DataFrame:
+    def ingest() -> DataFrame:
         """Ingest raw data using the Auto Loader."""
         return (
             spark.readStream.format("delta")
@@ -74,12 +74,12 @@ expectations: dict[str, str] = {
 # COMMAND ----------
 
 
-@dlt.table(
+@dp.table(
     name=f"bronze_{table}",
     table_properties={"quality": "bronze"},
     comment="Data transformed from raw",
 )
-@dlt.expect_all_or_drop(expectations)
-def set_expectations() -> dlt.DataFrame:
+@dp.expect_all_or_drop(expectations)
+def set_expectations() -> DataFrame:
     """Set expectations on raw data for bronze quality."""
-    return dlt.read_stream(f"raw_{table}")
+    return spark.readStream.table(f"raw_{table}")
