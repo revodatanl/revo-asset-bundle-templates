@@ -136,7 +136,6 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-
       - name: Deploy Databricks Asset Bundle (using default runner only)
         if: |
           matrix.os == 'ubuntu-latest' &&
@@ -166,7 +165,6 @@ jobs:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
           retention-days: 1
-
 
   run-example-job:
     needs: ci-dabs
@@ -215,7 +213,6 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-
   run-example-pipeline-job:
     needs: ci-dabs
     if: success()
@@ -262,7 +259,6 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-
 
 # Destroy bundle regardless of the outcome of both jobs
   destroy-bundle:
