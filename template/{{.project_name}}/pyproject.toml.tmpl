@@ -26,6 +26,10 @@ dev = [
     "ruff>=0.13.1",
 ]
 
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [tool.uv]
 package = true
 
@@ -82,8 +86,6 @@ python_version = "3.12"
 strict = true
 disallow_untyped_decorators = false
 exclude = "scratch"
-
-
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

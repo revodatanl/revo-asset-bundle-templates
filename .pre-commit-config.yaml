@@ -19,6 +19,6 @@ repos:
     -   id: check-yaml
     -   id: check-json
 -   repo: https://github.com/gitleaks/gitleaks
-    rev: v8.29.1
+    rev: v8.30.0
     hooks:
     -   id: gitleaks
