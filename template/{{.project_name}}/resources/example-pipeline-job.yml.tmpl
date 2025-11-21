@@ -13,9 +13,17 @@ resources:
       name: example-pipeline
       # catalog: main  # configure catalog in Unity Catalog
       schema: {{template `package_name` .}}_${bundle.environment}
+      root_path: ../notebooks/pipelines/example-pipeline
+
       libraries:
         - glob:
-            include: ../notebooks/pipelines/**
+            include: ../notebooks/pipelines/example-pipeline/**
+
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
 
       clusters:
        - label: default
@@ -31,4 +39,7 @@ resources:
       continuous: false
       photon: false
 
-      channel: PREVIEW
+      edition: ADVANCED
+      channel: CURRENT
+
+      serverless: false
