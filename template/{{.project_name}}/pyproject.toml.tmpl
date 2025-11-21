@@ -13,8 +13,7 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-    "databricks-connect==16.4.*",{{if (eq .include_example_jobs "yes")}}
-    "databricks-dlt>=0.3.0",{{end}}
+    "databricks-connect==16.4.*",
     "databricks-sdk>=0.67.0",
     "commitizen>=4.9.1",
     "mypy>=1.18.2",
@@ -84,9 +83,7 @@ strict = true
 disallow_untyped_decorators = false
 exclude = "scratch"
 
-[[tool.mypy.overrides]]
-module = "dlt"
-ignore_missing_imports = true
+
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
