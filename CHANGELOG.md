@@ -1,3 +1,11 @@
+## [0.18.4](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.3...v0.18.4) (2025-12-03)
+
+
+### Bug Fixes
+
+* **pipelines:** define pipeline dependencies from workspace environment ([d963db1](https://github.com/revodatanl/revo-asset-bundle-templates/commit/d963db1b00016a01d13eeac3ac876e3effa206b1))
+* **pipelines:** migrate to spark declarative pipelines syntax ([42f21f9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/42f21f9cace35879c512e0197a6bf30801af9920))
+
 ## [0.18.3](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.2...v0.18.3) (2025-10-30)
 
 
