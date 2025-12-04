@@ -41,7 +41,7 @@ setup:
 	fi
 
 	@echo "Setting up pre-commit hooks (with prek)..."
-	@uv run prek install --hook-type commit-msg --hook-type pre-push
+	@uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push
 	@uv run prek autoupdate
 
 	@echo "Setup completed successfully!"
