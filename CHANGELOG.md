@@ -1,3 +1,10 @@
+## [0.18.6](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.5...v0.18.6) (2025-12-04)
+
+
+### Bug Fixes
+
+* **Makefile:** update pre-commit hook installation to include pre-commit type ([bd20d17](https://github.com/revodatanl/revo-asset-bundle-templates/commit/bd20d170db8294017a8cc1659a5e7bec2e5f7df4))
+
 ## [0.18.5](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.4...v0.18.5) (2025-12-04)
 
 
