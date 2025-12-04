@@ -1,3 +1,10 @@
+## [0.18.5](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.4...v0.18.5) (2025-12-04)
+
+
+### Bug Fixes
+
+* update the deployment documentation ([163cd96](https://github.com/revodatanl/revo-asset-bundle-templates/commit/163cd96d9aca39643769b7bcdd0342f06eebae65))
+
 ## [0.18.4](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.3...v0.18.4) (2025-12-03)
 
 
