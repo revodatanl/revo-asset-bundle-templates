@@ -1,3 +1,10 @@
+## [0.18.7](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.6...v0.18.7) (2025-12-05)
+
+
+### Bug Fixes
+
+* add some sugar to the test suite ([3e24d68](https://github.com/revodatanl/revo-asset-bundle-templates/commit/3e24d682de95bcd959e449e88a151dd5dad4d670))
+
 ## [0.18.6](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.5...v0.18.6) (2025-12-04)
 
 
