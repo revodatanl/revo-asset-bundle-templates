@@ -57,4 +57,18 @@ if ! command -v just >/dev/null 2>&1; then
   install_just
 fi
 
+# Create just alias (j)
+ALIASES_FILE="$HOME/.bash_aliases"
+
+mkdir -p "$(dirname "$ALIASES_FILE")"
+touch "$ALIASES_FILE"
+
+add_line_if_missing() {
+  local line="$1"
+  grep -Fqx "$line" "$ALIASES_FILE" || printf '%s\n' "$line" >> "$ALIASES_FILE"
+}
+
+add_line_if_missing "alias j='just'"
+add_line_if_missing "complete -F _just -o bashdefault -o default j"
+
 just setup

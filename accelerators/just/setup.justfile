@@ -116,6 +116,8 @@ import? "justfile.local"
     echo "✅ .env file already exists, leaving unchanged."; \
   fi
 
+  cd '{{justfile_directory()}}' && \
+  cd .. && \
   if [ ! -d ".git" ]; then \
     echo "Setting up git..."; \
     git init -b main > /dev/null; \
