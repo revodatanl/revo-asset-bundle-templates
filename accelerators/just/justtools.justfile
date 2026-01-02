@@ -1,12 +1,12 @@
 # This imports GIT bash from user specific location for Windows.
 import? "justfile.local"
 
-osfam := if os_family() == "windows" { "Windows" } else { "Unix" }
-
 # Print shell and bash availability.
 [group('just tooling')]
+[parallel]
 @diag_just:
-  -echo "osfam                = {{osfam}}"
+  -echo "osfam                = {{ os_family() }}"
+  -echo "cpus                 = {{ num_cpus() }}"
   -echo "SHELL                = $SHELL"
   -echo "0                    = $0"
   -echo "bash location        = $(command -v bash)"
@@ -67,3 +67,35 @@ osfam := if os_family() == "windows" { "Windows" } else { "Unix" }
   printf "\033[0m\n"; \
   just --list --unsorted --alias-style right
 #
+
+# Parallel random digit test
+[parallel]
+[group('just tooling')]
+@_random_digit:
+  sleep $((RANDOM % 4))
+  printf "\033[%sm%d\033[0m" "$((31 + RANDOM % 7))" "$((RANDOM % 10))"
+#
+
+# Parallel random digit test
+[parallel]
+[group('just tooling')]
+@parallel_random_digit_test count='500':
+  set -euo pipefail
+  max=$(( {{num_cpus()}} )); \
+  (( max < 1 )) && max=1; \
+  running=0; \
+  for i in {1..{{count}}}; do \
+    just _random_digit & \
+    running=$((running+1)); \
+    if (( running >= max )); then \
+      wait -n; \
+      running=$((running-1)); \
+    fi; \
+  done; \
+  wait;
+alias randy := parallel_random_digit_test
+
+# Check formatting of the justfile
+[group('just tooling')]
+jformat: 
+  -just --fmt --check --unstable

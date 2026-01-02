@@ -1,6 +1,8 @@
 # This imports GIT bash from user specific location for Windows.
 import? "justfile.local"
 
+osfam := if os_family() == "windows" { "Windows" } else { "Unix" }
+
 # DEFAULT RECIPE | Complete project setup: sync dependencies, set up git, and pre-commit hooks.
 [default]
 [group('setup')]
@@ -158,3 +160,6 @@ import? "justfile.local"
     databricks configure --profile {{PROFILE_NAME}}; \
   fi;
 #
+
+
+
