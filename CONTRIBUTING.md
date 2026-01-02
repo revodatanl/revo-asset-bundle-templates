@@ -9,35 +9,35 @@ To contribute to this GitHub project, you can follow these steps:
 
 2. Clone the repository to your local machine using the following command:
 
-```bash
-git clone https://github.com/revodatanl/revo-asset-bundle-templates.git
-```
+    ```bash
+    git clone https://github.com/revodatanl/revo-asset-bundle-templates.git
+    ```
 
 3. Create a new branch for your changes using the following command:
 
-```bash
-git checkout -b "branch-name"
-```
+    ```bash
+    git checkout -b "branch-name"
+    ```
 
 4. Make your changes to the code or documentation. Do not forget to add tests (if needed).
 
 5. Add the changes to the staging area using the following command:
 
-```bash
-git add .
-```
+    ```bash
+    git add .
+    ```
 
 6. Commit the changes with a meaningful commit message using the [Angular Commit Message Conventions](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format). For example:
 
-```bash
-git commit -m "fix(semantic-release): add GitLab support"
-```
+    ```bash
+    git commit -m "fix(semantic-release): add GitLab support"
+    ```
 
 7. Push the changes to your forked repository using the following command:
 
-```bash
-git push origin branch-name
-```
+    ```bash
+    git push origin branch-name
+    ```
 
 8. Go to the GitHub website and navigate to your forked repository.
 
@@ -53,16 +53,16 @@ git push origin branch-name
 
 14. Once your changes are merged, you can update your forked repository and local copy of the repository with the following commands:
 
-```bash
-git fetch upstream
-git checkout main
-git merge upstream/main
-```
+    ```bash
+    git fetch upstream
+    git checkout main
+    git merge upstream/main
+    ```
 
-Finally, delete the branch you created with the following command:
+15. Finally, delete the branch you created with the following command:
 
-```bash
-git branch -d branch-name
-```
+    ```bash
+    git branch -d branch-name
+    ```
 
 That's it, you made it! 🐣⭐⭐
