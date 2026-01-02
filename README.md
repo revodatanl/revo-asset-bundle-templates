@@ -45,7 +45,7 @@ This template solves common pain points in Databricks project setup:
     When initializing your project, you'll be prompted to answer several questions. These configurations will be used to customize your project:
 
     | Parameter | Description | Example |
-    |-----------|-------------|---------------------|
+    | --------- | ----------- | ------- |
     | `project_name` | Name of the project (usually the same as the repository name) | `revo-dabs-test-project` |
     | `author` | Name of the author | `Thomas Brouwer` |
     | `email` | Email address of the author | `thomas.brouwer@revodata.nl` |
