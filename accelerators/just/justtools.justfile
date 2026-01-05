@@ -97,5 +97,5 @@ alias randy := parallel_random_digit_test
 
 # Check formatting of the justfile
 [group('just tooling')]
-jformat: 
+@jformat: 
   -just --fmt --check --unstable

@@ -1,0 +1,69 @@
+name: CI root
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  ci-root:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Default configurations
+          - os: ubuntu-latest
+            cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
+          - os: macos-latest
+            cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
+          - os: windows-latest
+            cicd_provider: github
+            cloud_provider: azure
+            include_example_jobs: yes
+          # Non-default configuration
+          - os: ubuntu-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+          - os: macos-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+          - os: windows-latest
+            cicd_provider: azure
+            cloud_provider: aws
+            include_example_jobs: no
+
+    env:
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+    steps:
+      - name: Run and verify setup
+        run: |
+          cd accelerators
+          .\setup
+          just --version
+          just p ""
+          just p "=================================================================="
+          just p "==================== TEST REQUIREMENTS =========================="
+          just p "=================================================================="
+          just p ""
+          just list
+          just diag_just
+          just _banner "Recipes are operational!"
+          databricks --version
+
+          just p ""
+          just p "=================================================================="
+          just p "================ CHECK JUSTFILE FORMATTING ======================="
+          just p "=================================================================="
+          just jformat
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
