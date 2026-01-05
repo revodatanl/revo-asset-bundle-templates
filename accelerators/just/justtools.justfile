@@ -98,6 +98,7 @@ alias randy := parallel_random_digit_test
 # Check formatting of the justfile
 [group('just tooling')]
 @jformat fail_on_error='true':
+  printf "Checking justfile formatting...";
   if {{fail_on_error}}; then \
     just --fmt --check --unstable ; \
   else \
