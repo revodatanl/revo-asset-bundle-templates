@@ -6,6 +6,18 @@ function PathRefresh {
     $env:Path    = "$machinePath;$userPath"
 }
 
+function Add-ToGitHubPathIfPresent {
+  param([Parameter(Mandatory=$true)][string]$Dir)
+
+  if ([string]::IsNullOrWhiteSpace($Dir)) { return }
+  if (-not (Test-Path -LiteralPath $Dir)) { return }
+
+  # Only in GitHub Actions. Persists to following steps in same job.
+  if ($env:GITHUB_PATH) {
+    Add-Content -Path $env:GITHUB_PATH -Value $Dir
+  }
+}
+
 function ParseSemVer {
   param([Parameter(Mandatory=$true)][string]$VersionText)
 
@@ -30,19 +42,26 @@ function EnsureJustMinVersion {
   param([Parameter(Mandatory=$true)][version]$MinVersion)
 
   Write-Output "Checking `just` command existence..."
-  if (-not (Get-Command just -ErrorAction SilentlyContinue)) {
+  $justCmd = Get-Command just -ErrorAction SilentlyContinue
+  if (-not $justCmd) {
     Write-Output "just not found, refreshing PATH..."
     PathRefresh
   }
 
-  if (-not (Get-Command just -ErrorAction SilentlyContinue)) {
+  $justCmd = Get-Command just -ErrorAction SilentlyContinue
+  if (-not $justCmd) {
     Write-Output "just not found, installing via winget..."
     RequireWinget
     winget install --id Casey.Just --source winget --accept-package-agreements --accept-source-agreements
     PathRefresh
   }
 
-  if (-not (Get-Command just -ErrorAction SilentlyContinue)) {
+  $justCmd = Get-Command just -ErrorAction SilentlyContinue
+  if ($justCmd) {
+    $justDir = Split-Path -Parent $justCmd.Source
+    Add-ToGitHubPathIfPresent $justDir
+  }
+  else {
     throw "just is not available on PATH after installation."
   }
 
@@ -110,7 +129,7 @@ function EnsureGitBash {
         RequireWinget
         winget install --id Git.Git --source winget --accept-package-agreements --accept-source-agreements
         PathRefresh
-        $gitBashPath = Get-GitBashPath
+        $gitBashPath = Get-GitBashPath        
     }
 
     if (-not $gitBashPath) {
@@ -122,6 +141,7 @@ function EnsureGitBash {
     # Put Git Bash directory first on PATH for this session
     $gitBashDir = Split-Path -Parent $gitBashPath
     $env:Path = "$gitBashDir;$env:Path"
+    Add-ToGitHubPathIfPresent $gitBashDir
 
     # Sanity check
     & $gitBashPath -lc "echo Git Bash OK" | Out-Null

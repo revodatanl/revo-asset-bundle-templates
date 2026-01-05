@@ -2,55 +2,9 @@
 set -euo pipefail
 
 install_just() {
-  if command -v brew >/dev/null 2>&1; then
-    brew install just
-    return
-  fi
-
-  if command -v apt-get >/dev/null 2>&1; then
-    sudo apt-get update -y
-    sudo apt-get install -y just
-    return
-  fi
-
-  if command -v dnf >/dev/null 2>&1; then
-    sudo dnf install -y just
-    return
-  fi
-
-  if command -v yum >/dev/null 2>&1; then
-    sudo yum install -y just
-    return
-  fi
-
-  if command -v pacman >/dev/null 2>&1; then
-    sudo pacman -S --noconfirm just
-    return
-  fi
-
-  if command -v zypper >/dev/null 2>&1; then
-    sudo zypper --non-interactive in just
-    return
-  fi
-
-  if command -v apk >/dev/null 2>&1; then
-    sudo apk add just
-    return
-  fi
-
-  if command -v nix-env >/dev/null 2>&1; then
-    nix-env -iA nixpkgs.just
-    return
-  fi
-
-  if command -v conda >/dev/null 2>&1; then
-    conda install -y -c conda-forge just
-    return
-  fi
-
-  echo "Error: could not install 'just'. Install it with your package manager and retry."
-  echo "See package options: https://just.systems/man/en/packages.html"
-  exit 1
+  curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh \
+  | bash -s -- --to "$HOME/.local/bin"
+  echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 }
 
 if ! command -v just >/dev/null 2>&1; then
