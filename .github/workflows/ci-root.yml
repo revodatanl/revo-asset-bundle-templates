@@ -46,11 +46,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Run and verify setup
+      - name: Run setup
         run: |
           cd accelerators
-          .\setup
+          ./setup
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+        
+      - name: Verify setup
+        run: |
           just --version
+          cd accelerators
           just p ""
           just p "=================================================================="
           just p "==================== TEST REQUIREMENTS =========================="
