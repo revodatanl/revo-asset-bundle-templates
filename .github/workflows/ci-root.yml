@@ -43,6 +43,9 @@ jobs:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
       - name: Run and verify setup
         run: |
           cd accelerators
