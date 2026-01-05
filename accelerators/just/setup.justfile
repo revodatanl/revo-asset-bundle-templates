@@ -56,7 +56,7 @@ osfam := if os_family() == "windows" { "Windows" } else { "Unix" }
   echo "Running required installations for Unix...";
   just _ux_install_item_url uv https://astral.sh/uv/install.sh
   just _ux_install_item git
-  just _ux_install_item databricks
+  just _ux_install_item_url databricks https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh
   just continue_setup
 #
 
@@ -72,8 +72,6 @@ osfam := if os_family() == "windows" { "Windows" } else { "Unix" }
   fi
   echo "Installing {{cliname}}..."
   curl -LsSf "{{url}}" | sh
-  # Common user-bin locations for curl installers
-  export PATH="$HOME/.local/bin:$PATH"
   if ! command -v "{{cliname}}" >/dev/null 2>&1; then
     printf "\033[31m{{cliname}} install finished but {{cliname}} not found on PATH\033[0m\n"
     exit 1
