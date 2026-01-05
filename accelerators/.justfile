@@ -20,7 +20,8 @@ import "just/justtools.justfile"
 
 # Generic recipe to print/echo a message with cross platform compatibility.
 @print msg:
-	printf "{{msg}}"
+    printf "{{ msg }}"
+
 alias p := print
 alias e := print
 alias echo := print
