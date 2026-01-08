@@ -84,9 +84,7 @@ jobs:
           uv --version
           just --version
 
-      # The following functionality tests are not supported on Windows
-      - name: Build and test Databricks Asset Bundle with Makefile
-        shell: bash
+      - name: Build and test Databricks Asset Bundle with justfile
         run: |
           cd revo-dabs-test-project
           echo ""
