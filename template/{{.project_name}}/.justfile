@@ -1,5 +1,4 @@
 set shell := ["bash", "-cu"]
-set windows-shell := ["C:\\Program Files\\Git\\usr\\bin\\bash.exe", "-cu"]
 
 PROFILE_NAME := "DEFAULT"
 
