@@ -87,12 +87,19 @@ jobs:
           uv --version
           just --version
 
-          where bash
-          
+          which bash
+
           bash -lc 'command -v bash;'
           bash -lc 'command -v databricks;'
           bash -lc 'command -v uv;'
           bash -lc 'command -v just;'
+
+      - name: Run PowerShell script
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd revo-dabs-test-project
+          pwsh -NoProfile -ExecutionPolicy Bypass -File "/.just/just_bash.ps1"
+          cd ..
 
       - name: Build and test Databricks Asset Bundle with justfile
         run: |
