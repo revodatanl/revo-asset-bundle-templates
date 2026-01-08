@@ -1,8 +1,17 @@
-.PHONY: _prepare setup clean test validate deploy destroy lint
+set shell := ["bash", "-cu"]
+set windows-shell := ["C:\\Program Files\\Git\\usr\\bin\\bash.exe", "-cu"]
 
-.DEFAULT_GOAL := setup
+PROFILE_NAME := "DEFAULT"
 
-PROFILE_NAME := DEFAULT
+[private]
+@verify_just:
+	just --version
+	printf "Just is available with subcommands\n"
+
+# List all available just recipes.
+@list:
+	printf "\033[33m\n";
+	just --list --unsorted --alias-style right
 
 # Internal target: sync dependencies, build package, and run pre-commit hooks
 _prepare:
@@ -11,6 +20,7 @@ _prepare:
 	@uv run prek run --all-files
 
 # Complete project setup: sync dependencies, set up git, and pre-commit hooks
+[default]
 setup:
 	@set -e; \
 	missing_tools=""; \

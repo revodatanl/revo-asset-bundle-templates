@@ -52,6 +52,9 @@ jobs:
           ignore-empty-workdir: true
           enable-cache: false
 
+      - name: Install Just
+        uses: extractions/setup-just@v3
+
       - name: Create init parameters JSON
         run: |
           echo '{
@@ -74,22 +77,29 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
+      - name: Verify dependencies
+        run: |
+          bash --version
+          databricks --version
+          uv --version
+          just --version
+
       # The following functionality tests are not supported on Windows
       - name: Build and test Databricks Asset Bundle with Makefile
-        if: matrix.os != 'windows-latest'
+        shell: bash
         run: |
           cd revo-dabs-test-project
           echo ""
           echo "=================================================================="
           echo "=============== BUILD PROJECT (WITH DEFAULT TARGET) =============="
           echo "=================================================================="
-          make
+          just
 
           echo ""
           echo "=================================================================="
           echo "=============== RE-BUILD PROJECT (WITH SETUP TARGET) ============="
           echo "=================================================================="
-          make setup
+          just setup
 
           echo ""
           echo "=================================================================="
@@ -105,26 +115,26 @@ jobs:
           echo "=================================================================="
           echo "======================== LINT PROJECT ============================"
           echo "=================================================================="
-          make lint
+          just lint
 
           echo ""
           echo "=================================================================="
           echo "========================= RUN TESTS =============================="
           echo "=================================================================="
-          make test
+          just test
 
 
           echo ""
           echo "=================================================================="
           echo "======================== CLEAN PROJECT ==========================="
           echo "=================================================================="
-          make clean
+          just clean
 
           echo ""
           echo "=================================================================="
           echo "================ RE-BUILD PROJECT (AFTER CLEAN) =================="
           echo "=================================================================="
-          make
+          just
 
           echo ""
           echo "=================================================================="
