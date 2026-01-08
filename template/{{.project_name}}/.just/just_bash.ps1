@@ -129,7 +129,7 @@ function EnsureGitBash {
         RequireWinget
         winget install --id Git.Git --source winget --accept-package-agreements --accept-source-agreements
         PathRefresh
-        $gitBashPath = Get-GitBashPath        
+        $gitBashPath = Get-GitBashPath
     }
 
     if (-not $gitBashPath) {
@@ -200,7 +200,7 @@ function setPowershellAlias {
 
   $aliasName   = "j"
   $aliasTarget = "just"
-  
+
   $existing = Get-Alias -Name $aliasName -ErrorAction SilentlyContinue
   if ($existing -and $existing.Definition -eq $aliasTarget) {
     Write-Host "Alias '$aliasName' is already correctly set ('$aliasTarget'). Nothing to do."

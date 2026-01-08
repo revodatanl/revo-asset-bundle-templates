@@ -111,21 +111,21 @@ test: _prepare
 [group('dab')]
 @validate: _prepare
 	echo "Validating resources..."
-	just configure_dbx_profile;	
+	just configure_dbx_profile;
 	databricks bundle validate --profile {{PROFILE_NAME}} --target dev;
 
 # Deploy Databricks bundle to development environment
 [group('dab')]
 @deploy: _prepare
 	echo "Deploying resources..."
-	just configure_dbx_profile;	
+	just configure_dbx_profile;
 	databricks bundle deploy --profile {{PROFILE_NAME}} --target dev;
 
 # Destroy all deployed Databricks resources in development environment
 [group('dab')]
 destroy:
 	echo "Destroying resources..."
-	just configure_dbx_profile;	
+	just configure_dbx_profile;
 	databricks bundle destroy --profile {{PROFILE_NAME}} --target dev;
 
 # Run code quality checks: ruff linting, mypy type checking, and pydoclint
