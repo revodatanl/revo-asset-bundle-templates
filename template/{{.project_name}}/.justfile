@@ -20,6 +20,7 @@ _prepare:
 	@uv build > /dev/null 2>&1
 	@uv run prek run --all-files
 
+[group('setup')]
 @verify_tools:
 	printf "Verifying tools on shell [$SHELL]... \n"
 	printf "running from [$(pwd)]... \n"
@@ -37,7 +38,19 @@ _prepare:
 		exit 1; \
 	fi;
 
+# Checks whether the git hooks path is set. If so, it will fail the setup.
+[group('setup')]
+@check_git_hooks:
+  hooks_path="$(git config --get core.hooksPath 2>/dev/null || true)"; \
+  if [ -n "$hooks_path" ]; then \
+    echo "Error: Git core.hooksPath is set to '$hooks_path'."; \
+    echo "Please run 'git config --unset-all core.hooksPath' (use --global if set globally) and retry."; \
+    exit 1; \
+  fi; \
+  echo "✅  Git hooks path is not set (as desired).";
+
 # Complete project setup: sync dependencies, set up git, and pre-commit hooks
+[group('setup')]
 [default]
 setup:
 	@set -e; \
@@ -52,12 +65,7 @@ setup:
 		git init -b main > /dev/null; \
 	fi
 
-	@hooks_path=$$(git config --get core.hooksPath 2>/dev/null || true); \
-	if [ -n "$$hooks_path" ]; then \
-		echo "❌ Error: Git core.hooksPath is set to '$$hooks_path'."; \
-		echo "   Please run 'git config --unset-all core.hooksPath' (use --global if set globally) and retry."; \
-		exit 1; \
-	fi
+	just check_git_hooks;
 
 	@echo "Setting up pre-commit hooks (with prek)..."
 	@uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push
@@ -91,32 +99,34 @@ test: _prepare
 	@echo "Running tests..."
 	@uv run pytest -v tests --cov=src --cov-report=term
 
+[group('setup')]
+[group('dab')]
+@configure_dbx_profile:
+  output="$(databricks auth env --profile {{PROFILE_NAME}} 2>&1)"; \
+  if [[ "$output" == *"Error: resolve:"* ]];then \
+    databricks configure --profile {{PROFILE_NAME}}; \
+  fi;
+
 # Validate Databricks bundle configuration and resources
-validate: _prepare
-	@echo "Validating resources..."
-	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
-	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile $(PROFILE_NAME); \
-	fi
-	@databricks bundle validate --profile $(PROFILE_NAME) --target dev;
+[group('dab')]
+@validate: _prepare
+	echo "Validating resources..."
+	just configure_dbx_profile;	
+	databricks bundle validate --profile {{PROFILE_NAME}} --target dev;
 
 # Deploy Databricks bundle to development environment
-deploy: _prepare
-	@echo "Deploying resources..."
-	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
-	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile $(PROFILE_NAME); \
-	fi
-	@databricks bundle deploy --profile $(PROFILE_NAME) --target dev;
+[group('dab')]
+@deploy: _prepare
+	echo "Deploying resources..."
+	just configure_dbx_profile;	
+	databricks bundle deploy --profile {{PROFILE_NAME}} --target dev;
 
 # Destroy all deployed Databricks resources in development environment
+[group('dab')]
 destroy:
-	@echo "Destroying resources..."
-	@output=$$(databricks auth env --profile $(PROFILE_NAME) 2>&1); \
-	if [[ $$output == *"Error: resolve:"* ]]; then \
-		databricks configure --profile $(PROFILE_NAME); \
-	fi
-	@databricks bundle destroy --profile $(PROFILE_NAME) --target dev;
+	echo "Destroying resources..."
+	just configure_dbx_profile;	
+	databricks bundle destroy --profile {{PROFILE_NAME}} --target dev;
 
 # Run code quality checks: ruff linting, mypy type checking, and pydoclint
 lint:
