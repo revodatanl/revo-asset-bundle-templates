@@ -19,21 +19,29 @@ _prepare:
 	@uv build > /dev/null 2>&1
 	@uv run prek run --all-files
 
+@verify_tools:
+	printf "Verifying tools on shell [$SHELL]... \n"
+	printf "running from [$(pwd)]... \n"
+	missing_tools=""; \
+	for tool in uv git databricks; do \
+		if ! command -v "$tool" >/dev/null 2>&1; then \
+			echo "Error: Prerequisite '$tool' is not installed."; \
+			missing_tools="$missing_tools $tool"; \
+		else \
+			echo "✅  $tool is installed."; \
+		fi; \
+	done; \
+	if [ -n "$missing_tools" ]; then \
+		echo "Missing tools:$$missing_tools"; \
+		exit 1; \
+	fi;
+
 # Complete project setup: sync dependencies, set up git, and pre-commit hooks
 [default]
 setup:
 	@set -e; \
-	missing_tools=""; \
-	for tool in uv git databricks; do \
-		if ! command -v $$tool >/dev/null 2>&1; then \
-			echo "❌ Error: Prerequisite '$$tool' is not installed. Please install manually."; \
-			missing_tools="$$missing_tools $$tool"; \
-		fi; \
-	done; \
-	if [ -n "$$missing_tools" ]; then \
-		echo "Exiting..."; \
-		exit 1; \
-	fi
+
+	just verify_tools;
 
 	@echo "Setting up the project..."
 	@uv sync
