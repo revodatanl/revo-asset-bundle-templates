@@ -151,97 +151,6 @@ function EnsureGitBash {
     $env:MSYS2_PATH_TYPE = "inherit"
 }
 
-function New-File([string]$path) {
-  $dir = Split-Path -Parent $path
-  if (-not (Test-Path -LiteralPath $dir)) {
-    New-Item -ItemType Directory -Path $dir -Force | Out-Null
-  }
-  if (-not (Test-Path -LiteralPath $path)) {
-    New-Item -ItemType File -Path $path -Force | Out-Null
-  }
-}
-
-function Convert-SingleQuotes([string]$s) {
-  # For single-quoted PowerShell strings, escape a single quote by doubling it
-  return $s -replace "'", "''"
-}
-
-function Add-Line([string]$path, [string]$line, [string]$comment = $null) {
-  New-File $path
-
-  $raw = Get-Content -LiteralPath $path -Raw -ErrorAction SilentlyContinue
-  if ($null -eq $raw) { $raw = "" }
-
-  $needle = $line.Trim()
-
-  $exists = $false
-  foreach ($l in ($raw -split "(`r`n|`n|`r)")) {
-    if ($l.Trim() -eq $needle) { $exists = $true; break }
-  }
-
-  if (-not $exists) {
-    $toAdd = "`r`n"
-    if ($comment) { $toAdd += "# $comment`r`n" }
-    $toAdd += "$line`r`n"
-    Add-Content -LiteralPath $path -Value $toAdd
-  }
-}
-
-function Set-DotSource([string]$hostProfilePath, [string]$targetProfilePath) {
-  # Single quotes are easiest for space-safe dot-sourcing
-  $escaped = Convert-SingleQuotes $targetProfilePath
-  $dotSourceLine = ". '$escaped'"
-  Add-Line -path $hostProfilePath -line $dotSourceLine -comment "Load shared AllHosts profile"
-}
-
-function setPowershellAlias {
-  [CmdletBinding()]
-  param()
-
-  $aliasName   = "j"
-  $aliasTarget = "just"
-
-  $existing = Get-Alias -Name $aliasName -ErrorAction SilentlyContinue
-  if ($existing -and $existing.Definition -eq $aliasTarget) {
-    Write-Host "Alias '$aliasName' is already correctly set ('$aliasTarget'). Nothing to do."
-    return
-  }
-
-  $allHostsProfile    = $PROFILE.CurrentUserAllHosts
-  $profilesDir        = Split-Path -Parent $allHostsProfile
-  $consoleHostProfile = Join-Path -Path $profilesDir -ChildPath "Microsoft.PowerShell_profile.ps1"
-  $vsCodeHostProfile  = Join-Path -Path $profilesDir -ChildPath "Microsoft.VSCode_profile.ps1"
-
-  Write-Host "Setting up PowerShell alias '$aliasName' -> '$aliasTarget'"
-
-  # 1) Ensure the shared and host profiles exist
-  New-File $allHostsProfile
-  New-File $consoleHostProfile
-  New-File $vsCodeHostProfile
-
-  # 2) Ensure both host profiles load the shared AllHosts profile
-  Set-DotSource -hostProfilePath $consoleHostProfile -targetProfilePath $allHostsProfile
-  Set-DotSource -hostProfilePath $vsCodeHostProfile  -targetProfilePath $allHostsProfile
-
-  # 3) Ensure the alias exists in AllHosts exactly once
-  $wantedAliasLine = "Set-Alias -Name $aliasName -Value $aliasTarget -Scope Global"
-  Add-Line -path $allHostsProfile -line $wantedAliasLine -comment "just shorthand"
-
-  # 4) Apply to current session (override any conflicting alias)
-  Set-Alias -Name $aliasName -Value $aliasTarget -Scope Global
-
-  # 5) Verify
-  $check = Get-Alias -Name $aliasName -ErrorAction SilentlyContinue
-  if ($check -and $check.Definition -eq $aliasTarget) {
-    Write-Host "OK: Alias '$aliasName' -> '$aliasTarget' set and persisted."
-    Write-Host "AllHosts: $allHostsProfile"
-    Write-Host "Console:  $consoleHostProfile"
-    Write-Host "VS Code:  $vsCodeHostProfile"
-  } else {
-    Write-Host "FAIL: alias '$aliasName' not set as expected."
-  }
-}
-
 $minJust = [version]::new(1,25,0)
 EnsureJustMinVersion -MinVersion $minJust
 
@@ -250,8 +159,6 @@ $gitBash = Get-GitBashPath
 $gitBashEsc = $gitBash -replace '\\', '\\\\'   # C:\x -> C:\\x
 
 Write-Output "Git Bash should be available at [$gitBash]"
-
-setPowershellAlias
 
 $localPath = Join-Path $PWD "justfile.local"
 $content = @"
