@@ -123,7 +123,7 @@ configure_dbx_profile:
 # Validate Databricks bundle configuration and resources
 [group('dab')]
 [group('ci')]
-validate: 
+validate:
 	just prepare
 	echo "Validating resources..."
 	just configure_dbx_profile;
@@ -131,7 +131,7 @@ validate:
 
 # Deploy Databricks bundle to development environment
 [group('dab')]
-deploy: 
+deploy:
 	just prepare
 	echo "Deploying resources..."
 	just configure_dbx_profile;
