@@ -81,6 +81,8 @@ jobs:
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
       - name: Verify dependencies
+        # Disabled, for debug purposes only.
+        if: false
         run: |
           bash --version
           databricks --version
