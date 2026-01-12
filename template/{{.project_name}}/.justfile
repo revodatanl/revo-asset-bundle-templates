@@ -44,7 +44,7 @@ verify_tools:
 		fi; \
 	done; \
 	if [ -n "$missing_tools" ]; then \
-		echo "Missing tools:$$missing_tools"; \
+		echo "Missing tools:$missing_tools"; \
 		exit 1; \
 	fi;
 
