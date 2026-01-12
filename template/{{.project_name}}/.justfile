@@ -1,3 +1,5 @@
+# For more information about just and how to use it, see https://just.systems/man/en/
+
 set shell := ["bash", "-cu"]
 
 set quiet
