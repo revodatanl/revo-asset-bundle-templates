@@ -9,7 +9,7 @@ PROFILE_NAME := "DEFAULT"
 [private]
 verify_just:
 	just --version
-	printf "Just is available with subcommands\n"
+	printf "✅  Just is available with subcommands\n"
 
 # List all available just recipes.
 list:
@@ -29,7 +29,7 @@ verify_tools:
 	missing_tools=""; \
 	for tool in uv git databricks; do \
 		if ! command -v "$tool" >/dev/null 2>&1; then \
-			echo "Error: Prerequisite '$tool' is not installed."; \
+			echo "❌  Error: Prerequisite '$tool' is not installed."; \
 			missing_tools="$missing_tools $tool"; \
 		else \
 			echo "✅  $tool is installed."; \
@@ -45,7 +45,7 @@ verify_tools:
 check_git_hooks:
 	hooks_path="$(git config --get core.hooksPath 2>/dev/null || true)"; \
 	if [ -n "$hooks_path" ]; then \
-		echo "Error: Git core.hooksPath is set to '$hooks_path'."; \
+		echo "❌  Error: Git core.hooksPath is set to '$hooks_path'."; \
 		echo "Please run 'git config --unset-all core.hooksPath' (use --global if set globally) and retry."; \
 		exit 1; \
 	fi; \
@@ -73,7 +73,7 @@ setup:
 	@uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push
 	@uv run prek autoupdate
 
-	@echo "Setup completed successfully!"
+	@echo "✅  Setup completed successfully!"
 
 # Clean project artifacts and rebuild virtual environment
 clean:
@@ -94,7 +94,7 @@ clean:
 	find . -name ".coverage" -type f -delete 2>/dev/null || true
 	echo "Rebuilding the project..."
 	uv sync
-	echo "Cleanup completed."
+	echo "✅  Cleanup completed."
 
 # Run pre-commit hooks, build package, and execute tests with coverage
 test: _prepare
@@ -142,4 +142,4 @@ lint:
 	-uv run mypy .
 	echo "Running pydoclint..."
 	-uv run pydoclint .
-	echo "Linting completed!"
+	echo "✅  Linting completed!"
