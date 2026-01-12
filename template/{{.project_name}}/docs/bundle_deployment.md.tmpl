@@ -1,6 +1,7 @@
 # Deployment
 
-[Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/) enable software engineering best practices for data and AI projects through source control, code review, testing, and CI/CD. Bundles define your entire project—structure, tests, and deployment—as source files, making collaboration seamless.
+[Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/) enable software engineering best practices for data and AI projects through source control, code review, testing, and CI/CD.
+Bundles define your entire project—structure, tests, and deployment—as source files, making collaboration seamless.
 
 A bundle contains:
 
@@ -59,7 +60,7 @@ The bundle deployment process follows a progressive promotion strategy:
 1. **Development** (`dev`)
    - Manual deployment from feature branches
    - Isolated testing environment
-   - Deployment through command: `databricks bundle deploy` (or `make deploy`)
+   - Deployment through command: `databricks bundle deploy` (or `just deploy`)
 
 2. **Test** (`test`)
    - Automatic deployment on updated repo tag

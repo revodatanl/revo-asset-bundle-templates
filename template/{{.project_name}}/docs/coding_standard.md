@@ -40,19 +40,19 @@ Each commit message consists of a **header**, an optional **body**, and an optio
 
 The type must be one of the following:
 
-| Type       | Description | Version Impact |
-|------------|-------------|----------------|
-| `feat`     | A new feature | Minor (`1.0.0` → `1.1.0`) |
-| `fix`      | A bug fix | Patch (`1.0.0` → `1.0.1`) |
-| `docs`     | Documentation only changes | None |
-| `style`    | Changes that do not affect the meaning of the code (white-space, formatting, etc.) | None |
+| Type | Description | Version Impact |
+| ---- | ----------- | -------------- |
+| `feat` | A new feature | Minor (`1.0.0` → `1.1.0`) |
+| `fix` | A bug fix | Patch (`1.0.0` → `1.0.1`) |
+| `docs` | Documentation only changes | None |
+| `style` | Changes that do not affect the meaning of the code (white-space, formatting, etc.) | None |
 | `refactor` | A code change that neither fixes a bug nor adds a feature | None |
-| `perf`     | A code change that improves performance | None |
-| `test`     | Adding missing tests or correcting existing tests | None |
-| `build`    | Changes that affect the build system or external dependencies | None |
-| `ci`       | Changes to our CI configuration files and scripts | None |
-| `chore`    | Other changes that don't modify src or test files | None |
-| `revert`   | Reverts a previous commit | None |
+| `perf` | A code change that improves performance | None |
+| `test` | Adding missing tests or correcting existing tests | None |
+| `build` | Changes that affect the build system or external dependencies | None |
+| `ci` | Changes to our CI configuration files and scripts | None |
+| `chore` | Other changes that don't modify src or test files | None |
+| `revert` | Reverts a previous commit | None |
 
 #### Scope
 

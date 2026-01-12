@@ -19,29 +19,31 @@ Ensure you have the following tools installed:
 - **[uv](https://docs.astral.sh/uv/)** - Fast Python package manager and project management
 - **[git](https://git-scm.com/)** - Version control system
 - **[Databricks CLI](https://docs.databricks.com/dev-tools/cli/index.html)** - Command-line interface for Databricks operations
-- **[make](https://www.gnu.org/software/make/)** - Build automation tool (very convenient during development)
+- **[just](https://just.systems/man/en/packages.html)** - Build automation tool (very convenient during development)
 
-**Platform Support**: This project is designed for **Linux** and **macOS**. Windows users should use a **DevContainer** or **[Windows Subsystem for Linux (WSL)](docs/wsl.md) (recommended)** for the best development experience.
+**Platform Support**: This project is designed for **Linux**, **macOS** and **Windows**.
 
 ## Quick Start
 
 Set up a fully configured development environment by running:
 
 ```bash
-make
+just
 ```
 
-You may need to update the `PROFILE_NAME` variable in the `Makefile` to match your Databricks profile name.  In addition, ensure that the host URL in `databricks.yml` matches your Databricks profile URL.
+You may need to update the `PROFILE_NAME` variable in the `.justfile` to match your Databricks profile name.  In addition, ensure that the host URL in `databricks.yml` matches your Databricks profile URL.
 
-Additional `make` commands are available for various tasks:
+Additional `just` commands are available for various tasks:
 
 ```bash
-make lint     # Run linting
-make test     # Run tests
-make validate # Validate bundle on default workspace
-make deploy   # Deploy bundle to default workspace
-make destroy  # Destroy bundle resources on default workspace
+just lint     # Run linting
+just test     # Run tests
+just validate # Validate bundle on default workspace
+just deploy   # Deploy bundle to default workspace
+just destroy  # Destroy bundle resources on default workspace
 ```
+
+Run `just list` to see all available commands.
 
 ## Documentation
 
@@ -51,7 +53,6 @@ Comprehensive documentation can be found in the [documentation](docs/README.md).
 - **[Development](docs/development.md)** - Project structure, configuration, code quality, and (testing on) Databricks Connect
 - **[Bundle Deployment](docs/bundle_deployment.md)** - Databricks Asset Bundle deployment, Git strategy, and CI/CD
 - **[Coding Standards](docs/coding_standard.md)** - Code style and conventions
-- **[WSL](docs/wsl.md)** - Instructions for Windows Subsystem for Linux setup
 
 ## Troubleshooting
 
