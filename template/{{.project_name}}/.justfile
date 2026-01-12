@@ -6,22 +6,28 @@ import? 'justfile.local'
 
 PROFILE_NAME := "DEFAULT"
 
-[private]
+# verify that just is available and can use just subcommands
+[group('just')]
 verify_just:
 	just --version
 	printf "✅  Just is available with subcommands\n"
 
 # List all available just recipes.
+[group('just')]
 list:
 	printf "\033[33m\n";
 	just --list --unsorted --alias-style right
 
 # Internal target: sync dependencies, build package, and run pre-commit hooks
-_prepare:
-	@uv sync
-	@uv build > /dev/null 2>&1
-	@uv run prek run --all-files
+[private]
+[group('pyproject')]
+[group('ci')]
+prepare:
+	uv sync
+	uv build > /dev/null 2>&1
+	uv run prek run --all-files
 
+# Verify that the required tools are installed.
 [group('setup')]
 verify_tools:
 	printf "Verifying tools on shell [$SHELL]... \n"
@@ -55,27 +61,28 @@ check_git_hooks:
 [group('setup')]
 [default]
 setup:
-	@set -e; \
+	set -e; \
 
 	just verify_tools;
 
-	@echo "Setting up the project..."
-	@uv sync
+	echo "Setting up the project..."
+	uv sync
 
-	@if [ ! -d ".git" ]; then \
+	if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
 		git init -b main > /dev/null; \
 	fi
 
 	just check_git_hooks;
 
-	@echo "Setting up pre-commit hooks (with prek)..."
-	@uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push
-	@uv run prek autoupdate
+	echo "Setting up pre-commit hooks (with prek)..."
+	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push
+	uv run prek autoupdate
 
-	@echo "✅  Setup completed successfully!"
+	echo "✅  Setup completed successfully!"
 
 # Clean project artifacts and rebuild virtual environment
+[group('pyproject')]
 clean:
 	echo "Uninstalling local packages..."
 	rm -rf uv.lock
@@ -97,10 +104,14 @@ clean:
 	echo "✅  Cleanup completed."
 
 # Run pre-commit hooks, build package, and execute tests with coverage
-test: _prepare
+[group('pyproject')]
+[group('ci')]
+test:
+	just prepare
 	@echo "Running tests..."
 	@uv run pytest -v tests --cov=src --cov-report=term
 
+# Make sure the databricks profile is configured.
 [group('setup')]
 [group('dab')]
 configure_dbx_profile:
@@ -111,14 +122,17 @@ configure_dbx_profile:
 
 # Validate Databricks bundle configuration and resources
 [group('dab')]
-validate: _prepare
+[group('ci')]
+validate: 
+	just prepare
 	echo "Validating resources..."
 	just configure_dbx_profile;
 	databricks bundle validate --profile {{PROFILE_NAME}} --target dev;
 
 # Deploy Databricks bundle to development environment
 [group('dab')]
-deploy: _prepare
+deploy: 
+	just prepare
 	echo "Deploying resources..."
 	just configure_dbx_profile;
 	databricks bundle deploy --profile {{PROFILE_NAME}} --target dev;
@@ -131,6 +145,8 @@ destroy:
 	databricks bundle destroy --profile {{PROFILE_NAME}} --target dev;
 
 # Run code quality checks: ruff linting, mypy type checking, and pydoclint
+[group('ci')]
+[group('pyproject')]
 lint:
 	echo "Linting the project..."
 	uv sync
