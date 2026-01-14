@@ -73,7 +73,7 @@ jobs:
             "project_description": "This project is generated using our own RevoData Asset Bundle Templates.",
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
-            "include_example_jobs": "${{ matrix.include_example_jobs }}"
+            "include_example_jobs": "${{ matrix.include_example_jobs }}",
             "support_windows": "${{ matrix.support_windows }}"
           }' > init_params.json
 
