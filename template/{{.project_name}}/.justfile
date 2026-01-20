@@ -43,8 +43,6 @@ setup:
 
 # Clean project artifacts and rebuild virtual environment. Does not reset local git nor local settings.
 clean:
-	echo "Uninstalling local packages...";
-	rm -rf uv.lock;
 	echo "Cleaning up project artifacts...";
 	find . \( \
 		-name "__pycache__" -o \
@@ -55,12 +53,13 @@ clean:
 		-name ".venv" -o \
 		-name "dist" -o \
 		-name "site" -o \
-		-name "*.egg-info" \) \
-		-type d -exec rm -rf {} + 2>/dev/null || true;
-	find . -name ".coverage" -type f -delete 2>/dev/null || true;
+		-name "*.egg-info" -o \
+		-name "uv.lock" -o \
+		-name ".coverage" \) \
+		-exec rm -rf {} + 2>/dev/null || true;
 	echo "Rebuilding the project...";
 	uv sync;
-	echo "✅  Cleanup completed.";
+	echo "✅  Cleanup completed!";
 
 # Run code quality checks: ruff linting, mypy type checking, and pydoclint
 lint:
@@ -87,7 +86,6 @@ test:
 validate target="dev":
 	just prepare;
 	echo "Validating resources...";
-	just configure_dbx_profile;
 	databricks bundle validate --profile {{ PROFILE_NAME }} --target {{ target }};
 
 # Deploy the Databricks bundle, targets development environment by default
@@ -95,14 +93,12 @@ validate target="dev":
 deploy target="dev":
 	just prepare;
 	echo "Deploying resources...";
-	just configure_dbx_profile;
 	databricks bundle deploy --profile {{ PROFILE_NAME }} --target {{ target }};
 
 # Destroy all deployed Databricks resources against target environment, targets development environment by default
 [group('dab')]
 destroy target="dev":
 	echo "Destroying resources...";
-	just configure_dbx_profile;
 	databricks bundle destroy --profile {{ PROFILE_NAME }} --target {{ target }};
 
 # sync dependencies, build package, and run pre-commit hooks. Used by recipes test, validate and deploy
@@ -110,15 +106,6 @@ destroy target="dev":
 prepare:
 	uv sync;
 	uv build > /dev/null 2>&1;
-	uv run prek run --all-files;
-
-# Make sure the databricks profile is configured.
-[private]
-configure_dbx_profile:
-	output="$(databricks auth env --profile {{ PROFILE_NAME }} 2>&1)"; \
-	if [[ "$output" == *"Error: resolve:"* ]];then \
-		databricks configure --profile {{ PROFILE_NAME }}; \
-	fi;
 
 # List all available just recipes in the order they appear in this file with aliasses on the same line.
 [private]
