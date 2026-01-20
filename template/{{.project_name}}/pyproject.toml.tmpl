@@ -6,9 +6,9 @@ authors = [
     { name = "{{.author}}", email = "{{.email}}" },
 ]
 readme = "README.md"
-requires-python = "==3.12.3"
+requires-python = ">=3.12,<4.0"
 scripts = { "main" = "{{template `package_name` .}}.main:main" }
-classifiers = ["Programming Language :: Python :: 3.12.3", "Operating System :: OS Independent"]
+classifiers = ["Programming Language :: Python :: 3.12", "Operating System :: OS Independent"]
 dependencies = []
 
 [dependency-groups]
@@ -38,7 +38,7 @@ package = true
 target-version = "py312"
 line-length = 100
 extend-include = ["*.ipynb"]
-extend-exclude = [".vscode", "scratch"]
+extend-exclude = ["scratch"]
 builtins = ["dbutils", "display", "spark"]
 
 [tool.ruff.lint]
@@ -71,6 +71,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+".vscode/**/*.pyi" = [
+    "F403",     # "Blanket import used" - needed for type stubs
+]
 "notebooks/**/*.py" = [
     "D100",     # "Missing docstring in public module" - not needed for Databricks notebooks
     "INP001",   # "Part of an implicit namespace package. Add an `__init__.py`" - not needed for Databricks notebooks
