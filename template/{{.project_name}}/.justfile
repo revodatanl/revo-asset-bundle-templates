@@ -6,16 +6,17 @@ set shell := ["bash", "-cu"]
 # Setting the justfile as quiet means commands are no longer printed to the terminal, without having to mark them all as silent (`@`) individually.
 set quiet := true
 
-# This imports the local justfile (gitignored) if it exists. This is useful for local overrides, such as a different Databricks profile name.
-import? 'justfile.local'
+# Makes sure settings from your local .env file are loaded.
+set dotenv-load
 
-PROFILE_NAME := "DEFAULT"
+# These import local justfiles (gitignored) if they exists. This is useful for local overrides, such as a different Databricks profile name.
+import? '.just\shell.justlocal'
 
 # Complete project setup: check tools, sync dependencies, set up git and pre-commit hooks
 [default]
 setup:
 	set -e; \
-	echo "🛈  running on shell [$SHELL] from [$(pwd)]"; \
+	echo "ℹ️   running on shell [$SHELL] from [$(pwd)]"; \
 	echo "Checking for required tools..."; \
 	missing_tools=""; \
 	for tool in uv git databricks; do \
@@ -80,6 +81,9 @@ test:
 	just prepare;
 	echo "Running tests...";
 	uv run pytest -v tests --cov=src --cov-report=term;
+
+# Loads the PROFILE_NAME for the Databricks CLI from your environment, or defaults to "DEFAULT" if not set.
+PROFILE_NAME := env("PROFILE_NAME", "DEFAULT")
 
 # Validate Databricks bundle configuration and resources, targets development environment by default
 [group('dab')]
