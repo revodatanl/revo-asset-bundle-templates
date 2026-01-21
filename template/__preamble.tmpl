@@ -24,3 +24,7 @@ This file only provides template directives; it is skipped for the actual output
 {{else}}
   {{skip "{{.project_name}}/resources/.gitkeep"}}
 {{end}}
+
+{{if not (eq .support_windows "yes")}}
+  {{skip "{{.project_name}}/.just/just_bash.ps1"}}
+{{end}}

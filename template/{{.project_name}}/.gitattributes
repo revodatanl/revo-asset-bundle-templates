@@ -1,0 +1,3 @@
+# Force LF for justfiles everywhere
+**/justfile.local text eol=lf
+**/*.justfile text eol=lf

@@ -8,6 +8,9 @@ on:
 jobs:
   ci-dabs:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
@@ -17,27 +20,33 @@ jobs:
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
+            support_windows: no
           - os: macos-latest
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
+            support_windows: no
           - os: windows-latest
             cicd_provider: github
             cloud_provider: azure
             include_example_jobs: yes
+            support_windows: yes
           # Non-default configuration
           - os: ubuntu-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
+            support_windows: no
           - os: macos-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
+            support_windows: no
           - os: windows-latest
             cicd_provider: azure
             cloud_provider: aws
             include_example_jobs: no
+            support_windows: yes
 
     env:
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -52,6 +61,9 @@ jobs:
           ignore-empty-workdir: true
           enable-cache: false
 
+      - name: Install Just
+        uses: extractions/setup-just@v3
+
       - name: Create init parameters JSON
         run: |
           echo '{
@@ -61,7 +73,8 @@ jobs:
             "project_description": "This project is generated using our own RevoData Asset Bundle Templates.",
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
-            "include_example_jobs": "${{ matrix.include_example_jobs }}"
+            "include_example_jobs": "${{ matrix.include_example_jobs }}",
+            "support_windows": "${{ matrix.support_windows }}"
           }' > init_params.json
 
       - name: Initialize Databricks Asset Bundle from template
@@ -74,22 +87,27 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-      # The following functionality tests are not supported on Windows
-      - name: Build and test Databricks Asset Bundle with Makefile
-        if: matrix.os != 'windows-latest'
+      - name: Run PowerShell script
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd revo-dabs-test-project
+          pwsh -NoProfile -ExecutionPolicy Bypass -File "./.just/just_bash.ps1"
+          cd ..
+
+      - name: Build and test Databricks Asset Bundle with justfile
         run: |
           cd revo-dabs-test-project
           echo ""
           echo "=================================================================="
           echo "=============== BUILD PROJECT (WITH DEFAULT TARGET) =============="
           echo "=================================================================="
-          make
+          just
 
           echo ""
           echo "=================================================================="
           echo "=============== RE-BUILD PROJECT (WITH SETUP TARGET) ============="
           echo "=================================================================="
-          make setup
+          just setup
 
           echo ""
           echo "=================================================================="
@@ -105,26 +123,26 @@ jobs:
           echo "=================================================================="
           echo "======================== LINT PROJECT ============================"
           echo "=================================================================="
-          make lint
+          just lint
 
           echo ""
           echo "=================================================================="
           echo "========================= RUN TESTS =============================="
           echo "=================================================================="
-          make test
+          just test
 
 
           echo ""
           echo "=================================================================="
           echo "======================== CLEAN PROJECT ==========================="
           echo "=================================================================="
-          make clean
+          just clean
 
           echo ""
           echo "=================================================================="
           echo "================ RE-BUILD PROJECT (AFTER CLEAN) =================="
           echo "=================================================================="
-          make
+          just
 
           echo ""
           echo "=================================================================="

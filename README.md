@@ -10,6 +10,7 @@
 
 [![CI](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/ci-dabs.yml/badge.svg)](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/ci-dabs.yml)
 [![semantic-release](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/semantic-release.yml)
+![just](https://img.shields.io/badge/%F0%9F%A4%96%20just-%3E1.25-000000?style=plastic&color=lime&link=https%3A%2F%2Fjust.systems%2Fman%2Fen%2F)
 
 The `RevoData Asset Bundle Templates` repo contains our own custom templates for Databricks Asset Bundles. The template provides a complete development environment for new Databricks projects, including CI/CD pipelines, pre-commit hooks, semantic release, and example pipelines and jobs that can directly be deployed to Databricks.
 
@@ -45,7 +46,7 @@ This template solves common pain points in Databricks project setup:
     When initializing your project, you'll be prompted to answer several questions. These configurations will be used to customize your project:
 
     | Parameter | Description | Example |
-    |-----------|-------------|---------------------|
+    | --------- | ----------- | ------- |
     | `project_name` | Name of the project (usually the same as the repository name) | `revo-dabs-test-project` |
     | `author` | Name of the author | `Thomas Brouwer` |
     | `email` | Email address of the author | `thomas.brouwer@revodata.nl` |
