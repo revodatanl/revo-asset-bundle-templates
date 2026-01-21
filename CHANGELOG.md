@@ -1,3 +1,10 @@
+# [0.19.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.7...v0.19.0) (2026-01-21)
+
+
+### Features
+
+* justfile alternative 1-1 makefile code ([#107](https://github.com/revodatanl/revo-asset-bundle-templates/issues/107)) ([01bd2b7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/01bd2b73674d33f8dc751d3f4e1ea88333921907))
+
 ## [0.18.7](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.6...v0.18.7) (2025-12-05)
 
 
