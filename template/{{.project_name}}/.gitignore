@@ -189,6 +189,3 @@ spark-warehouse/
 .databricks/
 scratch/**
 !scratch/README.md
-
-# Ignore local settings for just
-**/justfile.local

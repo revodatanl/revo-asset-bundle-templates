@@ -55,13 +55,14 @@ This template solves common pain points in Databricks project setup:
     | `cicd_provider` | CI/CD provider (skipped if `include_cicd` = `no`) | `github/azure` |
     | `cloud_provider` | Cloud provider (skipped if `include_cicd` = `no`) | `azure/aws` |
     | `include_example_jobs` | Whether to include example pipelines and jobs | `yes/no` |
+    | `support_windows` | Whether to include Windows support | `yes/no` |
 
     > Previously, specifying a `package_name` was required. The `package_name` is now automatically generated from the `project_name` by replacing dashes (`-`) with underscores (`_`) following Python package naming conventions.
 
 3. Set up a fully configured development environment by running:
 
     ```bash
-    make
+    just
     ```
 
 ## Developing the Template

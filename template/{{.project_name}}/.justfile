@@ -6,16 +6,20 @@ set shell := ["bash", "-cu"]
 # Setting the justfile as quiet means commands are no longer printed to the terminal, without having to mark them all as silent (`@`) individually.
 set quiet := true
 
-# This imports the local justfile (gitignored) if it exists. This is useful for local overrides, such as a different Databricks profile name.
-import? 'justfile.local'
+# Makes sure settings from your local .env file are loaded.
+set dotenv-load
 
-PROFILE_NAME := "DEFAULT"
+# These import local justfiles (gitignored) if they exists. This is useful for local overrides, such as a different shell or custom recipes.
+import? '.just\shell.justlocal'
+
+# Imports Databricks Asset Bundle related recipes if they are deployed.
+import? '.just\dab.justfile'
 
 # Complete project setup: check tools, sync dependencies, set up git and pre-commit hooks
 [default]
 setup:
 	set -e; \
-	echo "🛈  running on shell [$SHELL] from [$(pwd)]"; \
+	echo "ℹ️   running on shell [$SHELL] from [$(pwd)]"; \
 	echo "Checking for required tools..."; \
 	missing_tools=""; \
 	for tool in uv git databricks; do \
@@ -77,35 +81,10 @@ lint:
 
 # Run pre-commit hooks, build package, and execute tests with coverage
 test:
-	just prepare;
-	echo "Running tests...";
-	uv run pytest -v tests --cov=src --cov-report=term;
-
-# Validate Databricks bundle configuration and resources, targets development environment by default
-[group('dab')]
-validate target="dev":
-	just prepare;
-	echo "Validating resources...";
-	databricks bundle validate --profile {{ PROFILE_NAME }} --target {{ target }};
-
-# Deploy the Databricks bundle, targets development environment by default
-[group('dab')]
-deploy target="dev":
-	just prepare;
-	echo "Deploying resources...";
-	databricks bundle deploy --profile {{ PROFILE_NAME }} --target {{ target }};
-
-# Destroy all deployed Databricks resources against target environment, targets development environment by default
-[group('dab')]
-destroy target="dev":
-	echo "Destroying resources...";
-	databricks bundle destroy --profile {{ PROFILE_NAME }} --target {{ target }};
-
-# sync dependencies, build package, and run pre-commit hooks. Used by recipes test, validate and deploy
-[private]
-prepare:
 	uv sync;
 	uv build > /dev/null 2>&1;
+	echo "Running tests...";
+	uv run pytest -v tests --cov=src --cov-report=term;
 
 # List all available just recipes in the order they appear in this file with aliasses on the same line.
 [private]

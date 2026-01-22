@@ -2,6 +2,7 @@
   "recommendations": [
     "charliermarsh.ruff",
     "databricks.databricks",
+    "esbenp.prettier-vscode",
     "ms-python.mypy-type-checker",
     "ms-python.vscode-pylance",
     "ms-toolsai.jupyter",
