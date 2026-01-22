@@ -22,7 +22,8 @@ setup:
 		echo "Setting up git..."; \
 		git init -b main > /dev/null; \
 	fi;
-	uv pip install prek --system;
+	uv tool install commitizen
+	uv tool install prek;
 	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push;
 	uv run prek autoupdate;
 
@@ -46,6 +47,9 @@ clean:
 		echo "Cleaning up template .git folder..."; \
 		rm -rf "{{template_dir}}/.git"; \
 	fi;
+
+check-commit:
+	uv run cz check;
 
 # Run all precommit hooks.
 prek:
