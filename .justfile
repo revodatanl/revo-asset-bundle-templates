@@ -24,7 +24,7 @@ setup:
 	fi;
 	uv tool install commitizen
 	uv tool install prek;
-	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push;
+	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push --overwrite;
 	uv run prek autoupdate;
 
 # Cleanup template .git folder if it exists

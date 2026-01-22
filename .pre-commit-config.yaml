@@ -11,6 +11,7 @@ repos:
     -   id: commitizen
     -   id: commitizen-branch
         stages: [pre-push]
+        args: [--rev-range, origin/main..HEAD]
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
