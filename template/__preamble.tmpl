@@ -4,7 +4,7 @@ This file only provides template directives; it is skipped for the actual output
 
 {{skip "__preamble"}}
 
-{{if (eq .setup_type = "minimal")}}
+{{if (eq .setup_type "minimal")}}
 
   {{skip "{{.project_name}}/.github"}}
   {{skip "{{.project_name}}/.azure"}}
@@ -16,7 +16,7 @@ This file only provides template directives; it is skipped for the actual output
 
 {{else}}
 
-  {{if (eq .setup_type = "default")}}
+  {{if (eq .setup_type "default")}}
 
     {{skip "{{.project_name}}/resources/.gitkeep"}}
 
