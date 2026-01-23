@@ -161,5 +161,5 @@
       }
     }
   },
-  "success_message": "\nDefault workspace: {{workspace_host}}\n(auto-detected, update the 'databricks.yml' and configure 'PROFILE_NAME' in a `.env` file)\n\n✨ Your new project has been created in the '{{.project_name}}' directory!\n"
+  "success_message": "\nDefault workspace: {{workspace_host}}\n(auto-detected)\n \\033[38;5;208m→ Update the 'databricks.yml' and configure 'PROFILE_NAME' in a `.env` file \\033[0m\n\n✨ Your new project has been created in the '{{.project_name}}' directory!\n"
 }
