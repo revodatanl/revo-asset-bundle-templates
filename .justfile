@@ -59,6 +59,7 @@ clean:
 	fi;
 	just restore-hooks;
 
+# Removes the content of the .git/hooks folder and installs prek hooks.
 [private]
 restore-hooks:
 	echo "Removing all existing hooks and installing desired ones...";
