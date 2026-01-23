@@ -79,8 +79,8 @@ cz:
 prepare-commit:
 	git fetch;
 	git pull;
-	uv run prek run trailing-whitespace -a;
-	uv run prek run end-of-file-fixer -a;
+	uv run prek run trailing-whitespace -a -q;
+	uv run prek run end-of-file-fixer -a -q;
 
 # Check if the commit message follows the conventional commit format. This will also happen when you try to commit. Running it via the CLI can return a more detailed error message.
 check-commit:
