@@ -76,13 +76,17 @@ list:
 	just --list --unsorted --alias-style right;
 
 # Perform all operations to get your changes to the remote repository. Type should be any of [fix,feat,docs,style,refactor,perf,test,build,c]
-sync type message scope="":
+sync type message scope="" skip_ci="false":
 	echo "Preparing commit...";
 	just prepare-commit >/dev/null 2>&1; \
+	skipci=""; \
+	if [ {{skip_ci}} = "true" ]; then \
+		skipci=" [skip ci]"; \
+	fi; \
 	if [ -z "{{scope}}" ]; then \
-		git commit -m "{{ lowercase(type)}}: {{ lowercase(message) }}" -a -s; \
+		git commit -m "{{ lowercase(type)}}: {{ lowercase(message) }}$skipci" -a -s; \
 	else \
-		git commit -m "{{ lowercase(type)}}({{ lowercase(scope) }}): {{ lowercase(message) }}" -a -s; \
+		git commit -m "{{ lowercase(type)}}({{ lowercase(scope) }}): {{ lowercase(message) }}$skipci" -a -s; \
 	fi; \
 	echo "Pushing your changes to the remote repository..."; \
 	git push >/dev/null 2>&1; \
