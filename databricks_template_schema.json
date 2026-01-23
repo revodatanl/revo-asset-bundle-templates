@@ -159,6 +159,29 @@
           }
         ]
       }
+    },
+    "include_dab_recipes": {
+      "type": "string",
+      "default": "yes",
+      "enum": ["no", "yes"],
+      "description": "Include `just` recipes for Databricks Bundle commands",
+      "order": 40,
+      "skip_prompt_if": {
+        "anyOf": [
+          {"properties": {
+              "setup_type": {
+                "const": "default"
+              }
+            }
+          },
+          {"properties": {
+              "setup_type": {
+                "const": "minimal"
+              }
+            }
+          }
+        ]
+      }
     }
   },
   "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected)\n→ Update the 'databricks.yml' and configure 'PROFILE_NAME' in a `.env` file\n\n✨ Your new project has been created in the '{{.project_name}}' directory!\n"
