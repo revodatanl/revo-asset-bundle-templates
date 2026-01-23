@@ -35,7 +35,7 @@
     },
     "include_cicd": {
       "type": "string",
-      "default": "{{if (eq .setup_type `minimal`)}}no{{else}}yes{{end}}",
+      "default": "yes",
       "enum": ["yes", "no"],
       "description": "Include CI/CD pipelines?",
       "order": 10,
@@ -116,7 +116,7 @@
     },
     "include_example_jobs": {
       "type": "string",
-      "default": "{{if (eq .setup_type `minimal`)}}no{{else}}yes{{end}}",
+      "default": "yes",
       "enum": ["no", "yes"],
       "description": "Include example pipelines and jobs in '{{.project_name}}{{path_separator}}resources'",
       "order": 20,
@@ -139,7 +139,7 @@
     },
     "support_windows": {
       "type": "string",
-      "default": "{{if (eq .setup_type `minimal`)}}no{{else}}yes{{end}}",
+      "default": "yes",
       "enum": ["no", "yes"],
       "description": "Support Windows",
       "order": 30,
