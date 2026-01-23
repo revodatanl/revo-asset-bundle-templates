@@ -83,3 +83,28 @@ High level walk-through:
 | `accelerators\*` | This directory is a work in progress and is not currently used. This is not a default component of Databricks custom bundle templates. |
 
 This repository also provides a `justfile` which can help you properly setup git hooks, which will keep your commits compliant with contributing-rules.
+
+### databricks_template_schema
+
+An elaborate official example can be found in [an official Databricks Github repository](https://github.com/databricks/mlops-stacks/blob/main/databricks_template_schema.json).
+
+For our installation it is important to understand at least the following topics:
+
+1. The `order` determines the order in which the prompts are displayed, but also when values are available.
+
+    This means you can't use the input from a prompt in any dynamic property or `skip_prompt_if` for a propertie with a lower ordernumber.
+    To make it simple to expand the template without having to re-order everything, we have ordered the prompts in the following way:
+    - 0-10: Fixed prompts, always required.
+    - 11-20: CI/CD related prompts.
+    - 20-30: DAB content related prompts.
+    - 30-40: Supported platform/system related prompts.
+    - 40-50: (just)-tooling related prompts.
+
+2. `skip_prompt_if` is used to hide questions that are no longer relevant for the user.
+
+    At the moment, this is the only property that allows preventing further prompts. It supports either a single property with a constant value comparison, or `anyOf` where multiple values have to match exactly in order for the prompt to show.
+
+3. Prefer string values based on an `enum` whenever possible, this significantly increases user experience.
+
+    For prompts where the `enum` property was set, there is no support for dynamic default values (derived from earlier input).
+    This means that for cases where the prompt is optional, but a hardcoded default value is not always applicable, you have to provide a workaround in the `template_variables` file or in the template `__preamble`.
