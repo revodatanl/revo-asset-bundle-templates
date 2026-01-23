@@ -66,3 +66,20 @@ git branch -d branch-name
 ```
 
 That's it, you made it! 🐣⭐⭐
+
+## Repository and framework structure
+
+This repository creates a `Databricks custom bundle template` which uses `Go package templating` syntax.
+
+Find the official documentation [at docs.databricks.com](https://docs.databricks.com/aws/en/dev-tools/bundles/templates#custom-bundle-templates).
+
+High level walk-through:
+
+| File | Description |
+| --- | --- |
+| `databricks_template_schema.json` | Contains the cli prompts that allow the user to input values for the variables. |
+| `template\__preamble.tmpl` | Contains rules that define what is included when the templated is rendered. |
+| `library\template_variables.tmpl` | Contains variable manipulations that are not directly derived from the cli-input and can be used throughout the template. |
+| `accelerators\*` | This directory is a work in progress and is not currently used. This is not a default component of Databricks custom bundle templates. |
+
+This repository also provides a `justfile` which can help you properly setup git hooks, which will keep your commits compliant with contributing-rules.
