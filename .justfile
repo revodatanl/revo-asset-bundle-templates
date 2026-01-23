@@ -66,13 +66,13 @@ sync type message scope="":
 	else \
 		git commit -m "{{ lowercase(type)}}({{ lowercase(scope) }}): {{ lowercase(message) }}" -a -s; \
 	fi; \
-	git push;
+	git push >/dev/null 2>&1;
 
 # Run the commitizen cli interface to properly insert a commit.
 cz:
 	just prepare-commit >/dev/null 2>&1; \
 	uv run cz commit -a -s; \
-	git push;
+	git push >/dev/null 2>&1;
 
 # Make sure your branch is up-to-date and fix trailing whitespaces and end-of-files automatically.
 [private]
