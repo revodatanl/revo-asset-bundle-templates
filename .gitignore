@@ -194,3 +194,4 @@ scratch/**
 
 # justlocals
 **/*.justlocal
+temporary_deployment/

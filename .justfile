@@ -111,3 +111,31 @@ prepare-commit:
 # Check if the commit message follows the conventional commit format. This will also happen when you try to commit. Running it via the CLI can return a more detailed error message.
 check-commit:
 	uv run cz check;
+
+# Validates whether the templates justfile contains valid recipes.
+[group('template')]
+just-test:
+	cd "template/{{{{.project_name}}"; \
+	just --list >/dev/null;
+	echo "✅  Justfile is valid!"
+
+# Initializes a new Databricks Asset Bundle project using the template.
+[group('template')]
+test-deploy:
+	-rm -rf temporary_deployment;
+	mkdir -p temporary_deployment;
+	echo '{ \
+		"project_name": "temporary_deployment", \
+		"project_description": "This project is generated using our own RevoData Asset Bundle Templates.", \
+		"author": "Thomas Brouwer", \
+		"email": "thomas.brouwer@revodata.nl", \
+		"setup_type": "tailored", \
+		"include_cicd": "yes", \
+		"cicd_provider": "azure", \
+		"cloud_provider": "azure", \
+		"include_example_jobs": "yes", \
+		"support_windows": "yes" \
+		}' > temporary_deployment/init_params.json;
+	echo "Initializing a new Databricks Asset Bundle from template...";
+	databricks bundle init . --config-file "temporary_deployment/init_params.json";
+	-rm -rf temporary_deployment;
