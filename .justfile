@@ -59,3 +59,22 @@ prek:
 list:
 	printf "\033[33m\n";
 	just --list --unsorted --alias-style right;
+
+# Perform all operations to get your changes to the remote repository. Type should be any of [fix,feat,docs,style,refactor,perf,test,build,c]
+sync type message scope="":
+	set -e; \
+	git fetch; \
+	git pull; \
+	if [ -z "{{scope}}" ]; then \
+		uv run cz commit --type "{{type}}" --message "{{message}}" -a -- -s; \
+	else \
+		uv run cz commit --type "{{type}}" --scope "{{scope}}" --message "{{message}}" -a -- -s; \
+	fi; \
+	git push;
+
+cz:
+	set -e; \
+	git fetch; \
+	git pull; \
+	uv run cz commit -a -s; \
+	git push;
