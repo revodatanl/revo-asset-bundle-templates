@@ -48,9 +48,6 @@ clean:
 		rm -rf "{{template_dir}}/.git"; \
 	fi;
 
-check-commit:
-	uv run cz check;
-
 # Run all precommit hooks.
 prek:
 	uv run prek run -a;
@@ -62,19 +59,29 @@ list:
 
 # Perform all operations to get your changes to the remote repository. Type should be any of [fix,feat,docs,style,refactor,perf,test,build,c]
 sync type message scope="":
-	set -e; \
-	git fetch; \
-	git pull; \
+	echo "Preparing commit...";
+	just prepare-commit >/dev/null 2>&1; \
 	if [ -z "{{scope}}" ]; then \
-		uv run cz commit --type "{{type}}" --message "{{message}}" -a -- -s; \
+		git commit -m "{{ lowercase(type)}}: {{ lowercase(message) }}" -a -s; \
 	else \
-		uv run cz commit --type "{{type}}" --scope "{{scope}}" --message "{{message}}" -a -- -s; \
+		git commit -m "{{ lowercase(type)}}({{ lowercase(scope) }}): {{ lowercase(message) }}" -a -s; \
 	fi; \
 	git push;
 
+# Run the commitizen cli interface to properly insert a commit.
 cz:
-	set -e; \
-	git fetch; \
-	git pull; \
+	just prepare-commit >/dev/null 2>&1; \
 	uv run cz commit -a -s; \
 	git push;
+
+# Make sure your branch is up-to-date and fix trailing whitespaces and end-of-files automatically.
+[private]
+prepare-commit:
+	git fetch;
+	git pull;
+	uv run prek run trailing-whitespace -a;
+	uv run prek run end-of-file-fixer -a;
+
+# Check if the commit message follows the conventional commit format. This will also happen when you try to commit. Running it via the CLI can return a more detailed error message.
+check-commit:
+	uv run cz check;
