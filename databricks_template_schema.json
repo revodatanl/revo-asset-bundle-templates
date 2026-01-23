@@ -121,13 +121,20 @@
       "description": "Include example pipelines and jobs in '{{.project_name}}{{path_separator}}resources'",
       "order": 20,
       "skip_prompt_if": {
-        "not": {
-          "properties": {
-            "setup_type": {
-              "const": "tailored"
+        "anyOf": [
+          {"properties": {
+              "setup_type": {
+                "const": "default"
+              }
+            }
+          },
+          {"properties": {
+              "setup_type": {
+                "const": "minimal"
+              }
             }
           }
-        }
+        ]
       }
     },
     "support_windows": {
