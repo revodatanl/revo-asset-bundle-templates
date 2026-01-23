@@ -3,12 +3,14 @@ repos:
     rev: v0.9.0
     hooks:
     -   id: pre-commit-update
+        stages: [pre-commit]
         args:
         -   --verbose
 -   repo: https://github.com/commitizen-tools/commitizen
     rev: v4.12.1
     hooks:
     -   id: commitizen
+        stages: [commit-msg]
     -   id: commitizen-branch
         stages: [pre-push]
         args: [--rev-range, origin/main..HEAD]
@@ -18,8 +20,11 @@ repos:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
     -   id: check-yaml
+        stages: [pre-commit]
     -   id: check-json
+        stages: [pre-commit]
 -   repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.0
     hooks:
     -   id: gitleaks
+        stages: [pre-commit]
