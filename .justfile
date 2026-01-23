@@ -18,14 +18,24 @@ template_dir := "template/{{.project_name}}/"
 # DEFAULT: This will setup the git hooks.
 [default]
 setup:
+	just loud "Running setup...";
 	if [ ! -d ".git" ]; then \
 		echo "Setting up git..."; \
 		git init -b main > /dev/null; \
 	fi;
+	echo "Installing uv tools..."
 	uv tool install commitizen
 	uv tool install prek;
-	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push --overwrite;
+	just restore-hooks;
 	uv run prek autoupdate;
+	just loud "✅  Setup complete!";
+
+# Echoes a message in a box.
+[private]
+loud msg:
+	printf '─%.0s' $(seq 1 "${COLUMNS:-80}");
+	printf " {{msg}}\n";
+	printf '─%.0s' $(seq 1 "${COLUMNS:-80}");
 
 # Cleanup template .git folder if it exists
 clean:
@@ -47,6 +57,13 @@ clean:
 		echo "Cleaning up template .git folder..."; \
 		rm -rf "{{template_dir}}/.git"; \
 	fi;
+	just restore-hooks;
+
+[private]
+restore-hooks:
+	echo "Removing all existing hooks and installing desired ones...";
+	rm -rf .git/hooks && mkdir .git/hooks;
+	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push --overwrite;
 
 # Run all precommit hooks.
 prek:
@@ -68,7 +85,7 @@ sync type message scope="":
 	fi; \
 	echo "Pushing your changes to the remote repository..."; \
 	git push >/dev/null 2>&1; \
-	echo " Sync completed!"
+	just loud "✅  Sync completed!"
 
 # Run the commitizen cli interface to properly insert a commit.
 cz:
@@ -76,7 +93,7 @@ cz:
 	uv run cz commit -a -s; \
 	echo "Pushing your changes to the remote repository..."; \
 	git push >/dev/null 2>&1; \
-	echo " Sync completed!";
+	echo "✅  Sync completed!";
 
 # Make sure your branch is up-to-date and fix trailing whitespaces and end-of-files automatically.
 [private]
