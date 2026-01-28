@@ -45,19 +45,32 @@ This template solves common pain points in Databricks project setup:
 
     When initializing your project, you'll be prompted to answer several questions. These configurations will be used to customize your project:
 
-    | Parameter | Description | Example |
-    | --------- | ----------- | ------- |
-    | `project_name` | Name of the project (usually the same as the repository name) | `revo-dabs-test-project` |
-    | `author` | Name of the author | `Thomas Brouwer` |
-    | `email` | Email address of the author | `thomas.brouwer@revodata.nl` |
-    | `project_description` | Brief description of the project | `This project is generated using our own RevoData Asset Bundle Templates.` |
-    | `include_cicd` | Set up CI/CD pipeines | `yes/no` |
-    | `cicd_provider` | CI/CD provider (skipped if `include_cicd` = `no`) | `github/azure` |
-    | `cloud_provider` | Cloud provider (skipped if `include_cicd` = `no`) | `azure/aws` |
-    | `include_example_jobs` | Whether to include example pipelines and jobs | `yes/no` |
-    | `support_windows` | Whether to include Windows support | `yes/no` |
+    | Parameter | Description | Example | Condition |
+    | --------- | ----------- | ------- | --------- |
+    | `project_name` | Name of the project (usually the same as the repository name) | `revo-dabs-test-project` | |
+    | `project_description` | Brief description of the project | `This project is generated using our own RevoData Asset Bundle Templates.` | |
+    | `author` | Name of the author | `Thomas Brouwer` | |
+    | `email` | Email address of the author | `thomas.brouwer@revodata.nl` | |
+    | `setup_type` | Type of setup (`default`, `minimal` or `tailored`) | `default` | |
+    | `include_cicd` | Set up CI/CD pipeines | `yes/no` | `setup_type` = `tailored` |
+    | `cicd_provider` | CI/CD provider | `github/azure` | `include_cicd` = `yes` |
+    | `cloud_provider` | Cloud provider (skipped if `include_cicd` = `no`) | `azure/aws` | `include_cicd` = `yes` |
+    | `include_example_jobs` | Whether to include example pipelines and jobs | `yes/no` | `setup_type` = `tailored` |
+    | `support_windows` | Whether to include Windows support | `yes/no` | `setup_type` = `tailored` |
+    | `include_dab_recipes` | Whether to include just recipes for Databricks Bundle commands | `yes/no` | `setup_type` = `tailored` |
 
     > Previously, specifying a `package_name` was required. The `package_name` is now automatically generated from the `project_name` by replacing dashes (`-`) with underscores (`_`) following Python package naming conventions.
+
+    This table contains the values passed for setup types `default` and `minimal`. When `setup_type` is `tailored`, the values are determined by the user's choices.
+
+    | Parameter | Default | Minimal |
+    | --------- | ------- | ------- |
+    | `include_cicd` | `yes` | `no` |
+    | `cicd_provider` | `azure` | `` |
+    | `cloud_provider` | `azure` | `` |
+    | `include_example_jobs` | `yes` | `no` |
+    | `support_windows` | `yes` | `no` |
+    | `include_dab_recipes` | `yes` | `no` |
 
 3. Set up a fully configured development environment by running:
 

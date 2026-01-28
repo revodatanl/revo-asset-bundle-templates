@@ -9,42 +9,80 @@
       "pattern": "^[A-Za-z0-9_-]+$",
       "pattern_match_failure_message": "Project name must consist of letters, numbers, dashes, or underscores."
     },
+    "project_description": {
+      "type": "string",
+      "description": "Description of the project",
+      "order": 2
+    },
     "author": {
       "type": "string",
       "description": "Author",
-      "order": 2
+      "order": 3
     },
     "email": {
       "type": "string",
       "description": "Email address of the author",
       "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
       "pattern_match_failure_message": "Invalid email address.",
-      "order": 3
-    },
-    "project_description": {
-      "type": "string",
-      "description": "Description of the project",
       "order": 4
+    },
+    "setup_type": {
+      "type": "string",
+      "default": "default",
+      "enum": ["default", "minimal", "tailored"],
+      "description": "Select how this template should be configured.",
+      "order": 5
     },
     "include_cicd": {
       "type": "string",
       "default": "yes",
       "enum": ["yes", "no"],
-      "description": "Set up CI/CD pipelines",
-      "order": 5
+      "description": "Include CI/CD pipelines?",
+      "order": 10,
+      "skip_prompt_if": {
+        "anyOf": [
+          {"properties": {
+              "setup_type": {
+                "const": "default"
+              }
+            }
+          },
+          {"properties": {
+              "setup_type": {
+                "const": "minimal"
+              }
+            }
+          }
+        ]
+      }
     },
     "cicd_provider": {
       "type": "string",
-      "default": "github",
+      "default": "azure",
       "enum": ["github", "azure"],
       "description": "Select CI/CD platform",
-      "order": 6,
+      "order": 11,
       "skip_prompt_if": {
-        "properties": {
-          "include_cicd": {
-            "const": "no"
+        "anyOf": [
+          {"properties": {
+              "setup_type": {
+                "const": "default"
+              }
+            }
+          },
+          {"properties": {
+              "setup_type": {
+                "const": "minimal"
+              }
+            }
+          },
+          {"properties": {
+              "include_cicd": {
+                "const": "no"
+              }
+            }
           }
-        }
+        ]
       }
     },
     "cloud_provider": {
@@ -52,29 +90,99 @@
       "default": "azure",
       "enum": ["azure", "aws"],
       "description": "Select cloud provider",
-      "order": 7,
+      "order": 12,
       "skip_prompt_if": {
-        "properties": {
-          "include_cicd": {
-            "const": "no"
+        "anyOf": [
+          {"properties": {
+              "setup_type": {
+                "const": "default"
+              }
+            }
+          },
+          {"properties": {
+              "setup_type": {
+                "const": "minimal"
+              }
+            }
+          },
+          {"properties": {
+              "include_cicd": {
+                "const": "no"
+              }
+            }
           }
-        }
+        ]
       }
     },
     "include_example_jobs": {
       "type": "string",
-      "default": "no",
+      "default": "yes",
       "enum": ["no", "yes"],
       "description": "Include example pipelines and jobs in '{{.project_name}}{{path_separator}}resources'",
-      "order": 8
+      "order": 20,
+      "skip_prompt_if": {
+        "anyOf": [
+          {"properties": {
+              "setup_type": {
+                "const": "default"
+              }
+            }
+          },
+          {"properties": {
+              "setup_type": {
+                "const": "minimal"
+              }
+            }
+          }
+        ]
+      }
     },
     "support_windows": {
       "type": "string",
-      "default": "no",
+      "default": "yes",
       "enum": ["no", "yes"],
       "description": "Support Windows",
-      "order": 9
+      "order": 30,
+      "skip_prompt_if": {
+        "anyOf": [
+          {"properties": {
+              "setup_type": {
+                "const": "default"
+              }
+            }
+          },
+          {"properties": {
+              "setup_type": {
+                "const": "minimal"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "include_dab_recipes": {
+      "type": "string",
+      "default": "yes",
+      "enum": ["no", "yes"],
+      "description": "Include `just` recipes for Databricks Bundle commands",
+      "order": 40,
+      "skip_prompt_if": {
+        "anyOf": [
+          {"properties": {
+              "setup_type": {
+                "const": "default"
+              }
+            }
+          },
+          {"properties": {
+              "setup_type": {
+                "const": "minimal"
+              }
+            }
+          }
+        ]
+      }
     }
   },
-  "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected, update in 'databricks.yml' and configure 'PROFILE_NAME' in the Makefile)\n\n✨ Your new project has been created in the '{{.project_name}}' directory!"
+  "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected)\n→ To alter the bundle target, update the 'databricks.yml' and configure 'PROFILE_NAME' in a `.env` file\n\n✨ Your new project has been created in the '{{.project_name}}' directory!\n"
 }
