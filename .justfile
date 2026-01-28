@@ -107,5 +107,8 @@ test-deploy profile=PROFILE_NAME:
 		just setup; \
 	fi; \
 	git add . ;\
-	git commit -m "feat: initial commit"
-	#-rm -rf temporary_deployment;
+	git commit -m "feat: initial commit"; \
+	just lint; \
+	just clean; \
+	just;
+	-rm -rf temporary_deployment;
