@@ -12,6 +12,11 @@ validate target=DEFAULT_TARGET:
 	echo "Validating resources...";
 	databricks bundle validate --profile {{ PROFILE_NAME }} --target {{ target }};
 
+# Provides a list of actions that would be performed against a target when the bundle would be deployed.
+[group('dab')]
+plan target=DEFAULT_TARGET:
+	databricks bundle plan --profile {{ PROFILE_NAME }} --target {{ target }};
+
 # Deploy the Databricks bundle, targets development environment by default
 [group('dab')]
 deploy target=DEFAULT_TARGET:
@@ -22,6 +27,21 @@ deploy target=DEFAULT_TARGET:
 
 # Destroy all deployed Databricks resources against target environment, targets development environment by default
 [group('dab')]
+[confirm('Are you certain you want to destroy all resources?')]
 destroy target=DEFAULT_TARGET:
 	echo "Destroying resources...";
-	databricks bundle destroy --profile {{ PROFILE_NAME }} --target {{ target }};
+	databricks bundle destroy --profile {{ PROFILE_NAME }} --target {{ target }} --auto-approve;
+
+# Provide overview of the currently deployed resources.
+[group('dab')]
+summary target=DEFAULT_TARGET:
+	echo "Deployed resources:";
+	databricks bundle summary --profile {{ PROFILE_NAME }} --target {{ target }};
+alias bundle-info := summary
+
+# Open a resource in the browser, you will be prompted to select the desired resource.
+[group('dab')]
+open target=DEFAULT_TARGET:
+	databricks bundle open --profile {{ PROFILE_NAME }} --target {{ target }};
+alias go-to-bundle := open
+alias bundle-open := open
