@@ -6,9 +6,12 @@
 # This sets the default shell to use for all recipes.
 set shell := ["bash", "-cu"]
 
+set dotenv-load
+
 # These import local justfiles (gitignored) if they exists. This is useful for local overrides, such as a different shell or custom recipes.
 # At Revo template level, create manually when needed.
 import? 'shell.justlocal'
+import? 'personal.justlocal'
 
 # Setting the justfile as quiet means commands are no longer printed to the terminal, without having to mark them all as silent (`@`) individually.
 set quiet := true
@@ -19,12 +22,7 @@ template_dir := "template/{{.project_name}}/"
 [default]
 setup:
 	just loud "Running setup...";
-	if [ ! -d ".git" ]; then \
-		echo "Setting up git..."; \
-		git init -b main > /dev/null; \
-	fi;
 	echo "Installing uv tools..."
-	uv tool install commitizen
 	uv tool install prek;
 	just restore-hooks;
 	uv run prek autoupdate;
@@ -66,62 +64,25 @@ restore-hooks:
 	rm -rf .git/hooks && mkdir .git/hooks;
 	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push --overwrite;
 
-# Run all precommit hooks.
-prek:
-	uv run prek run -a;
-
 # List all available recipes in original justfile order.
+[private]
 list:
 	printf "\033[33m\n";
 	just --list --unsorted --alias-style right;
 
-# Perform all operations to get your changes to the remote repository. Type should be any of [fix,feat,docs,style,refactor,perf,test,build,c]
-sync type message scope="" skip_ci="false":
-	echo "Preparing commit...";
-	just prepare-commit >/dev/null 2>&1; \
-	skipci=""; \
-	if [ {{skip_ci}} = "true" ]; then \
-		skipci=" [skip ci]"; \
-	fi; \
-	if [ -z "{{scope}}" ]; then \
-		git commit -m "{{ lowercase(type)}}: {{ lowercase(message) }}$skipci" -a -s; \
-	else \
-		git commit -m "{{ lowercase(type)}}({{ lowercase(scope) }}): {{ lowercase(message) }}$skipci" -a -s; \
-	fi; \
-	echo "Pushing your changes to the remote repository..."; \
-	git push >/dev/null 2>&1; \
-	just loud "✅  Sync completed!"
-
-# Run the commitizen cli interface to properly insert a commit.
-cz:
-	just prepare-commit >/dev/null 2>&1; \
-	uv run cz commit -a -s; \
-	echo "Pushing your changes to the remote repository..."; \
-	git push >/dev/null 2>&1; \
-	echo "✅  Sync completed!";
-
-# Make sure your branch is up-to-date and fix trailing whitespaces and end-of-files automatically.
-[private]
-prepare-commit:
-	git fetch;
-	git pull;
-	uv run prek run trailing-whitespace -a -q;
-	uv run prek run end-of-file-fixer -a -q;
-
-# Check if the commit message follows the conventional commit format. This will also happen when you try to commit. Running it via the CLI can return a more detailed error message.
-check-commit:
-	uv run cz check;
-
 # Validates whether the templates justfile contains valid recipes.
 [group('template')]
-just-test:
+test-justfile:
 	cd "template/{{{{.project_name}}"; \
 	just --list >/dev/null;
-	echo "✅  Justfile is valid!"
+	echo "✅  Justfile is valid!";
+alias just-test := test-justfile
+
+PROFILE_NAME := env("PROFILE_NAME", "DEFAULT")
 
 # Initializes a new Databricks Asset Bundle project using the template.
 [group('template')]
-test-deploy:
+test-deploy profile=PROFILE_NAME:
 	-rm -rf temporary_deployment;
 	mkdir -p temporary_deployment;
 	echo '{ \
@@ -134,8 +95,17 @@ test-deploy:
 		"cicd_provider": "azure", \
 		"cloud_provider": "azure", \
 		"include_example_jobs": "yes", \
-		"support_windows": "yes" \
+		"support_windows": "yes", \
+		"include_dab_recipes": "yes" \
 		}' > temporary_deployment/init_params.json;
 	echo "Initializing a new Databricks Asset Bundle from template...";
-	databricks bundle init . --config-file "temporary_deployment/init_params.json";
-	-rm -rf temporary_deployment;
+	databricks bundle init . --config-file "temporary_deployment/init_params.json" -p {{ PROFILE_NAME }};
+	cd "temporary_deployment"; \
+	if [ "{{ os_family() }}" = "windows" ]; then \
+		pwsh .just/just_bash.ps1; \
+	else \
+		just setup; \
+	fi; \
+	git add . ;\
+	git commit -m "feat: initial commit"
+	#-rm -rf temporary_deployment;

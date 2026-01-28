@@ -184,5 +184,5 @@
       }
     }
   },
-  "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected)\n→ Update the 'databricks.yml' and configure 'PROFILE_NAME' in a `.env` file\n\n✨ Your new project has been created in the '{{.project_name}}' directory!\n"
+  "success_message": "\nDefault workspace: {{workspace_host}} (auto-detected)\n→ To alter the bundle target, update the 'databricks.yml' and configure 'PROFILE_NAME' in a `.env` file\n\n✨ Your new project has been created in the '{{.project_name}}' directory!\n"
 }
