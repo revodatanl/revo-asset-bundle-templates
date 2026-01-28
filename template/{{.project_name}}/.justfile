@@ -9,6 +9,9 @@ set quiet := true
 # Makes sure settings from your local .env file are loaded.
 set dotenv-load
 
+# We have to set the temp directory to prevent OS specific fallbacks that are not always available.
+set tempdir := ".just"
+
 # These import local justfiles (gitignored) if they exists. This is useful for local overrides, such as a different shell or custom recipes.
 import? '.just\shell.justlocal'
 
@@ -17,49 +20,51 @@ import? '.just\dab.justfile'
 
 # Complete project setup: check tools, sync dependencies, set up git and pre-commit hooks
 [default]
+[script]
 setup:
-	set -e; \
-	echo "ℹ️   running on shell [$SHELL] from [$(pwd)]"; \
-	echo "Checking for required tools..."; \
-	missing_tools=""; \
-	for tool in uv git databricks; do \
-		if ! command -v "$tool" >/dev/null 2>&1; then \
-			echo "   ❌  Error: Prerequisite '$tool' is not installed."; \
-			missing_tools="$missing_tools $tool"; \
-		else \
-			echo "   ✅  $tool is installed."; \
-		fi; \
-	done; \
-	if [ -n "$missing_tools" ]; then \
-		echo "❌  Missing tools:$missing_tools"; \
-		exit 1; \
-	fi; \
-	echo "Setting up the project..."; \
-	uv sync; \
-	if [ ! -d ".git" ]; then \
-		echo "Setting up git..."; \
-		git init -b main > /dev/null; \
-	fi; \
-	echo "Setting up pre-commit hooks (with prek)..."; \
-	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push; \
-	uv run prek autoupdate; \
+	set -e;
+	echo "ℹ️   running on shell [$SHELL] from [$(pwd)]";
+	echo "Checking for required tools...";
+	missing_tools="";
+	for tool in uv git databricks; do
+		if ! command -v "$tool" >/dev/null 2>&1; then
+			echo "   ❌  Error: Prerequisite '$tool' is not installed.";
+			missing_tools="$missing_tools $tool";
+		else
+			echo "   ✅  $tool is installed.";
+		fi;
+	done;
+	if [ -n "$missing_tools" ]; then
+		echo "❌  Missing tools:$missing_tools";
+		exit 1;
+	fi;
+	echo "Setting up the project...";
+	uv sync;
+	if [ ! -d ".git" ]; then
+		echo "Setting up git...";
+		git init -b main > /dev/null;
+	fi;
+	echo "Setting up pre-commit hooks (with prek)...";
+	uv run prek install --hook-type pre-commit --hook-type commit-msg --hook-type pre-push;
+	uv run prek autoupdate;
 	echo "✅  Setup completed successfully!";
 
 # Clean project artifacts and rebuild virtual environment. Does not reset local git nor local settings.
+[script]
 clean:
 	echo "Cleaning up project artifacts...";
-	find . \( \
-		-name "__pycache__" -o \
-		-name ".ipynb_checkpoints" -o \
-		-name ".mypy_cache" -o \
-		-name ".pytest_cache" -o \
-		-name ".ruff_cache" -o \
-		-name ".venv" -o \
-		-name "dist" -o \
-		-name "site" -o \
-		-name "*.egg-info" -o \
-		-name "uv.lock" -o \
-		-name ".coverage" \) \
+	find . \(
+		-name "__pycache__" -o
+		-name ".ipynb_checkpoints" -o
+		-name ".mypy_cache" -o
+		-name ".pytest_cache" -o
+		-name ".ruff_cache" -o
+		-name ".venv" -o
+		-name "dist" -o
+		-name "site" -o
+		-name "*.egg-info" -o
+		-name "uv.lock" -o
+		-name ".coverage" \)
 		-exec rm -rf {} + 2>/dev/null || true;
 	echo "Rebuilding the project...";
 	uv sync;

@@ -27,7 +27,7 @@ deploy target=DEFAULT_TARGET:
 
 # Destroy all deployed Databricks resources against target environment, targets development environment by default
 [group('dab')]
-[confirm('Are you certain you want to destroy all resources?')]
+[confirm('Are you certain you want to destroy all resources? (y/n)')]
 destroy target=DEFAULT_TARGET:
 	echo "Destroying resources...";
 	databricks bundle destroy --profile {{ PROFILE_NAME }} --target {{ target }} --auto-approve;
@@ -41,6 +41,7 @@ alias bundle-info := summary
 
 # Open a resource in the browser, you will be prompted to select the desired resource.
 [group('dab')]
+[script]
 open target=DEFAULT_TARGET:
 	databricks bundle open --profile {{ PROFILE_NAME }} --target {{ target }};
 alias go-to-bundle := open
