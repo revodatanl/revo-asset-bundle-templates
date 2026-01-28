@@ -172,6 +172,7 @@ set script-interpreter := [
   "exec bash \"`$(cygpath -u \"`$1\")\"",
   "--"
 ]
+
 "@
 [System.IO.File]::WriteAllText(
   $localPath,
