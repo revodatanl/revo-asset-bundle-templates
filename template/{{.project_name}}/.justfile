@@ -3,6 +3,9 @@
 # This sets the default shell to use for all recipes.
 set shell := ["bash", "-cu"]
 
+# Import shell settings which could be overwritten by the user.
+import? '.just/shell_settings.justfile'
+
 # Setting the justfile as quiet means commands are no longer printed to the terminal, without having to mark them all as silent (`@`) individually.
 set quiet := true
 
@@ -11,9 +14,6 @@ set dotenv-load
 
 # We have to set the temp directory to prevent OS specific fallbacks that are not always available.
 set tempdir := ".just"
-
-# These import local justfiles (gitignored) if they exists. This is useful for local overrides, such as a different shell or custom recipes.
-import? '.just\shell.justlocal'
 
 # Imports Databricks Asset Bundle related recipes if they are deployed.
 import? '.just\dab.justfile'
