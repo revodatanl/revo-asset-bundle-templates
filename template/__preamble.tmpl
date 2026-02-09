@@ -4,27 +4,53 @@ This file only provides template directives; it is skipped for the actual output
 
 {{skip "__preamble"}}
 
-{{if not (eq .include_cicd "yes")}}
+{{if (eq .setup_type "minimal")}}
+
   {{skip "{{.project_name}}/.github"}}
   {{skip "{{.project_name}}/.azure"}}
-{{else}}
-  {{if not (eq .cicd_provider "github")}}
-    {{skip "{{.project_name}}/.github"}}
-  {{end}}
-  {{if not (eq .cicd_provider "azure")}}
-    {{skip "{{.project_name}}/.azure"}}
-  {{end}}
-{{end}}
-
-{{if not (eq .include_example_jobs "yes")}}
   {{skip "{{.project_name}}/notebooks/example_job.py"}}
   {{skip "{{.project_name}}/notebooks/pipelines"}}
   {{skip "{{.project_name}}/resources/example-job.yml"}}
   {{skip "{{.project_name}}/resources/example-pipeline-job.yml"}}
-{{else}}
-  {{skip "{{.project_name}}/resources/.gitkeep"}}
-{{end}}
+  {{skip "{{.project_name}}/.just"}}
 
-{{if not (eq .support_windows "yes")}}
-  {{skip "{{.project_name}}/.just/just_bash.ps1"}}
+{{else}}
+
+  {{if (eq .setup_type "default")}}
+
+    {{skip "{{.project_name}}/resources/.gitkeep"}}
+
+  {{else}}
+
+    {{if not (eq .include_cicd "yes") }}
+      {{skip "{{.project_name}}/.github"}}
+      {{skip "{{.project_name}}/.azure"}}
+    {{else}}
+      {{if not (eq .cicd_provider "github")}}
+        {{skip "{{.project_name}}/.github"}}
+      {{end}}
+      {{if not (eq .cicd_provider "azure")}}
+        {{skip "{{.project_name}}/.azure"}}
+      {{end}}
+    {{end}}
+
+    {{if not (eq .include_example_jobs "yes") }}
+      {{skip "{{.project_name}}/notebooks/example_job.py"}}
+      {{skip "{{.project_name}}/notebooks/pipelines"}}
+      {{skip "{{.project_name}}/resources/example-job.yml"}}
+      {{skip "{{.project_name}}/resources/example-pipeline-job.yml"}}
+    {{else}}
+      {{skip "{{.project_name}}/resources/.gitkeep"}}
+    {{end}}
+
+    {{if not (eq .support_windows "yes") }}
+      {{skip "{{.project_name}}/.just/just_bash.ps1"}}
+    {{end}}
+
+    {{if not (eq .include_dab_recipes "yes") }}
+      {{skip "{{.project_name}}/.just/dab.justfile"}}
+    {{end}}
+
+  {{end}}
+
 {{end}}

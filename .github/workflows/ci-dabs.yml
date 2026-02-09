@@ -68,9 +68,11 @@ jobs:
         run: |
           echo '{
             "project_name": "revo-dabs-test-project",
+            "project_description": "This project is generated using our own RevoData Asset Bundle Templates.",
             "author": "Thomas Brouwer",
             "email": "thomas.brouwer@revodata.nl",
-            "project_description": "This project is generated using our own RevoData Asset Bundle Templates.",
+            "setup_type": "tailored",
+            "include_cicd": "yes",
             "cicd_provider": "${{ matrix.cicd_provider }}",
             "cloud_provider": "${{ matrix.cloud_provider }}",
             "include_example_jobs": "${{ matrix.include_example_jobs }}",
