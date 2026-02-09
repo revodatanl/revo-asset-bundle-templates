@@ -1,3 +1,10 @@
+# [0.20.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.19.0...v0.20.0) (2026-02-09)
+
+
+### Features
+
+* add dab recipe for plan and fix destroy recipe ([#110](https://github.com/revodatanl/revo-asset-bundle-templates/issues/110)) ([dd0bbe2](https://github.com/revodatanl/revo-asset-bundle-templates/commit/dd0bbe2adcc8d1db1d7d74d02b1ff176f077873c))
+
 # [0.19.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.7...v0.19.0) (2026-01-21)
 
 
