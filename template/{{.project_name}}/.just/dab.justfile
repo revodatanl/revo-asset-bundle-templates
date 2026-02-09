@@ -27,10 +27,10 @@ deploy target=DEFAULT_TARGET:
 
 # Destroy all deployed Databricks resources against target environment, targets development environment by default
 [group('dab')]
-[confirm('Are you certain you want to destroy all resources? (y/n)')]
+[script]
 destroy target=DEFAULT_TARGET:
 	echo "Destroying resources...";
-	databricks bundle destroy --profile {{ PROFILE_NAME }} --target {{ target }} --auto-approve;
+	databricks bundle destroy --profile {{ PROFILE_NAME }} --target {{ target }};
 
 # Provide overview of the currently deployed resources.
 [group('dab')]
