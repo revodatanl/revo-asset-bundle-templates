@@ -80,9 +80,10 @@ alias just-test := test-justfile
 
 PROFILE_NAME := env("PROFILE_NAME", "DEFAULT")
 
-# Initializes a new Databricks Asset Bundle project using the template.
+# Initializes a new Databricks Asset Bundle project using the template. Tests whether the template is valid and passes checks.
 [group('template')]
 test-deploy profile=PROFILE_NAME:
+	echo '(re)Creating "temporary_deployment" folder...';
 	-rm -rf temporary_deployment;
 	mkdir -p temporary_deployment;
 	echo '{ \
@@ -100,15 +101,20 @@ test-deploy profile=PROFILE_NAME:
 		}' > temporary_deployment/init_params.json;
 	echo "Initializing a new Databricks Asset Bundle from template...";
 	databricks bundle init . --config-file "temporary_deployment/init_params.json" -p {{ PROFILE_NAME }};
+	echo "Switching to deployed template folder and running setup...";
 	cd "temporary_deployment"; \
 	if [ "{{ os_family() }}" = "windows" ]; then \
 		pwsh .just/just_bash.ps1; \
 	else \
 		just setup; \
 	fi; \
+	echo "Checking if pre-commit hooks pass...";\
 	git add . ;\
-	git commit -m "feat: initial commit"; \
+	git commit -m "feat: initial commit";
+	echo "Checking additional just commands...";\
 	just lint; \
 	just clean; \
 	just;
+	echo "Removing temporary deployment folder...";
 	-rm -rf temporary_deployment;
+	echo "Done!";
