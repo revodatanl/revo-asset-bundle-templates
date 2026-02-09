@@ -1,17 +1,22 @@
 {
   "autoDocstring.docstringFormat": "numpy",
   "files.associations": {
-    "*.sql": "sql"
+    "*.sql": "sql",
+    "*.justlocal": "just",
+    "*.justfile": "just"
   },
   "files.exclude": {
     "**/*.egg-info": true,
     "**/__pycache__": true,
-    ".pytest_cache": true
+    ".pytest_cache": true,
+    ".*": true,
+    "dist": true,
+    "uv.lock": true,
+    "release.config.mjs": true
   },
   "jupyter.interactiveWindow.cellMarker.codeRegex": "^# COMMAND ----------|^# Databricks notebook source|^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])",
   "jupyter.interactiveWindow.cellMarker.default": "# COMMAND ----------",
   "jupyter.notebookFileRoot": "${workspaceFolder}",
-  "makefile.configureOnOpen": true,
   "notebook.formatOnSave.enabled": true,
   "notebook.codeActionsOnSave": {
     "source.fixAll": "explicit",
@@ -38,10 +43,18 @@
     }
   },
   "[markdown]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[just]": {
+    "editor.insertSpaces": false,
+    "editor.tabSize": 4
   }
 }
