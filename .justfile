@@ -97,24 +97,33 @@ test-deploy profile=PROFILE_NAME:
 		"cloud_provider": "azure", \
 		"include_example_jobs": "yes", \
 		"support_windows": "yes", \
-		"include_dab_recipes": "yes" \
+		"include_dab_recipes": "yes", \
+		"empower_vscode": "no" \
 		}' > temporary_deployment/init_params.json;
 	echo "Initializing a new Databricks Asset Bundle from template...";
 	databricks bundle init . --config-file "temporary_deployment/init_params.json" -p {{ PROFILE_NAME }};
 	echo "Switching to deployed template folder and running setup...";
 	cd "temporary_deployment"; \
+	just -f ../.justfile run-temporary-deployment-tests;
+	echo "Removing temporary deployment folder...";
+	-rm -rf temporary_deployment;
+	echo "Done!";
+
+[group('template')]
+[no-cd]
+[private]
+run-temporary-deployment-tests:
+	set -e;
 	if [ "{{ os_family() }}" = "windows" ]; then \
 		pwsh .just/just_bash.ps1; \
 	else \
 		just setup; \
-	fi; \
-	echo "Checking if pre-commit hooks pass...";\
-	git add . ;\
+	fi;
+	echo "Creating temporary local git..."
+	git add . 2>/dev/null;
+	echo "Checking if pre-commit hooks pass...";
 	git commit -m "feat: initial commit";
-	echo "Checking additional just commands...";\
-	just lint; \
-	just clean; \
-	just;
-	echo "Removing temporary deployment folder...";
-	-rm -rf temporary_deployment;
-	echo "Done!";
+	echo "Checking additional just commands...";
+	just lint;
+	just clean;
+	echo "✅  All recipes passed!";

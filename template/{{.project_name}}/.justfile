@@ -56,21 +56,21 @@ setup:
 [script]
 clean:
 	echo "Cleaning up project artifacts...";
-	find . \(
-		-name "__pycache__" -o
-		-name ".ipynb_checkpoints" -o
-		-name ".mypy_cache" -o
-		-name ".pytest_cache" -o
-		-name ".ruff_cache" -o
-		-name ".venv" -o
-		-name "dist" -o
-		-name "site" -o
-		-name "*.egg-info" -o
-		-name "uv.lock" -o
-		-name ".coverage" \)
+	find . \( \
+		-name "__pycache__" -o \
+		-name ".ipynb_checkpoints" -o \
+		-name ".mypy_cache" -o \
+		-name ".pytest_cache" -o \
+		-name ".ruff_cache" -o \
+		-name ".venv" -o \
+		-name "dist" -o \
+		-name "site" -o \
+		-name "*.egg-info" -o \
+		-name "uv.lock" -o \
+		-name ".coverage" \) \
 		-exec rm -rf {} + 2>/dev/null || true;
 	echo "Rebuilding the project...";
-	uv sync;
+	uv sync 2>/dev/null;
 	echo "✅  Cleanup completed!";
 
 # Run code quality checks: ruff linting, mypy type checking, and pydoclint
