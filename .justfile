@@ -6,6 +6,7 @@
 # This sets the default shell to use for all recipes.
 set shell := ["bash", "-cu"]
 
+# Make sure variables from an optional .env file are loaded.
 set dotenv-load
 
 # These import local justfiles (gitignored) if they exists. This is useful for local overrides, such as a different shell or custom recipes.
@@ -103,12 +104,12 @@ test-deploy profile=PROFILE_NAME:
 	echo "Initializing a new Databricks Asset Bundle from template...";
 	databricks bundle init . --config-file "temporary_deployment/init_params.json" -p {{ PROFILE_NAME }};
 	echo "Switching to deployed template folder and running setup...";
-	cd "temporary_deployment"; \
-	just -f ../.justfile run-temporary-deployment-tests;
+	cd "temporary_deployment" && just -f ../.justfile run-temporary-deployment-tests;
 	echo "Removing temporary deployment folder...";
 	-rm -rf temporary_deployment;
 	echo "Done!";
 
+# This recipe is used to test the template. It is a seperate recipe because the content needs to run from a subdirectory.
 [group('template')]
 [no-cd]
 [private]
@@ -119,7 +120,7 @@ run-temporary-deployment-tests:
 	else \
 		just setup; \
 	fi;
-	echo "Creating temporary local git..."
+	echo "Creating temporary local git...";
 	git add . 2>/dev/null;
 	echo "Checking if pre-commit hooks pass...";
 	git commit -m "feat: initial commit";
