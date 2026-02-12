@@ -7,12 +7,16 @@ install-extensions:
 		echo "Install it from VS Code Command Palette: Shell Command: Install 'code' command in PATH" >&2;
 		exit 1;
 	fi;
-	mapfile -t exts < <(
-		sed -n '/"recommendations"[[:space:]]*:[[:space:]]*\[/,/\]/p' "$EXT_FILE" \
+	exts=();
+	tmp_file="${TMPDIR:-/tmp}/vscode-exts.$$";
+	sed -n '/"recommendations"[[:space:]]*:[[:space:]]*\[/,/\]/p' "$EXT_FILE" \
 		| grep -oE '"[A-Za-z0-9][A-Za-z0-9._-]*\.[A-Za-z0-9][A-Za-z0-9._-]*"' \
 		| tr -d '"' \
-		| awk '!seen[$0]++'
-	);
+		| awk '!seen[$0]++' > "$tmp_file";
+	while IFS= read -r ext; do
+		exts+=("$ext");
+	done < "$tmp_file";
+	rm -f "$tmp_file";
 	echo "Installing ${#exts[@]} recommended VS Code extensions from $EXT_FILE";
 	extargs=();
 	for ext in "${exts[@]}"; do

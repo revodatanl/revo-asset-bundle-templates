@@ -99,7 +99,7 @@ test-deploy profile=PROFILE_NAME:
 		"include_example_jobs": "yes", \
 		"support_windows": "yes", \
 		"include_dab_recipes": "yes", \
-		"empower_vscode": "no" \
+		"empower_vscode": "yes" \
 		}' > temporary_deployment/init_params.json;
 	echo "Initializing a new Databricks Asset Bundle from template...";
 	databricks bundle init . --config-file "temporary_deployment/init_params.json" -p {{ PROFILE_NAME }};
