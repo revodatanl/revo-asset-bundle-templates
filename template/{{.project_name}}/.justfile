@@ -67,6 +67,7 @@ clean:
 		-name "site" -o \
 		-name "*.egg-info" -o \
 		-name "uv.lock" -o \
+		-name "htmlcov" -o \
 		-name ".coverage" \) \
 		-exec rm -rf {} + 2>/dev/null || true;
 	sleep 2;
