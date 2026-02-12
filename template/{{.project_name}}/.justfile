@@ -70,7 +70,7 @@ clean:
 		-name ".coverage" \) \
 		-exec rm -rf {} + 2>/dev/null || true;
 	echo "Rebuilding the project...";
-	uv sync 2>/dev/null;
+	uv sync;
 	echo "✅  Cleanup completed!";
 
 # Run code quality checks: ruff linting, mypy type checking, and pydoclint
