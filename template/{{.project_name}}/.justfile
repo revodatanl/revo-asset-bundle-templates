@@ -18,6 +18,9 @@ set tempdir := ".just"
 # Imports Databricks Asset Bundle related recipes if they are deployed.
 import? '.just\dab.justfile'
 
+# Imports VS Code related recipes if they are deployed.
+import? '.just\vscode.justfile'
+
 # Complete project setup: check tools, sync dependencies, set up git and pre-commit hooks
 [default]
 [script]
@@ -53,19 +56,21 @@ setup:
 [script]
 clean:
 	echo "Cleaning up project artifacts...";
-	find . \(
-		-name "__pycache__" -o
-		-name ".ipynb_checkpoints" -o
-		-name ".mypy_cache" -o
-		-name ".pytest_cache" -o
-		-name ".ruff_cache" -o
-		-name ".venv" -o
-		-name "dist" -o
-		-name "site" -o
-		-name "*.egg-info" -o
-		-name "uv.lock" -o
-		-name ".coverage" \)
+	find . \( \
+		-name "__pycache__" -o \
+		-name ".ipynb_checkpoints" -o \
+		-name ".mypy_cache" -o \
+		-name ".pytest_cache" -o \
+		-name ".ruff_cache" -o \
+		-name ".venv" -o \
+		-name "dist" -o \
+		-name "site" -o \
+		-name "*.egg-info" -o \
+		-name "uv.lock" -o \
+		-name "htmlcov" -o \
+		-name ".coverage" \) \
 		-exec rm -rf {} + 2>/dev/null || true;
+	sleep 2;
 	echo "Rebuilding the project...";
 	uv sync;
 	echo "✅  Cleanup completed!";
@@ -85,11 +90,16 @@ lint:
 	echo "✅  Linting completed!";
 
 # Run pre-commit hooks, build package, and execute tests with coverage
-test:
+test open-coverage="false":
 	uv sync;
 	uv build > /dev/null 2>&1;
 	echo "Running tests...";
 	uv run pytest -v tests --cov=src --cov-report=term;
+	if [[ "{{open-coverage}}" == "true" ]]; then \
+		uv run coverage html; \
+		python -m webbrowser "file://{{ justfile_directory() }}/htmlcov/index.html"; \
+	fi;
+	echo "✅  Testing completed!";
 
 # List all available just recipes in the order they appear in this file with aliasses on the same line.
 [private]
