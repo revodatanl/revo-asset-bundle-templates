@@ -13,12 +13,15 @@ This file only provides template directives; it is skipped for the actual output
   {{skip "{{.project_name}}/resources/example-job.yml"}}
   {{skip "{{.project_name}}/resources/example-pipeline-job.yml"}}
   {{skip "{{.project_name}}/.just"}}
+  {{skip "{{.project_name}}/.just/vscode.justfile"}}
+  {{skip "{{.project_name}}/.vscode"}}
 
 {{else}}
 
   {{if (eq .setup_type "default")}}
 
     {{skip "{{.project_name}}/resources/.gitkeep"}}
+    {{skip "{{.project_name}}/.github"}}
 
   {{else}}
 
@@ -49,6 +52,11 @@ This file only provides template directives; it is skipped for the actual output
 
     {{if not (eq .include_dab_recipes "yes") }}
       {{skip "{{.project_name}}/.just/dab.justfile"}}
+    {{end}}
+
+    {{if not (eq .empower_vscode "yes") }}
+      {{skip "{{.project_name}}/.just/vscode.justfile"}}
+      {{skip "{{.project_name}}/.vscode"}}
     {{end}}
 
   {{end}}
