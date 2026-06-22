@@ -4,7 +4,6 @@ This folder defines all source code for the 'example' pipeline:
 
 - `explorations`: Ad-hoc notebooks used to explore the data processed by this pipeline.
 - `transformations`: All dataset definitions and transformations.
-- `utilities`: Utility functions and Python modules used in this pipeline.
 
 ## Getting Started
 
