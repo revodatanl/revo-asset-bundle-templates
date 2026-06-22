@@ -115,7 +115,7 @@ High level walk-through:
 | `library/template_variables.tmpl` | Contains variable manipulations that are not directly derived from the cli-input and can be used throughout the template. |
 | `accelerators/*` | This directory is a work in progress and is not currently used. This is not a default component of Databricks custom bundle templates. |
 
-This repository also provides a `justfile` which can help you properly setup git hooks, which will keep your commits compliant with contributing-rules.
+This repository also provides a `.justfile` which can help you properly setup git hooks, which will keep your commits compliant with contributing-rules.
 
 ### databricks_template_schema
 
