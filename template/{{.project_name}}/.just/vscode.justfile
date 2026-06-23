@@ -1,10 +1,15 @@
 [group('vscode')]
 [script]
 install-extensions:
+	set -e;
 	EXT_FILE=".vscode/extensions.json";
 	if ! command -v code >/dev/null 2>&1; then
 		echo "VS Code CLI 'code' is not available in PATH." >&2;
 		echo "Install it from VS Code Command Palette: Shell Command: Install 'code' command in PATH" >&2;
+		exit 1;
+	fi;
+	if [ ! -f "$EXT_FILE" ]; then
+		echo "$EXT_FILE not found." >&2;
 		exit 1;
 	fi;
 	exts=();
@@ -17,6 +22,10 @@ install-extensions:
 		exts+=("$ext");
 	done < "$tmp_file";
 	rm -f "$tmp_file";
+	if [ "${#exts[@]}" -eq 0 ]; then
+		echo "No extensions found in $EXT_FILE." >&2;
+		exit 1;
+	fi;
 	echo "Installing ${#exts[@]} recommended VS Code extensions from $EXT_FILE";
 	extargs=();
 	for ext in "${exts[@]}"; do

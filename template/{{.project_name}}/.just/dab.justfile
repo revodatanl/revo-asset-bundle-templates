@@ -8,7 +8,7 @@ DEFAULT_TARGET := env("DEFAULT_TARGET", "dev")
 [group('dab')]
 validate target=DEFAULT_TARGET:
 	uv sync;
-	uv build > /dev/null 2>&1;
+	uv build >/dev/null;
 	echo "Validating resources...";
 	databricks bundle validate --profile {{ PROFILE_NAME }} --target {{ target }};
 
@@ -21,7 +21,7 @@ plan target=DEFAULT_TARGET:
 [group('dab')]
 deploy target=DEFAULT_TARGET:
 	uv sync;
-	uv build > /dev/null 2>&1;
+	uv build >/dev/null;
 	echo "Deploying resources...";
 	databricks bundle deploy --profile {{ PROFILE_NAME }} --target {{ target }};
 
