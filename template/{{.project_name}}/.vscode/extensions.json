@@ -1,9 +1,9 @@
 {
   "recommendations": [
     "charliermarsh.ruff",
+    "astral-sh.ty",
     "databricks.databricks",
     "esbenp.prettier-vscode",
-    "ms-python.mypy-type-checker",
     "ms-python.vscode-pylance",
     "ms-toolsai.jupyter",
     "ms-vscode.makefile-tools",

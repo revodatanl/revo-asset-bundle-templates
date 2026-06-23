@@ -4,7 +4,7 @@
 [![python](https://img.shields.io/badge/python-3.12-g)](https://www.python.org)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+[![Checked with ty](https://img.shields.io/badge/type%20checked-ty-261230.svg)](https://github.com/astral-sh/ty)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
@@ -19,7 +19,7 @@ The `RevoData Asset Bundle Templates` repo contains our own custom templates for
 This template solves common pain points in Databricks project setup:
 
 - **Streamlined Setup**: One command creates a fully configured development environment
-- **Modern Python Tooling**: Uses `uv` for fast package management, `ruff` for linting, and `mypy` for type checking (pending `ty` reaching production-ready status)
+- **Modern Python Tooling**: Uses `uv` for fast package management, `ruff` for linting, and `ty` for type checking
 - **Modular Architecture**: Core template is lightweight with optional accelerators for specialized needs
 - **CI/CD Ready**: Complete pipelines for GitHub Actions and Azure DevOps
 - **Development Environment**: DevContainer and WSL support for consistent development across platforms
