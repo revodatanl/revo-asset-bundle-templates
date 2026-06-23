@@ -9,6 +9,9 @@ ENV EDITOR=nano \
     UV_CACHE_DIR=/uv-cache \
     UV_LINK_MODE=copy
 
+# Install just (the project's build-automation tool)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+
 # Set the working directory
 WORKDIR /workspace/
 
