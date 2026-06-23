@@ -74,16 +74,22 @@ function EnsureJustMinVersion {
     Write-Output "just is older than required, upgrading via winget..."
     RequireWinget
 
-    # Prefer upgrade, fall back to install if upgrade is not supported for some reason
-    $upgradeOk = $true
+    # Prefer upgrade, fall back to install. winget can signal "no applicable upgrade"
+    # via a thrown error (PowerShell 7.4+) or a non-zero exit code (older hosts), so
+    # handle both and let the version re-check below decide whether it actually worked.
+    $upgradeFailed = $false
     try {
       winget upgrade --id Casey.Just --source winget --accept-package-agreements --accept-source-agreements
+      if ($LASTEXITCODE -ne 0) { $upgradeFailed = $true }
     } catch {
-      $upgradeOk = $false
+      $upgradeFailed = $true
     }
 
-    if (-not $upgradeOk) {
-      winget install --id Casey.Just --source winget --accept-package-agreements --accept-source-agreements
+    if ($upgradeFailed) {
+      Write-Output "winget upgrade did not apply, falling back to install..."
+      try {
+        winget install --id Casey.Just --source winget --accept-package-agreements --accept-source-agreements
+      } catch { }
     }
 
     PathRefresh
@@ -102,13 +108,14 @@ function Get-GitBashPath {
     $candidates = @(
         "$env:ProgramFiles\Git\bin\bash.exe",
         "$env:ProgramFiles\Git\usr\bin\bash.exe",
-        "$env:ProgramFiles(x86)\Git\bin\bash.exe",
-        "$env:ProgramFiles(x86)\Git\usr\bin\bash.exe",
+        "${env:ProgramFiles(x86)}\Git\bin\bash.exe",
+        "${env:ProgramFiles(x86)}\Git\usr\bin\bash.exe",
         "$env:LOCALAPPDATA\Programs\Git\bin\bash.exe",
         "$env:LOCALAPPDATA\Programs\Git\usr\bin\bash.exe"
     ) | Where-Object { $_ -and (Test-Path $_) }
 
-    if (-not $candidates) { throw "Git Bash not found. Install Git for Windows." }
+    # Return $null (not throw) so the caller can attempt a winget install.
+    if (-not $candidates) { return $null }
     return $candidates[0]
 }
 
@@ -180,7 +187,15 @@ set script-interpreter := [
   [System.Text.UTF8Encoding]::new($false)
 )
 
-git update-index --skip-worktree -- ".just/shell_settings.justfile"
+# Hide local edits to the generated shell settings from git. Best-effort: the file may
+# not be tracked yet (e.g. a fresh template init before the first commit), in which case
+# git errors. Swallow it so this never aborts setup (under PowerShell 7.4+ a non-zero
+# native exit is a terminating error, so try/catch is required, not just stderr redirect).
+try {
+  git update-index --skip-worktree -- ".just/shell_settings.justfile" 2>$null
+} catch {
+  Write-Output "Skipping skip-worktree: .just/shell_settings.justfile is not tracked yet."
+}
 
 Write-Output "Just and Bash are available, triggering `just setup`!"
 just setup
