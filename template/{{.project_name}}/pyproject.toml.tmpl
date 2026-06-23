@@ -87,8 +87,16 @@ ignore = [
 python-version = "3.12"
 
 [tool.ty.src]
-include = ["src"]
 exclude = ["scratch"]
+
+# The example notebooks use Databricks' dynamically-typed pyspark.pipelines
+# API (e.g. `dp.table`, `dp.expect_all_or_drop`), which has no type information.
+[[tool.ty.overrides]]
+include = ["notebooks/**"]
+
+[tool.ty.overrides.rules]
+unresolved-import = "ignore"
+unresolved-attribute = "ignore"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

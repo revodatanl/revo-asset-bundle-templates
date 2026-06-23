@@ -83,7 +83,7 @@ lint:
 	echo "Running ruff...";
 	-uv run ruff check --output-format=concise .;
 	echo "Running ty...";
-	-uv run ty check;
+	-uv run ty check --output-format=concise .;
 	echo "Running pydoclint...";
 	-uv run pydoclint .;
 	echo "✅  Linting completed!";
