@@ -20,7 +20,7 @@ This template solves common pain points in Databricks project setup:
 
 - **Streamlined Setup**: One command creates a fully configured development environment
 - **Modern Python Tooling**: Uses `uv` for fast package management, `ruff` for linting, and `ty` for type checking
-- **Modular Architecture**: Core template is lightweight with optional accelerators for specialized needs
+- **Modular Architecture**: Core template is lightweight, with experimental accelerators (work in progress) for specialized needs
 - **CI/CD Ready**: Complete pipelines for GitHub Actions and Azure DevOps
 - **Development Environment**: DevContainer and WSL support for consistent development across platforms
 
@@ -58,6 +58,7 @@ This template solves common pain points in Databricks project setup:
     | `include_example_jobs` | Whether to include example pipelines and jobs | `yes/no` | `setup_type` = `tailored` |
     | `support_windows` | Whether to include Windows support | `yes/no` | `setup_type` = `tailored` |
     | `include_dab_recipes` | Whether to include just recipes for Databricks Bundle commands | `yes/no` | `setup_type` = `tailored` |
+    | `empower_vscode` | Whether to include VS Code settings, extension recommendations, and just recipes | `yes/no` | `setup_type` = `tailored` |
 
     > Previously, specifying a `package_name` was required. The `package_name` is now automatically generated from the `project_name` by replacing dashes (`-`) with underscores (`_`) following Python package naming conventions.
 
@@ -71,6 +72,7 @@ This template solves common pain points in Databricks project setup:
     | `include_example_jobs` | `yes` | `no` |
     | `support_windows` | `yes` | `no` |
     | `include_dab_recipes` | `yes` | `no` |
+    | `empower_vscode` | `yes` | `no` |
 
 3. Set up a fully configured development environment by running:
 
