@@ -70,7 +70,7 @@ You need these tools installed on your system:
    databricks configure
    ```
 
-   This silently creates a `.databrickscfg` file in your home directory to authenticate the user. Note that the profile name is `DEFAULT` in this example. If you give it any other name, you will need to update it in the `Makefile`.
+   This silently creates a `.databrickscfg` file in your home directory to authenticate the user. Note that the profile name is `DEFAULT` in this example. If you give it any other name, set the `PROFILE_NAME` environment variable accordingly (e.g. in a `.env` file), which the project's `just` recipes pick up.
 
 4. **Clone Repo**
 
@@ -108,9 +108,9 @@ The container automatically mounts:
 Once your container is configured and running, you can:
 
 - Interact with Azure Repos using `git` commands
-- Run `PySpark` tests on `Databricks Connect` using the `make test` command
-- Deploy to Databricks using the `make deploy` command
-- Destroy Databricks resources using the `make destroy` command
+- Run `PySpark` tests on `Databricks Connect` using the `just test` command
+- Deploy to Databricks using the `just deploy` command
+- Destroy Databricks resources using the `just destroy` command
 
 ## Troubleshooting
 

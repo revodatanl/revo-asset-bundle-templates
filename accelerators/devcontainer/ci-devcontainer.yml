@@ -81,12 +81,12 @@ jobs:
           echo "Pulling container image..."
           docker pull ${{ env.CONTAINER_REGISTRY }}/${{ github.repository_owner }}/${{ env.CONTAINER_NAME }}:${{ env.CONTAINER_TAG }}
 
-      # Mount the project directory and run Make commands inside the container
-      - name: Build and test Databricks Asset Bundle with Makefile in container
+      # Mount the project directory and run just recipes inside the container
+      - name: Build and test Databricks Asset Bundle with just in container
         run: |
           cd revo-dabs-devcontainer-test
           echo "Running commands in container..."
-          cat Makefile
+          cat .justfile
           cat pyproject.toml
           set -e
           docker run --rm \
@@ -113,27 +113,20 @@ jobs:
 
               echo \"\"
               echo \"==================================================================\"
-              echo \"=============== BUILD PROJECT (WITH DEFAULT TARGET) ==============\"
+              echo \"===================== ENSURE just IS AVAILABLE ===================\"
               echo \"==================================================================\"
-              make
+              command -v just >/dev/null 2>&1 || curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
 
               echo \"\"
               echo \"==================================================================\"
-              echo \"================ SETUP PROJECT (WITH SETUP TARGET) ===============\"
+              echo \"===================== SETUP PROJECT (just setup) =================\"
               echo \"==================================================================\"
-              make setup
-
-              echo \"\"
-              echo \"==================================================================\"
-              echo \"=============== BUILD PROJECT (WITH BUILD TARGET) ================\"
-              echo \"==================================================================\"
-              make build
+              just setup
 
               echo \"\"
               echo \"==================================================================\"
               echo \"==================== COMMIT ALL FILES ============================\"
               echo \"==================================================================\"
-              uv run pre-commit autoupdate || true
               git add .
               git commit -m \"feat: initial commit\"
 
@@ -141,25 +134,25 @@ jobs:
               echo \"==================================================================\"
               echo \"======================== LINT PROJECT ============================\"
               echo \"==================================================================\"
-              make lint
+              just lint
 
               echo \"\"
               echo \"==================================================================\"
               echo \"========================= RUN TESTS ==============================\"
               echo \"==================================================================\"
-              make test
+              just test
 
               echo \"\"
               echo \"==================================================================\"
               echo \"======================== CLEAN PROJECT ===========================\"
               echo \"==================================================================\"
-              make clean
+              just clean
 
               echo \"\"
               echo \"==================================================================\"
               echo \"=============== RE-BUILD PROJECT (AFTER CLEAN) ===================\"
               echo \"==================================================================\"
-              make build
+              uv build
 
               echo \"\"
               echo \"==================================================================\"
