@@ -36,8 +36,8 @@ jobs:
           set -e
           echo "Running ruff"
           uv run ruff check --output-format=github .
-          echo "Running mypy"
-          uv run mypy .
+          echo "Running ty"
+          uv run ty check --output-format=github .
           echo "Running pydoclint"
           uv run pydoclint .
           echo "Formatting checks passed ✅"

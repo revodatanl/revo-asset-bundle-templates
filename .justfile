@@ -42,7 +42,6 @@ clean:
 	find . \( \
 		-name "__pycache__" -o \
 		-name ".ipynb_checkpoints" -o \
-		-name ".mypy_cache" -o \
 		-name ".pytest_cache" -o \
 		-name ".ruff_cache" -o \
 		-name ".venv" -o \

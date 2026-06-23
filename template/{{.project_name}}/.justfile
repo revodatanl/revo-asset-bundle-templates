@@ -59,7 +59,6 @@ clean:
 	find . \( \
 		-name "__pycache__" -o \
 		-name ".ipynb_checkpoints" -o \
-		-name ".mypy_cache" -o \
 		-name ".pytest_cache" -o \
 		-name ".ruff_cache" -o \
 		-name ".venv" -o \
@@ -75,7 +74,7 @@ clean:
 	uv sync;
 	echo "✅  Cleanup completed!";
 
-# Run code quality checks: ruff linting, mypy type checking, and pydoclint
+# Run code quality checks: ruff linting, ty type checking, and pydoclint
 lint:
 	echo "Linting the project...";
 	uv sync;
@@ -83,8 +82,8 @@ lint:
 	uv build >/dev/null 2>&1;
 	echo "Running ruff...";
 	-uv run ruff check --output-format=concise .;
-	echo "Running mypy...";
-	-uv run mypy .;
+	echo "Running ty...";
+	-uv run ty check --output-format=concise .;
 	echo "Running pydoclint...";
 	-uv run pydoclint .;
 	echo "✅  Linting completed!";

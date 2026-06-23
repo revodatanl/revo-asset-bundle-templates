@@ -46,10 +46,10 @@ The Python project configuration file that defines:
 - **Dependencies**: Core dependencies are minimal by default, with comprehensive development dependencies including:
   - `databricks-connect` for local Databricks development
   - `databricks-sdk` and `databricks-dlt` for Databricks integration
-  - Python tooling: `ruff`, `mypy`, `pytest`, `prek`, `commitizen`
+  - Python tooling: `ruff`, `ty`, `pytest`, `prek`, `commitizen`
 - **Tool configuration**:
   - **Ruff**: Linting and formatting with RevoData's coding standards
-  - **MyPy**: Type checking with strict mode enabled
+  - **ty**: Fast type checking (Astral's type checker)
   - **Pytest**: Test configuration with coverage reporting
   - **Pydoclint**: Documentation linting with NumPy-style docstrings
 
@@ -63,7 +63,7 @@ Ensure that the [`pre-commit`](https://pre-commit.com) hook defined in `.pre-com
 
 - [`commitizen`](https://github.com/commitizen-tools/commitizen) to enforce conventional commit standards.
 - [`ruff`](https://docs.astral.sh/ruff/) for linting and formatting.
-- [`mypy`](https://mypy.readthedocs.io/en/stable/) for static type checking (in `strict` mode)
+- [`ty`](https://github.com/astral-sh/ty) for static type checking.
 - [`pydoclint`](https://github.com/shmsi/pydoclint) to lint docstrings.
 
 {{if (eq .cicd_provider "github")}}### Dependabot
