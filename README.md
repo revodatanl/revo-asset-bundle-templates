@@ -23,6 +23,7 @@ This template solves common pain points in Databricks project setup:
 - **Modular Architecture**: Core template is lightweight, with experimental accelerators (work in progress) for specialized needs
 - **CI/CD Ready**: Complete pipelines for GitHub Actions and Azure DevOps
 - **Development Environment**: DevContainer and WSL support for consistent development across platforms
+- **Aligned with Databricks**: follows Databricks' March 2026 [rename](https://docs.databricks.com/aws/en/dev-tools/bundles/faqs) to Declarative Automation Bundles — the `databricks bundle` CLI and the DAB acronym are unchanged
 
 ## Getting started
 
