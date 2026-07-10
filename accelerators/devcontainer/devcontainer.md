@@ -1,6 +1,6 @@
 # Setting up a Development Environment with DevContainers
 
-This document explains how to set up a consistent development environment for Databricks Asset Bundles using DevContainers. This approach works on **Windows**, **macOS**, and **Linux** with minimal setup requirements.
+This document explains how to set up a consistent development environment for Declarative Automation Bundles using DevContainers. This approach works on **Windows**, **macOS**, and **Linux** with minimal setup requirements.
 
 This approach sets up Databricks Runtime, Python environment, development tools, VS Code extensions, and configuration to match your production environment. This guide has been written with **Windows** and **Azure DevOps** users in mind.
 

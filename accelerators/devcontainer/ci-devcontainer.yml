@@ -54,7 +54,7 @@ jobs:
           EOF
           cat init_params.json
 
-      - name: Initialize Databricks Asset Bundle from template
+      - name: Initialize Declarative Automation Bundle from template
         run: |
           echo "Using branch: $BRANCH_NAME"
           databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
@@ -82,7 +82,7 @@ jobs:
           docker pull ${{ env.CONTAINER_REGISTRY }}/${{ github.repository_owner }}/${{ env.CONTAINER_NAME }}:${{ env.CONTAINER_TAG }}
 
       # Mount the project directory and run just recipes inside the container
-      - name: Build and test Databricks Asset Bundle with just in container
+      - name: Build and test Declarative Automation Bundle with just in container
         run: |
           cd revo-dabs-devcontainer-test
           echo "Running commands in container..."

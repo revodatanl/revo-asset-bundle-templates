@@ -1,4 +1,4 @@
-# RevoData Asset Bundle Templates
+# RevoData Declarative Automation Bundle Templates
 
 ![Databricks Runtime](https://img.shields.io/badge/Databricks%20Runtime-16.4--LTS-%231B3139)
 [![python](https://img.shields.io/badge/python-3.12-g)](https://www.python.org)
@@ -12,7 +12,7 @@
 [![semantic-release](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/semantic-release.yml)
 ![just](https://img.shields.io/badge/%F0%9F%A4%96%20just-%3E1.25-000000?style=plastic&color=lime&link=https%3A%2F%2Fjust.systems%2Fman%2Fen%2F)
 
-The `RevoData Asset Bundle Templates` repo contains our own custom templates for Databricks Asset Bundles. The template provides a complete development environment for new Databricks projects, including CI/CD pipelines, pre-commit hooks, semantic release, and example pipelines and jobs that can directly be deployed to Databricks.
+The `RevoData Declarative Automation Bundle Templates` repo contains our own custom templates for Declarative Automation Bundles (formerly Databricks Asset Bundles). The template provides a complete development environment for new Databricks projects, including CI/CD pipelines, pre-commit hooks, semantic release, and example pipelines and jobs that can directly be deployed to Databricks.
 
 ## Why This Template?
 
@@ -48,7 +48,7 @@ This template solves common pain points in Databricks project setup:
     | Parameter | Description | Example | Condition |
     | --------- | ----------- | ------- | --------- |
     | `project_name` | Name of the project (usually the same as the repository name) | `revo-dabs-test-project` | |
-    | `project_description` | Brief description of the project | `This project is generated using our own RevoData Asset Bundle Templates.` | |
+    | `project_description` | Brief description of the project | `This project is generated using our own RevoData Declarative Automation Bundle Templates.` | |
     | `author` | Name of the author | `Thomas Brouwer` | |
     | `email` | Email address of the author | `thomas.brouwer@revodata.nl` | |
     | `setup_type` | Type of setup (`default`, `minimal` or `tailored`) | `default` | |
@@ -82,7 +82,7 @@ This template solves common pain points in Databricks project setup:
 
 ## Developing the Template
 
-Databricks Asset Bundle Templates use `Go` template syntax with conditional logic based on the parameters above.
+Declarative Automation Bundle Templates use `Go` template syntax with conditional logic based on the parameters above.
 
 Key development files:
 

@@ -1,6 +1,6 @@
 # Deployment
 
-[Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/) enable software engineering best practices for data and AI projects through source control, code review, testing, and CI/CD.
+[Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/) enable software engineering best practices for data and AI projects through source control, code review, testing, and CI/CD.
 Bundles define your entire project—structure, tests, and deployment—as source files, making collaboration seamless.
 
 A bundle contains:
@@ -120,14 +120,14 @@ The `CI` pipeline ensures code quality and bundle functionality before merging.
 
 ### Continuous Deployment (CD)
 
-The `CD` pipeline automates Databricks Asset Bundle deployments across environments. The pipeline ensures consistent deployments while maintaining proper governance through environment-specific configurations and approval workflows.
+The `CD` pipeline automates Declarative Automation Bundle deployments across environments. The pipeline ensures consistent deployments while maintaining proper governance through environment-specific configurations and approval workflows.
 
 **Trigger**: Merge to main branch
 **Pipeline**: {{if (eq .cicd_provider "azure")}}`.azure/.azure-pipelines/cd.yml`{{end}}{{if (eq .cicd_provider "github")}}`.github/workflows/cd.yml`{{end}}
 
 **Flow**:
 
-1. Automatic Databricks Asset Bundle deployment to test environment
+1. Automatic Declarative Automation Bundle deployment to test environment
 2. Integration test execution
 3. Manual approval gate (12-hour timeout)
 4. Production deployment upon approval (**from `main` for jobs/pipelines; from `release/*` for models**)

@@ -5,8 +5,8 @@
 # Interactive module deployment - select and deploy template accelerators
 accelerator:
 	@echo "Select the accelerator to deploy:"
-	@echo "1) Deploy Databricks Asset Bundle pipeline for GitHub"
-	@echo "2) Deploy Databricks Asset Bundle pipeline for Azure DevOps"
+	@echo "1) Deploy Declarative Automation Bundle pipeline for GitHub"
+	@echo "2) Deploy Declarative Automation Bundle pipeline for Azure DevOps"
 	@echo "Enter the number of the accelerator you want to deploy: "
 	@read choice; \
 	case "$$choice" in \
