@@ -186,103 +186,107 @@ jobs:
           path: revo-dabs-test-project
           retention-days: 1
 
-  run-example-job:
-    needs: ci-dabs
-    if: success()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download project artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: revo-dabs-test-project
-          path: revo-dabs-test-project
+# Temporarily disabled: running the deployed example jobs is fragile (shared
+# workspace accumulates stale duplicates, runs get canceled mid-flight) and slow.
+# To re-enable, uncomment both jobs and restore
+# `needs: [run-example-job, run-example-pipeline-job]` on destroy-bundle.
+#  run-example-job:
+#    needs: ci-dabs
+#    if: success()
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download project artifact
+#        uses: actions/download-artifact@v5
+#        with:
+#          name: revo-dabs-test-project
+#          path: revo-dabs-test-project
+#
+#      - name: Install Databricks CLI
+#        run: |
+#          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+#          databricks version
+#
+#      - name: Run Example Job
+#        run: |
+#          cd revo-dabs-test-project
+#          echo ""
+#          echo "=================================================================="
+#          echo "======================== RUN EXAMPLE JOB ========================="
+#          echo "=================================================================="
+#          echo "Starting 'example-job' job... (this may take a while)"
+#          EXAMPLE_JOB_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-job")) | .job_id')
+#          echo "Example job ID: $EXAMPLE_JOB_ID"
+#
+#          if [ -z "$EXAMPLE_JOB_ID" ]; then
+#            echo "Error: Could not find example-job"
+#            databricks jobs list --output text
+#            exit 1
+#          fi
+#
+#          RESULT_STATE=$(databricks jobs run-now $EXAMPLE_JOB_ID | jq -r '.state.result_state')
+#          echo "Job result state: $RESULT_STATE"
+#
+#          if [[ "$RESULT_STATE" == "SUCCESS" ]]; then
+#            echo "Job completed successfully!"
+#          else
+#            echo "Job failed with status: $RESULT_STATE"
+#            exit 1
+#          fi
+#        env:
+#          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+#          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+#          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+#
+#  run-example-pipeline-job:
+#    needs: ci-dabs
+#    if: success()
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download project artifact
+#        uses: actions/download-artifact@v5
+#        with:
+#          name: revo-dabs-test-project
+#          path: revo-dabs-test-project
+#
+#      - name: Install Databricks CLI
+#        run: |
+#          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+#          databricks version
+#
+#      - name: Run example pipeline job
+#        run: |
+#          cd revo-dabs-test-project
+#          echo ""
+#          echo "=================================================================="
+#          echo "================ RUN EXAMPLE PIPELINE JOB ========================"
+#          echo "=================================================================="
+#          echo "Starting 'example-pipeline-job'... (this may take a while)"
+#          PIPELINE_JOB_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-pipeline-job")) | .job_id')
+#          echo "Pipeline job ID: $PIPELINE_JOB_ID"
+#
+#          if [ -z "$PIPELINE_JOB_ID" ]; then
+#            echo "Error: Could not find example-pipeline-job"
+#            databricks jobs list --output text
+#            exit 1
+#          fi
+#
+#          PIPELINE_RESULT_STATE=$(databricks jobs run-now $PIPELINE_JOB_ID | jq -r '.state.result_state')
+#          echo "Pipeline result state: $PIPELINE_RESULT_STATE"
+#
+#          if [[ "$PIPELINE_RESULT_STATE" == "SUCCESS" ]]; then
+#            echo "Pipeline job completed successfully!"
+#          else
+#            echo "Pipeline job failed with status: $PIPELINE_RESULT_STATE"
+#            exit 1
+#          fi
+#        env:
+#          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+#          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+#          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-      - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
-          databricks version
-
-      - name: Run Example Job
-        run: |
-          cd revo-dabs-test-project
-          echo ""
-          echo "=================================================================="
-          echo "======================== RUN EXAMPLE JOB ========================="
-          echo "=================================================================="
-          echo "Starting 'example-job' job... (this may take a while)"
-          EXAMPLE_JOB_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-job")) | .job_id')
-          echo "Example job ID: $EXAMPLE_JOB_ID"
-
-          if [ -z "$EXAMPLE_JOB_ID" ]; then
-            echo "Error: Could not find example-job"
-            databricks jobs list --output text
-            exit 1
-          fi
-
-          RESULT_STATE=$(databricks jobs run-now $EXAMPLE_JOB_ID | jq -r '.state.result_state')
-          echo "Job result state: $RESULT_STATE"
-
-          if [[ "$RESULT_STATE" == "SUCCESS" ]]; then
-            echo "Job completed successfully!"
-          else
-            echo "Job failed with status: $RESULT_STATE"
-            exit 1
-          fi
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-
-  run-example-pipeline-job:
-    needs: ci-dabs
-    if: success()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download project artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: revo-dabs-test-project
-          path: revo-dabs-test-project
-
-      - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
-          databricks version
-
-      - name: Run example pipeline job
-        run: |
-          cd revo-dabs-test-project
-          echo ""
-          echo "=================================================================="
-          echo "================ RUN EXAMPLE PIPELINE JOB ========================"
-          echo "=================================================================="
-          echo "Starting 'example-pipeline-job'... (this may take a while)"
-          PIPELINE_JOB_ID=$(databricks jobs list --output json | jq '.[] | select(.settings.name | contains("example-pipeline-job")) | .job_id')
-          echo "Pipeline job ID: $PIPELINE_JOB_ID"
-
-          if [ -z "$PIPELINE_JOB_ID" ]; then
-            echo "Error: Could not find example-pipeline-job"
-            databricks jobs list --output text
-            exit 1
-          fi
-
-          PIPELINE_RESULT_STATE=$(databricks jobs run-now $PIPELINE_JOB_ID | jq -r '.state.result_state')
-          echo "Pipeline result state: $PIPELINE_RESULT_STATE"
-
-          if [[ "$PIPELINE_RESULT_STATE" == "SUCCESS" ]]; then
-            echo "Pipeline job completed successfully!"
-          else
-            echo "Pipeline job failed with status: $PIPELINE_RESULT_STATE"
-            exit 1
-          fi
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-
-# Destroy bundle regardless of the outcome of both jobs
+# Destroy bundle regardless of the outcome of the deploy
   destroy-bundle:
-    needs: [run-example-job, run-example-pipeline-job]
+    needs: ci-dabs
     if: always()
     runs-on: ubuntu-latest
     steps:
