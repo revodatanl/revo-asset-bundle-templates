@@ -79,10 +79,11 @@ clean:
 # Run code quality checks: ruff linting, ty type checking, and pydoclint
 [script]
 lint:
+	set -e;
 	echo "Linting the project...";
-	uv sync || exit 1;
+	uv sync;
 	echo "Building the project...";
-	uv build >/dev/null || exit 1;
+	uv build >/dev/null;
 	# Run all checkers, collect their results, then fail if any failed.
 	# This reports every problem in one pass while still failing the recipe
 	# (and any CI gate that calls `just lint`) on a real violation.

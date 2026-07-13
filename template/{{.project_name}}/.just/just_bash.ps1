@@ -89,7 +89,9 @@ function EnsureJustMinVersion {
       Write-Output "winget upgrade did not apply, falling back to install..."
       try {
         winget install --id Casey.Just --source winget --accept-package-agreements --accept-source-agreements
-      } catch { }
+      } catch {
+        Write-Output "winget install failed: $_"
+      }
     }
 
     PathRefresh
@@ -189,8 +191,8 @@ set script-interpreter := [
 
 # Hide local edits to the generated shell settings from git. Best-effort: the file may
 # not be tracked yet (e.g. a fresh template init before the first commit), in which case
-# git errors. Swallow it so this never aborts setup (under PowerShell 7.4+ a non-zero
-# native exit is a terminating error, so try/catch is required, not just stderr redirect).
+# git exits non-zero and writes to stderr. With $ErrorActionPreference = "Stop", the
+# stderr redirect alone can raise a terminating error, so try/catch is required.
 try {
   git update-index --skip-worktree -- ".just/shell_settings.justfile" 2>$null
 } catch {
