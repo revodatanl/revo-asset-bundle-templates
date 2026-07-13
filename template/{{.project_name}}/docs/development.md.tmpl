@@ -8,11 +8,11 @@ The project is structured as follows:
 {{.project_name}}/{{if (eq .cicd_provider "azure")}}
 ├── .azure/                   # Azure DevOps pipelines{{end}}{{if (eq .cicd_provider "github")}}
 ├── .github/                        # GitHub Actions workflows{{end}}
+├── .just/                          # just recipe imports (DAB, VS Code, shell settings)
 ├── .vscode/                        # VSCode settings
 ├── docs/                           # Documentation
 ├── notebooks/                      # Databricks notebooks
 ├── resources/                      # Databricks resources (jobs, pipelines)
-├── scratch/                        # Personal, exploratory notebooks (gitignored)
 ├── src/                            # Source code
 ├── tests/                          # Tests
 ├── .gitignore                      # Git ignore patterns
