@@ -6,7 +6,7 @@ on:
       - main
   workflow_dispatch:
 
-# Only one workflow run may touch the shared Databricks workspace at a time (group shared with ci-dabs.yml).
+# Serialize CD runs: they deploy the same bundle to the shared Databricks workspace.
 concurrency:
   group: databricks-shared-workspace
   cancel-in-progress: false

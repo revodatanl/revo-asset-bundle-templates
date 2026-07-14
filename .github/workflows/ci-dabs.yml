@@ -5,11 +5,6 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
-# Only one workflow run may touch the shared Databricks workspace at a time (group shared with cd-dabs.yml).
-concurrency:
-  group: databricks-shared-workspace
-  cancel-in-progress: false
-
 jobs:
   ci-dabs:
     runs-on: ${{ matrix.os }}
@@ -156,66 +151,6 @@ jobs:
           echo "======================== VALIDATE BUNDLE ========================="
           echo "=================================================================="
           databricks bundle validate
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-
-      - name: Deploy Declarative Automation Bundle (using default runner only)
-        if: |
-          matrix.os == 'ubuntu-latest' &&
-          matrix.cicd_provider == 'github' &&
-          matrix.cloud_provider == 'azure' &&
-          matrix.include_example_jobs == 'yes'
-        run: |
-          cd revo-dabs-test-project
-          echo ""
-          echo "=================================================================="
-          echo "======================== DEPLOY BUNDLE ==========================="
-          echo "=================================================================="
-          databricks bundle deploy
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-
-      - name: Upload project artifact
-        if: |
-          matrix.os == 'ubuntu-latest' &&
-          matrix.cicd_provider == 'github' &&
-          matrix.cloud_provider == 'azure' &&
-          matrix.include_example_jobs == 'yes'
-        uses: actions/upload-artifact@v7
-        with:
-          name: revo-dabs-test-project
-          path: revo-dabs-test-project
-          retention-days: 1
-
-# Destroy bundle regardless of the outcome of the deploy
-  destroy-bundle:
-    needs: ci-dabs
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download project artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: revo-dabs-test-project
-          path: revo-dabs-test-project
-
-      - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
-          databricks version
-
-      - name: Destroy Bundle
-        run: |
-          cd revo-dabs-test-project
-          echo ""
-          echo "=================================================================="
-          echo "======================== DESTROY BUNDLE =========================="
-          echo "=================================================================="
-          databricks bundle destroy --auto-approve
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
