@@ -3,7 +3,9 @@
 # This sets the default shell to use for all recipes.
 set shell := ["bash", "-cu"]
 
-# Import shell settings which could be overwritten by the user.
+# Import machine-local shell settings. The file is git-ignored: the Windows bootstrap
+# (.just/just_bash.ps1) overwrites it with machine-specific paths, and `just setup`
+# restores the default when it is missing (e.g. after a fresh clone).
 import? '.just/shell_settings.justfile'
 
 # Setting the justfile as quiet means commands are no longer printed to the terminal, without having to mark them all as silent (`@`) individually.
@@ -27,6 +29,15 @@ import? '.just/vscode.justfile'
 setup:
 	set -e;
 	echo "ℹ️   running on shell [$SHELL] from [$(pwd)]";
+	if [ ! -f ".just/shell_settings.justfile" ]; then
+		echo "Restoring default .just/shell_settings.justfile (machine-local, git-ignored)...";
+		printf '%s\n' \
+			"# Machine-local shell settings, restored by 'just setup'. Git-ignored via .just/.gitignore." \
+			"# On Windows, .just/just_bash.ps1 overwrites this file with machine-specific paths." \
+			'set script-interpreter := ["bash"]' \
+			> .just/shell_settings.justfile;
+		echo "   Settings take effect on the next just invocation.";
+	fi;
 	echo "Checking for required tools...";
 	missing_tools="";
 	for tool in uv git databricks; do
