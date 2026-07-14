@@ -1,4 +1,4 @@
-name: Deploy Databricks Asset Bundle
+name: Deploy Declarative Automation Bundle
 
 # Before using this pipeline:
 # 1. Update variables: groupName, environmentName, keyVaultName, azureSubscription

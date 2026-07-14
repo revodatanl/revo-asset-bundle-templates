@@ -184,7 +184,7 @@ pyrightconfig.json
 # Ignore simulated Spark warehouse
 spark-warehouse/
 
-# Ignore Databricks Asset Bundles
+# Ignore Declarative Automation Bundles
 .databricks/
 scratch/**
 !scratch/README.md

@@ -81,7 +81,7 @@ alias just-test := test-justfile
 
 PROFILE_NAME := env("PROFILE_NAME", "DEFAULT")
 
-# Initializes a new Databricks Asset Bundle project using the template. Tests whether the template is valid and passes checks.
+# Initializes a new Declarative Automation Bundle project using the template. Tests whether the template is valid and passes checks.
 # Note: this is the repo-root justfile, not the template's. The Databricks profile comes from
 # the `profile` argument (`just test-deploy MY_PROFILE`), defaulting to $PROFILE_NAME or "DEFAULT".
 [group('template')]
@@ -91,7 +91,7 @@ test-deploy profile=PROFILE_NAME:
 	mkdir -p temporary_deployment;
 	echo '{ \
 		"project_name": "temporary_deployment", \
-		"project_description": "This project is generated using our own RevoData Asset Bundle Templates.", \
+		"project_description": "This project is generated using our own RevoData Declarative Automation Bundle Templates.", \
 		"author": "Thomas Brouwer", \
 		"email": "thomas.brouwer@revodata.nl", \
 		"setup_type": "tailored", \
@@ -103,7 +103,7 @@ test-deploy profile=PROFILE_NAME:
 		"include_dab_recipes": "yes", \
 		"empower_vscode": "yes" \
 		}' > temporary_deployment/init_params.json;
-	echo "Initializing a new Databricks Asset Bundle from template...";
+	echo "Initializing a new Declarative Automation Bundle from template...";
 	databricks bundle init . --config-file "temporary_deployment/init_params.json" -p {{ profile }};
 	echo "Switching to deployed template folder and running setup...";
 	cd "temporary_deployment" && just -f ../.justfile run-temporary-deployment-tests;
