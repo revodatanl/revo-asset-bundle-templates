@@ -82,6 +82,8 @@ alias just-test := test-justfile
 PROFILE_NAME := env("PROFILE_NAME", "DEFAULT")
 
 # Initializes a new Databricks Asset Bundle project using the template. Tests whether the template is valid and passes checks.
+# Note: this is the repo-root justfile, not the template's. The Databricks profile comes from
+# the `profile` argument (`just test-deploy MY_PROFILE`), defaulting to $PROFILE_NAME or "DEFAULT".
 [group('template')]
 test-deploy profile=PROFILE_NAME:
 	echo '(re)Creating "temporary_deployment" folder...';
