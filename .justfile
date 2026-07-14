@@ -36,9 +36,11 @@ loud msg:
 	printf " {{msg}}\n";
 	printf '─%.0s' $(seq 1 "${COLUMNS:-80}");
 
-# Cleanup template .git folder if it exists
+# Remove build/cache artifacts, delete the template .git folder if present, and reinstall hooks.
 clean:
 	echo "Cleaning up project artifacts...";
+	# NOTE: keep this prune list in sync with the generated project's .justfile clean recipe.
+	# uv.lock is intentionally NOT removed: it is a committed reproducibility artifact.
 	find . \( \
 		-name "__pycache__" -o \
 		-name ".ipynb_checkpoints" -o \
@@ -48,9 +50,8 @@ clean:
 		-name "dist" -o \
 		-name "site" -o \
 		-name "*.egg-info" -o \
-		-name "uv.lock" -o \
 		-name ".coverage" \) \
-		-exec rm -rf {} + 2>/dev/null || true;
+		-exec rm -rf {} + || true;
 	if [ -d "{{template_dir}}/.git" ]; then \
 		echo "Cleaning up template .git folder..."; \
 		rm -rf "{{template_dir}}/.git"; \
@@ -81,6 +82,8 @@ alias just-test := test-justfile
 PROFILE_NAME := env("PROFILE_NAME", "DEFAULT")
 
 # Initializes a new Databricks Asset Bundle project using the template. Tests whether the template is valid and passes checks.
+# Note: this is the repo-root justfile, not the template's. The Databricks profile comes from
+# the `profile` argument (`just test-deploy MY_PROFILE`), defaulting to $PROFILE_NAME or "DEFAULT".
 [group('template')]
 test-deploy profile=PROFILE_NAME:
 	echo '(re)Creating "temporary_deployment" folder...';
@@ -101,7 +104,7 @@ test-deploy profile=PROFILE_NAME:
 		"empower_vscode": "yes" \
 		}' > temporary_deployment/init_params.json;
 	echo "Initializing a new Databricks Asset Bundle from template...";
-	databricks bundle init . --config-file "temporary_deployment/init_params.json" -p {{ PROFILE_NAME }};
+	databricks bundle init . --config-file "temporary_deployment/init_params.json" -p {{ profile }};
 	echo "Switching to deployed template folder and running setup...";
 	cd "temporary_deployment" && just -f ../.justfile run-temporary-deployment-tests;
 	echo "Removing temporary deployment folder...";
@@ -120,9 +123,9 @@ run-temporary-deployment-tests:
 		just setup; \
 	fi;
 	echo "Creating temporary local git...";
-	git add . 2>/dev/null;
+	git add .;
 	echo "Checking if pre-commit hooks pass...";
-	git commit -m "feat: initial commit";
+	git -c user.email="ci@revodata.nl" -c user.name="Template Test" commit -m "feat: initial commit";
 	echo "Checking additional just commands...";
 	just lint;
 	just clean;
