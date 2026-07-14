@@ -1,0 +1,95 @@
+name: CD DABs
+
+# Post-merge counterpart to `CI DABs`: renders the template from main, deploys
+# the bundle, and runs the deployed example jobs end-to-end. This re-enables
+# the run tests that PR #120 disabled, with the robustness fixes it called for:
+# - `databricks bundle run <resource_key>` targets only this bundle's own
+#   deployment, instead of a workspace-wide job-name search
+# - a concurrency group shared with `CI DABs` ensures only one run touches the
+#   shared workspace at a time
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: databricks-shared-workspace
+  cancel-in-progress: false
+
+jobs:
+  deploy-and-run-example-jobs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      BRANCH_NAME: ${{ github.ref_name }}
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+      DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+    steps:
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          ignore-empty-workdir: true
+          enable-cache: false
+
+      - name: Create init parameters JSON
+        run: |
+          echo '{
+            "project_name": "revo-dabs-test-project",
+            "project_description": "This project is generated using our own RevoData Declarative Automation Bundle Templates.",
+            "author": "Thomas Brouwer",
+            "email": "thomas.brouwer@revodata.nl",
+            "setup_type": "default"
+          }' > init_params.json
+
+      - name: Initialize Declarative Automation Bundle from template
+        run: |
+          echo "Using branch: $BRANCH_NAME"
+          databricks bundle init https://github.com/revodatanl/revo-dabs --branch $BRANCH_NAME --config-file init_params.json
+
+      - name: Deploy Declarative Automation Bundle
+        run: |
+          cd revo-dabs-test-project
+          echo ""
+          echo "=================================================================="
+          echo "======================== DEPLOY BUNDLE ==========================="
+          echo "=================================================================="
+          databricks bundle deploy
+
+      - name: Run example job
+        run: |
+          cd revo-dabs-test-project
+          echo ""
+          echo "=================================================================="
+          echo "======================== RUN EXAMPLE JOB ========================="
+          echo "=================================================================="
+          echo "Starting 'example-job'... (this may take a while)"
+          databricks bundle run example-job
+
+      - name: Run example pipeline job
+        run: |
+          cd revo-dabs-test-project
+          echo ""
+          echo "=================================================================="
+          echo "================ RUN EXAMPLE PIPELINE JOB ========================"
+          echo "=================================================================="
+          echo "Starting 'example-pipeline-job'... (this may take a while)"
+          databricks bundle run example-pipeline-job
+
+      # Destroy bundle regardless of the outcome of the deploy and runs
+      - name: Destroy Bundle
+        if: always()
+        run: |
+          cd revo-dabs-test-project
+          echo ""
+          echo "=================================================================="
+          echo "======================== DESTROY BUNDLE =========================="
+          echo "=================================================================="
+          databricks bundle destroy --auto-approve
