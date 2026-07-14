@@ -8,8 +8,8 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
-[![CI](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/ci-dabs.yml/badge.svg)](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/ci-dabs.yml)
-[![semantic-release](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/revo-asset-bundle-templates/actions/workflows/semantic-release.yml)
+[![CI](https://github.com/revodatanl/revo-dabs/actions/workflows/ci-dabs.yml/badge.svg)](https://github.com/revodatanl/revo-dabs/actions/workflows/ci-dabs.yml)
+[![semantic-release](https://github.com/revodatanl/revo-dabs/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/revo-dabs/actions/workflows/semantic-release.yml)
 ![just](https://img.shields.io/badge/%F0%9F%A4%96%20just-%3E1.25-000000?style=plastic&color=lime&link=https%3A%2F%2Fjust.systems%2Fman%2Fen%2F)
 
 The `RevoData Declarative Automation Bundle Templates` repo contains our own custom templates for Declarative Automation Bundles (formerly Databricks Asset Bundles). The template provides a complete development environment for new Databricks projects, including CI/CD pipelines, pre-commit hooks, semantic release, and example pipelines and jobs that can directly be deployed to Databricks.
@@ -38,7 +38,7 @@ This template solves common pain points in Databricks project setup:
 2. Initialize a new project using the template:
 
     ```bash
-    databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
+    databricks bundle init https://github.com/revodatanl/revo-dabs
     ```
 
     ![bundle-init](images/bundle-init.png)
@@ -93,7 +93,7 @@ Key development files:
 Test locally using:
 
 ```bash
-databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch <branch_name>
+databricks bundle init https://github.com/revodatanl/revo-dabs --branch <branch_name>
 ```
 
 Changes are protected by comprehensive CI-DABS pipeline testing all template configurations.

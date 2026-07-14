@@ -69,7 +69,7 @@ You need these tools installed on your system:
    ```bash
    mkdir ~/code
    cd ~/code
-   databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
+   databricks bundle init https://github.com/revodatanl/revo-dabs
    ```
 
    Follow the prompts to configure your project. This will create a new project directory with all necessary files.

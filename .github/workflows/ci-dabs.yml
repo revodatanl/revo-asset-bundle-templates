@@ -82,7 +82,7 @@ jobs:
       - name: Initialize Declarative Automation Bundle from template
         run: |
           echo "Using branch: $BRANCH_NAME"
-          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
+          databricks bundle init https://github.com/revodatanl/revo-dabs --branch $BRANCH_NAME --config-file init_params.json
         shell: bash
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}

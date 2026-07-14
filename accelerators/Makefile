@@ -25,7 +25,7 @@ accelerator_%:
 		set -e; \
 		trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 		if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-		if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir accelerators/$* 2>&1; then \
+		if ! databricks bundle init https://github.com/revodatanl/revo-dabs --template-dir accelerators/$* 2>&1; then \
 			echo "Exiting." >&2; \
 		fi; \
 	}

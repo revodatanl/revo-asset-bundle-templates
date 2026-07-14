@@ -15,7 +15,7 @@ To contribute to this GitHub project, you can follow these steps:
 
     **Internal contributors**:
     1. Run the following command from your terminal:
-        `git clone https://github.com/revodatanl/revo-asset-bundle-templates.git`
+        `git clone https://github.com/revodatanl/revo-dabs.git`
     2. Create a feature branch using the following command:
         `git checkout -b "branch-name"`
 
