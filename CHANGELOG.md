@@ -1,643 +1,536 @@
-# [0.20.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.19.0...v0.20.0) (2026-02-09)
+## Unreleased
 
+### BREAKING CHANGE
 
-### Features
+- the minimum supported Databricks CLI version is now
+v0.295.0 (the release that shipped the rename). Existing generated
+projects are unaffected; the rename itself is non-breaking and the DAB
+acronym is unchanged.
 
-* add dab recipe for plan and fix destroy recipe ([#110](https://github.com/revodatanl/revo-asset-bundle-templates/issues/110)) ([dd0bbe2](https://github.com/revodatanl/revo-asset-bundle-templates/commit/dd0bbe2adcc8d1db1d7d74d02b1ff176f077873c))
+### Feat
 
-# [0.19.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.7...v0.19.0) (2026-01-21)
+- rebrand to RevoData Declarative Automation Bundle Templates
+- migrate type checker from mypy to ty
 
+### Fix
 
-### Features
+- **just**: git-ignore machine-local shell settings instead of skip-worktree
+- **just**: harden Windows bootstrap script (just_bash.ps1)
+- **just**: correct silent failures and portability bugs in recipes
+- **template**: correct cross-platform path separators and dependabot grouping
+- **pre-commit**: keep the repo: local hooks, with ty instead of mypy
 
-* justfile alternative 1-1 makefile code ([#107](https://github.com/revodatanl/revo-asset-bundle-templates/issues/107)) ([01bd2b7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/01bd2b73674d33f8dc751d3f4e1ea88333921907))
+### Refactor
 
-## [0.18.7](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.6...v0.18.7) (2025-12-05)
+- **just**: align lint with set -e idiom, surface winget install errors
+- run ty over the whole tree with consistent output format
 
+## v0.20.0 (2026-02-09)
 
-### Bug Fixes
+### Feat
 
-* add some sugar to the test suite ([3e24d68](https://github.com/revodatanl/revo-asset-bundle-templates/commit/3e24d682de95bcd959e449e88a151dd5dad4d670))
+- add dab recipe for plan and fix destroy recipe (#110)
 
-## [0.18.6](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.5...v0.18.6) (2025-12-04)
+## v0.19.0 (2026-01-21)
 
+### Feat
 
-### Bug Fixes
+- justfile alternative 1-1 makefile code (#107)
 
-* **Makefile:** update pre-commit hook installation to include pre-commit type ([bd20d17](https://github.com/revodatanl/revo-asset-bundle-templates/commit/bd20d170db8294017a8cc1659a5e7bec2e5f7df4))
+## v0.18.7 (2025-12-05)
 
-## [0.18.5](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.4...v0.18.5) (2025-12-04)
+### Fix
 
+- add some sugar to the test suite
 
-### Bug Fixes
+## v0.18.6 (2025-12-04)
 
-* update the deployment documentation ([163cd96](https://github.com/revodatanl/revo-asset-bundle-templates/commit/163cd96d9aca39643769b7bcdd0342f06eebae65))
+### Fix
 
-## [0.18.4](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.3...v0.18.4) (2025-12-03)
+- **Makefile**: update pre-commit hook installation to include pre-commit type
 
+## v0.18.5 (2025-12-04)
 
-### Bug Fixes
+### Fix
 
-* **pipelines:** define pipeline dependencies from workspace environment ([d963db1](https://github.com/revodatanl/revo-asset-bundle-templates/commit/d963db1b00016a01d13eeac3ac876e3effa206b1))
-* **pipelines:** migrate to spark declarative pipelines syntax ([42f21f9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/42f21f9cace35879c512e0197a6bf30801af9920))
+- update the deployment documentation
 
-## [0.18.3](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.2...v0.18.3) (2025-10-30)
+## v0.18.4 (2025-12-03)
 
+### Fix
 
-### Bug Fixes
+- **pipelines**: define pipeline dependencies from workspace environment
+- **pipelines**: migrate to spark declarative pipelines syntax
 
-* minor update to welcome screen databricks_template_schema ([d50c620](https://github.com/revodatanl/revo-asset-bundle-templates/commit/d50c620d905d6863f2966a1dcf94e631695602f1))
+## v0.18.3 (2025-10-30)
 
-## [0.18.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.1...v0.18.2) (2025-10-28)
+### Fix
 
+- minor update to welcome screen databricks_template_schema
 
-### Bug Fixes
+## v0.18.2 (2025-10-28)
 
-* use default workspace root_path for test/prod ([8f5cf92](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8f5cf9222e03862c227035821b1e2067c73d5fd2))
+### Fix
 
-## [0.18.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.18.0...v0.18.1) (2025-10-22)
+- use default workspace root_path for test/prod
 
+## v0.18.1 (2025-10-22)
 
-### Bug Fixes
+### Fix
 
-* include resources folder regardless of include_example_jobs parameter ([cf61aef](https://github.com/revodatanl/revo-asset-bundle-templates/commit/cf61aef2d9c38af95eff3ae489a929c9a9292882))
+- include resources folder regardless of include_example_jobs parameter
 
-# [0.18.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.2...v0.18.0) (2025-10-22)
+## v0.18.0 (2025-10-22)
 
+### Feat
 
-### Bug Fixes
+- utilize the system venv for most of the pre-commit hooks and use `prek` over `pre-commit`
+- update to Databricks runtime 16.4-LTS (with corresponding Python versions) in templates and configuration files
+- remove gitleaks hook from pre-commit hooks
+- integrate bundle content in databricks.yml
 
-* enhance CI/CD workflows with Databricks integration and improved deployment ([69bae6b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/69bae6b0e76f611d813deff2c6a0b4d6943559be))
-* remove redundant update targets step in CI workflow ([66bed64](https://github.com/revodatanl/revo-asset-bundle-templates/commit/66bed644e611bf6de1abdab16b6042ec93af9160))
-* remove redundant uv installation from CI DABs pipeline ([43fb73f](https://github.com/revodatanl/revo-asset-bundle-templates/commit/43fb73fd6519d51680e5d82ef0cdfe67cf8967dd))
-* set up core.hooksPath error handling in Makefile ([5b109ea](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5b109eaf7e575d1b140cba016b6d537cace132d2))
-* syntax for variable references in CI/CD pipeline configurations ([aaaf144](https://github.com/revodatanl/revo-asset-bundle-templates/commit/aaaf14402a2f3eb134bbcb44c9fbfeff43cea2d5))
-* update tmpl syntax in CI workflow ([123d90b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/123d90b91da6ec84a428977f9453aaae6cb77b2c))
+### Fix
 
+- syntax for variable references in CI/CD pipeline configurations
+- remove redundant update targets step in CI workflow
+- update tmpl syntax in CI workflow
+- set up core.hooksPath error handling in Makefile
+- enhance CI/CD workflows with Databricks integration and improved deployment
+- remove redundant uv installation from CI DABs pipeline
 
-### Features
+### Refactor
 
-* integrate bundle content in databricks.yml ([629d89c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/629d89cfde52d397590edc7a3f24c1987dcacef1))
-* remove gitleaks hook from pre-commit hooks ([2ce3a40](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2ce3a4023bc546e8885d9e13146303bd729ea2bb))
-* update to Databricks runtime 16.4-LTS (with corresponding Python versions) in templates and configuration files ([6c41cc4](https://github.com/revodatanl/revo-asset-bundle-templates/commit/6c41cc4f03811c36abd69b90df9617f46ed098c1))
-* utilize the system venv for most of the pre-commit hooks and use `prek` over `pre-commit` ([302a7c7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/302a7c72ed8292e5aab0d7986a9d4d45da6f16ad))
+- consolidate preparation steps in Makefile
+- update Makefile and CI/CD templates for accelerator terminology consistency
+- rename modules to accelerators
 
+## v0.17.2 (2025-09-29)
 
-### Reverts
+### Fix
 
-* restore uv installation in CI DABs pipeline ([76f1caa](https://github.com/revodatanl/revo-asset-bundle-templates/commit/76f1caaee92fdc42345d2d0d240ab1995dcbfaf1))
+- update release.config.mjs to reference correct docs filename
 
-## [0.17.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.1...v0.17.2) (2025-09-29)
+## v0.17.1 (2025-09-29)
 
+### Fix
 
-### Bug Fixes
+- simplify pre-commit installation in Makefile
+- enforce conventional commits using Commitizen in downstream template
+- improve linting target in Makefile
+- enforce conventional commits using Commitizen
 
-* update release.config.mjs to reference correct docs filename ([e42487c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e42487c3ec2cd9b80e9a9737ca70af79f735f26e))
+## v0.17.0 (2025-09-23)
 
-## [0.17.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.17.0...v0.17.1) (2025-09-29)
+### Feat
 
+- remove tree functionality from template
+- add conditional CI/CD setup and enhanced template validation
+- remove package_name from the bundle initialization parameter
 
-### Bug Fixes
+### Fix
 
-* enforce conventional commits using Commitizen ([5464a52](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5464a5242bfc142bdc15a4852645de42225fc0d8))
-* enforce conventional commits using Commitizen in downstream template ([22a959b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/22a959bf17ab6723788ddb0032accbaf210b0943))
-* improve linting target in Makefile ([5b85de4](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5b85de46ad4f1a4b2da922493bc496704f58de91))
-* simplify pre-commit installation in Makefile ([15877fe](https://github.com/revodatanl/revo-asset-bundle-templates/commit/15877fe0ef4ca5afe81988f2d337b661885ba648))
+- align Databricks authentication with best practices
+- update template package_name replacement ensuring Windows compatability
+- include missing prerequisite tools check in setup target
+- update CD pipelines to trigger on tags and fix GitHub Actions environment errors
+- replace DLT with Lakeflow Declarative Pipelines nomenclature
 
-# [0.17.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.5...v0.17.0) (2025-09-23)
+### Refactor
 
+- rename .azuredevops to .azure
 
-### Bug Fixes
+## v0.16.5 (2025-08-08)
 
-* align Databricks authentication with best practices ([10aecf7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/10aecf736baa88edfcf2df513fb490010ef30561))
-* include missing prerequisite tools check in setup target ([e9b34b0](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e9b34b0ec913fc0fcd27f1d0b0feeb1b0c6b9b57))
-* replace DLT with Lakeflow Declarative Pipelines nomenclature ([06baeeb](https://github.com/revodatanl/revo-asset-bundle-templates/commit/06baeebe5ac3a7693e2ffa8c155cd24ab59060a4))
-* update CD pipelines to trigger on tags and fix GitHub Actions environment errors ([2dbf6b2](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2dbf6b2beab0daad4e9f1fd87478643304156158))
-* update template package_name replacement ensuring Windows compatability ([8081560](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8081560bb106e30bd829c36e3023d448d0e4eb59))
+### Fix
 
+- update sqlfluff settings to allow `$catalog_name`.`$schema_name`.`$table_name`
 
-### Features
+## v0.16.4 (2025-08-07)
 
-* add conditional CI/CD setup and enhanced template validation ([11c1580](https://github.com/revodatanl/revo-asset-bundle-templates/commit/11c1580365747860d6628f4bce01c7abeb65daf3))
-* remove package_name from the bundle initialization parameter ([36527c7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/36527c702ae0b84fc4c2d44bcc170f7e2185f201))
-* remove tree functionality from template ([03a8b52](https://github.com/revodatanl/revo-asset-bundle-templates/commit/03a8b520b620b368cee59481fc590df9f0723bff))
+### Fix
 
-## [0.16.5](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.4...v0.16.5) (2025-08-08)
+- ruff output in Azure CI
 
+## v0.16.3 (2025-08-07)
 
-### Bug Fixes
+### Fix
 
-* update sqlfluff settings to allow `$catalog_name`.`$schema_name`.`$table_name` ([2bf1b3d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2bf1b3d9e9cc477fee70625cb82c57107ba28d8a))
+- update remaining deploy-dab references to cd
 
-## [0.16.4](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.3...v0.16.4) (2025-08-07)
+## v0.16.2 (2025-08-04)
 
+### Fix
 
-### Bug Fixes
+- clean up Makefile
 
-* ruff output in Azure CI ([e19eeaa](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e19eeaacf2506220712cbb6994baf71778c9a2b1))
+## v0.16.1 (2025-07-31)
 
-## [0.16.3](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.2...v0.16.3) (2025-08-07)
+### Fix
 
+- reset profile name in Makefile
+- improve robustness of make update target
 
-### Bug Fixes
+## v0.16.0 (2025-07-25)
 
-* update remaining deploy-dab references to cd ([f71fbd8](https://github.com/revodatanl/revo-asset-bundle-templates/commit/f71fbd8539346752a1b4644b36b97d0d9238fe3a))
+### Feat
 
-## [0.16.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.1...v0.16.2) (2025-08-04)
+- isolate devcontainer from core template
+- synchronize pre-commit, CI, and local development environments
+- update documentation in absence of MkDocs
+- default to always use databricks-connect
+- isolate SQLFluff from core template
+- isolate bandit from core template
+- remove bandit security scanning from core template
 
+### Fix
 
-### Bug Fixes
+- manually install uv and Databricks CLI in CI pipeline
+- remove unnecessary .tmpl anchors
+- update devcontainer tag
+- update vscode settings
+- update DevContainer configuration to match updated lean image
 
-* clean up Makefile ([5518f25](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5518f258d37bb6e22f9cafe75ee1ad023e7ca178))
+### Refactor
 
-## [0.16.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.16.0...v0.16.1) (2025-07-31)
+- made Makefile a lot simpler
+- rename pipeline deploy-dab to CD
+- isolate MkDocs from core template
+- update vscode settings
 
+## v0.15.3 (2025-06-10)
 
-### Bug Fixes
+### Fix
 
-* improve robustness of make update target ([bfa4d9d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/bfa4d9d73a82dcedd33ad18f5638e5269ad182b0))
-* reset profile name in Makefile ([aea6a7f](https://github.com/revodatanl/revo-asset-bundle-templates/commit/aea6a7f1d3d4b3e3d7d8aef0b45e97a79e567397))
+- **claude**: include Claude Code GitHub Action
 
-# [0.16.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.3...v0.16.0) (2025-07-25)
+## v0.15.2 (2025-06-06)
 
+### Fix
 
-### Bug Fixes
+- **azure**: update conditions for manual validation and production deployment stages in DAB pipeline
+- **github**: update DAB deployment configurations composite action
+- **makefile**: add pre-commit autoupdate step in setup target
+- **template**: add preamble directive for databricks_connect documentation
+- **azure**: enhance unit test step to publish test and coverage results
+- **github**: add composite action for deploying Databricks bundles
+- **azure**: use vmImage in CI and deployment pipelines
+- **azure**: omit redundancies from semantic release pipeline
 
-* manually install uv and Databricks CLI in CI pipeline ([b4c2c98](https://github.com/revodatanl/revo-asset-bundle-templates/commit/b4c2c9800cef4bc0ab6807af01acd0adfc027b38))
-* remove unnecessary .tmpl anchors ([e782134](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e78213401ca3c8694bd8b0474cbf3b7bfec9280b))
-* update DevContainer configuration to match updated lean image ([4c85ecc](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4c85ecc3a4f38d932ff326cf54b48049537b90c8))
-* update devcontainer tag ([ce068a0](https://github.com/revodatanl/revo-asset-bundle-templates/commit/ce068a02c9bfcdb7da6e08df61ca8f576b808bf6))
-* update vscode settings ([7ce376d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/7ce376d8e444da8df5c354f0e04dec242358ea15))
+## v0.15.1 (2025-06-02)
 
+### Fix
 
-### Features
+- update targets configuration by adding host
+- include pip dependency for databricks-connect
+- decouple targets and variables from databricks.yml
+- **ci-dabs**: enhance workflow with DevContainer support
 
-* default to always use databricks-connect ([a5c8565](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a5c85650887e6ddaf5cfbec7502d596e67f824a8))
-* isolate bandit from core template ([67709d9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/67709d9436b672612f967dfd1e1a598f16bae640))
-* isolate devcontainer from core template ([bbf84f9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/bbf84f96fc8fea4b6f1304dd4ce19b57bbdc7c5f))
-* isolate SQLFluff from core template ([aef2a2d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/aef2a2ddb26b32da076ff72d9b902d854ba051c1))
-* remove bandit security scanning from core template ([1508e7d](https://github.com/revodatanl/revo-asset-bundle-templates/commit/1508e7d0a9d6d0d7d6b3ce804dda62bec9455f49))
-* synchronize pre-commit, CI, and local development environments ([6327360](https://github.com/revodatanl/revo-asset-bundle-templates/commit/63273602e0a6f7577ef5f129c2e5001fb396775a))
-* update documentation in absence of MkDocs ([c976c55](https://github.com/revodatanl/revo-asset-bundle-templates/commit/c976c550aed2536cc49e0cc6b8ac44813248221e))
+## v0.15.0 (2025-05-30)
 
-## [0.15.3](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.2...v0.15.3) (2025-06-10)
+### Feat
 
+- add Databricks Connect support and adapt testing configuration accordingly
 
-### Bug Fixes
+### Fix
 
-* **claude:** include Claude Code GitHub Action ([e46966e](https://github.com/revodatanl/revo-asset-bundle-templates/commit/e46966e56e0424470216c51a2899f7a9adfc5d1e))
+- remove DevContainer configuration from the CI DABs pipeline
+- **ci-dabs**: update matrix configuration to include 'use_databricks_connect' keys
 
-## [0.15.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.1...v0.15.2) (2025-06-06)
+## v0.14.2 (2025-05-23)
 
+### Fix
 
-### Bug Fixes
+- **ci-dabs**: improve error handling for missing workflows in CI pipeline
 
-* **azure:** enhance unit test step to publish test and coverage results ([f0425ac](https://github.com/revodatanl/revo-asset-bundle-templates/commit/f0425ac4b7109399d8fd5d51463345198ef51220))
-* **azure:** omit redundancies from semantic release pipeline ([dc0f319](https://github.com/revodatanl/revo-asset-bundle-templates/commit/dc0f319225807482d6f45bdece185b48c19e8d5c))
-* **azure:** update conditions for manual validation and production deployment stages in DAB pipeline ([f5321c7](https://github.com/revodatanl/revo-asset-bundle-templates/commit/f5321c7701301858c012a2de31f7478fb0f0fb5c))
-* **azure:** use vmImage in CI and deployment pipelines ([ef98b5c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/ef98b5c8a91b1f760d96d0d2082e3d9904453a6e))
-* **github:** add composite action for deploying Databricks bundles ([29c0346](https://github.com/revodatanl/revo-asset-bundle-templates/commit/29c03466f2791034db556f2b1fa9cd521fd5e051))
-* **github:** update DAB deployment configurations composite action ([4d274ad](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4d274ad576606434eda8bb0398bd7d53fcf7fa02))
-* **makefile:** add pre-commit autoupdate step in setup target ([b339313](https://github.com/revodatanl/revo-asset-bundle-templates/commit/b339313282d5765f3303d23858e5f9de4f7805b5))
-* **template:** add preamble directive for databricks_connect documentation ([53ce1c6](https://github.com/revodatanl/revo-asset-bundle-templates/commit/53ce1c6271c6b654b76c9aa43d0531cc19172191))
+## v0.14.1 (2025-05-22)
 
-## [0.15.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.15.0...v0.15.1) (2025-06-02)
+### Fix
 
+- remove gitmoji hook from pre-commit configuration
 
-### Bug Fixes
+## v0.14.0 (2025-05-22)
 
-* **ci-dabs:** enhance workflow with DevContainer support ([233f344](https://github.com/revodatanl/revo-asset-bundle-templates/commit/233f34406ead0c3ea03c0bf981c94f97ced5bf3a))
-* decouple targets and variables from databricks.yml ([5e51792](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5e5179250174d77a189149e6be0999499e19ea53))
-* include pip dependency for databricks-connect ([6f467a1](https://github.com/revodatanl/revo-asset-bundle-templates/commit/6f467a1540a1f75edeb7befb6bb162c0742e23a0))
-* update targets configuration by adding host ([36673be](https://github.com/revodatanl/revo-asset-bundle-templates/commit/36673be9fb062d6d5fd40e5705a823d1d5ab3ee3))
+### Feat
 
-# [0.15.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.2...v0.15.0) (2025-05-30)
+- **gitmoji**: add this very important hook to the template
 
+### Fix
 
-### Bug Fixes
+- **configuration**: update mypy configuration and Makefile redundancies
 
-* **ci-dabs:** update matrix configuration to include 'use_databricks_connect' keys ([41ef611](https://github.com/revodatanl/revo-asset-bundle-templates/commit/41ef611368904a6da8a5842a512ab4010a8070ed))
-* remove DevContainer configuration from the CI DABs pipeline ([1287e61](https://github.com/revodatanl/revo-asset-bundle-templates/commit/1287e61b8ce138837d82d1d257eca61ae9c7ad3d))
+## v0.13.0 (2025-05-13)
 
+### Feat
 
-### Features
+- add databricks connect and dlt builtins
 
-* add Databricks Connect support and adapt testing configuration accordingly ([8ce6874](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8ce687499f25eac3e4d74de1bf760e01a402ca66))
+### Fix
 
-## [0.14.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.1...v0.14.2) (2025-05-23)
+- {{end}} line error in makefile
 
+## v0.12.0 (2025-05-08)
 
-### Bug Fixes
+### Feat
 
-* **ci-dabs:** improve error handling for missing workflows in CI pipeline ([fa911ae](https://github.com/revodatanl/revo-asset-bundle-templates/commit/fa911ae41490b029de1fbfeb861fa4cbba32052d))
-* include default_task_config in example workflow ([20fd550](https://github.com/revodatanl/revo-asset-bundle-templates/commit/20fd550))
-* setup proper error handling in CI pipeline templates ([727e977](https://github.com/revodatanl/revo-asset-bundle-templates/commit/727e977))
-* package_name issues ([6502e82](https://github.com/revodatanl/revo-asset-bundle-templates/commit/6502e82))
-* template initialization for the python_wheel_job ([83cbcea](https://github.com/revodatanl/revo-asset-bundle-templates/commit/83cbcea))
+- **devcontainers**: include generalized devcontainers configuration
 
-## [0.14.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.14.0...v0.14.1) (2025-05-22)
+## v0.11.2 (2025-04-09)
 
+### Fix
 
-### Bug Fixes
+- **template**: do not deploy __builtins__.pyi in a python-only project
+- **github-action**: add gitleaks support in CI pipeline
+- **azure-pipelines**: add uv support in CI pipeline
+- **template**: debug example job deployment
 
-* remove gitmoji hook from pre-commit configuration ([2c36db3](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2c36db36abed48267d0c956577a3f6fb40924600))
+## v0.11.1 (2025-03-18)
 
-# [0.14.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.13.0...v0.14.0) (2025-05-22)
+### Fix
 
+- **semantic-release**: update regex for version replacement
+- **pyproject**: relaxed some linting exceptions to pyproject.toml template
+- **devcontainer**: enhance entrypoint validation
+- **settings**: re-add (parameterized) settings.json for VS Code
 
-### Bug Fixes
+## v0.11.0 (2025-03-12)
 
-* **configuration:** update mypy configuration and Makefile redundancies ([a86237b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a86237bce931f15840bcb298bcd6f701a06095c3))
-* **ci-dabs:** deploy and run example workflows ([302f1fd](https://github.com/revodatanl/revo-asset-bundle-templates/commit/302f1fd))
-* **mypy:** defined mypy_path for more robustness ([4bfec8c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4bfec8c))
-* **ci-dabs:** clean the pipeline of redundancies ([7b62fed](https://github.com/revodatanl/revo-asset-bundle-templates/commit/7b62fed))
-* **ci:** debug GitHub CI pipeline ([c6c92c9](https://github.com/revodatanl/revo-asset-bundle-templates/commit/c6c92c9))
+### Feat
 
+- **tests**: add integration (Spark) vs. unit tests
+- **devcontainer**: add Databricks Runtime development environment container
 
-### Features
+### Fix
 
-* **gitmoji:** add this very important hook to the template ([514f635](https://github.com/revodatanl/revo-asset-bundle-templates/commit/514f635b2b4ce71d5333cdf9195df44f8e00d130))
-* **ci-dabs:** introduce a CI pipeline to test the deployability of the DABs template ([a112cdd](https://github.com/revodatanl/revo-asset-bundle-templates/commit/a112cdd))
-* **modules:** integrate deploy-dab pipeline by default in template, effectively making revodata modules redundant ([1331cef](https://github.com/revodatanl/revo-asset-bundle-templates/commit/1331cef))
-* **uv:** remove package_manager option from template, default to uv ([01485ca](https://github.com/revodatanl/revo-asset-bundle-templates/commit/01485ca))
+- **pyproject**: migrate pyproject.toml to Poetry 2.0 configuration
+- **package-manager**: minimize uv/poetry redundancy
 
-# [0.13.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.12.0...v0.13.0) (2025-05-13)
+## v0.10.2 (2025-03-10)
 
+### Fix
 
-### Bug Fixes
+- **semantic-release**: standardize Semantic Release with the official Node.js package
+- **deploy-dab**: debug deploy-dab pipeline for Azure and GitHub
+- **template**: enhance Databricks Asset Bundle template configuration
+- **pre-commit**: add a poetry/uv lock step to the pre-commit hook
+- **semantic-release**: streamline semantic release pipeline for Azure DevOps
+- update Ruff configuration to once again exclude default directories (like .venv)
 
-* {{end}} line error in makefile ([3b50054](https://github.com/revodatanl/revo-asset-bundle-templates/commit/3b5005492e3cf4aedc38e8ff5ed5fa51f8839280))
+## v0.10.1 (2024-11-14)
 
+### Fix
 
-### Features
+- **uv**: make wheel jobs executable by providing a [project.scripts] section in pyproject.toml
+- downgrade python_only default version to 3.12 since 3.13 was not compatible with mypy and pyenv
+- **settings**: virtual environment will now succesfully be activated after opening a new terminal
 
-* add databricks connect and dlt builtins ([dd7afbf](https://github.com/revodatanl/revo-asset-bundle-templates/commit/dd7afbfd49b537388eef1a5175dfa2119a0cbe80))
+## v0.10.0 (2024-11-11)
 
-# [0.12.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.2...v0.12.0) (2025-05-08)
+### Feat
 
+- add LICENSE
+- add a CONTRIBUTING section
 
-### Features
+### Fix
 
-* **devcontainers:** include generalized devcontainers configuration ([2e07b1e](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2e07b1ee09a24888d71b3c80e6178854d522cbdd))
+- **makefile**: simplify workflow by condensing `make install` and `make setup` into a single `make setup` command
 
-## [0.11.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.1...v0.11.2) (2025-04-09)
+## v0.9.4 (2024-11-11)
 
+### Fix
 
-### Bug Fixes
+- unify CHANGELOG generation location
+- make pre-commit configuration more resilient to auto-formatting
+- integrate sqlfluff configuration
+- **poetry**: retire poetry-types
 
-* **azure-pipelines:** add uv support in CI pipeline ([5770b0e](https://github.com/revodatanl/revo-asset-bundle-templates/commit/5770b0e5867290fb24471156cc877dffec37ddb4))
-* **github-action:** add gitleaks support in CI pipeline ([b39fd7b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/b39fd7b26e6e05e96d33eda6d0ea8b6a71291997))
-* **template:** debug example job deployment ([132f477](https://github.com/revodatanl/revo-asset-bundle-templates/commit/132f477f97827afab9c3eb5fdf875a4fa8b1fd3f))
-* **template:** do not deploy __builtins__.pyi in a python-only project ([074263c](https://github.com/revodatanl/revo-asset-bundle-templates/commit/074263cb760f16252eb5704e3587f027539a13c8))
+## v0.9.3 (2024-11-03)
 
-## [0.11.1](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.11.0...v0.11.1) (2025-03-18)
+### Fix
 
+- python_only projects default to python version 3.13
 
-### Bug Fixes
+## v0.9.2 (2024-11-02)
 
-* **devcontainer:** enhance entrypoint validation ([07d134b](https://github.com/revodatanl/revo-asset-bundle-templates/commit/07d134b1b192dacfc5ea1ef0c5c34f911156caf7))
-* **pyproject:** relaxed some linting exceptions to pyproject.toml template ([979ff89](https://github.com/revodatanl/revo-asset-bundle-templates/commit/979ff8993ce88c44563599920b96e884d79f3721))
-* **semantic-release:** update regex for version replacement ([8b5f1d2](https://github.com/revodatanl/revo-asset-bundle-templates/commit/8b5f1d2023cf2993406702178889aa2250d05574))
-* **settings:** re-add (parameterized) settings.json for VS Code ([712844e](https://github.com/revodatanl/revo-asset-bundle-templates/commit/712844eba1921214b8f9ea5bbff8a59d6b3fd01c))
+### Fix
 
-# [0.11.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.10.2...v0.11.0) (2025-03-12)
+- clean up poetry references in poetry template
 
+## v0.9.1 (2024-11-01)
 
-### Bug Fixes
+### Fix
 
-* **package-manager:** minimize uv/poetry redundancy ([9725958](https://github.com/revodatanl/revo-asset-bundle-templates/commit/97259585d0ff383e6a186f0d0d1121e235516086))
-* **pyproject:** migrate pyproject.toml to Poetry 2.0 configuration ([757c4ca](https://github.com/revodatanl/revo-asset-bundle-templates/commit/757c4ca465968a739a31c9cad5fedf4ef19f0a24))
+- revert python version to 3.11 (rather than 3.11.0)
 
+## v0.9.0 (2024-11-01)
 
-### Features
+### Feat
 
-* **devcontainer:** add Databricks Runtime development environment container ([27f1059](https://github.com/revodatanl/revo-asset-bundle-templates/commit/27f105958e49ebd8e7c7f3f8a1e9c5d1e8848002))
-* **tests:** add integration (Spark) vs. unit tests ([b11ef6f](https://github.com/revodatanl/revo-asset-bundle-templates/commit/b11ef6f12cf384da0558d1a14066f28cd1f9570d))
+- add uv-support
 
-## [0.10.2](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.10.1...v0.10.2) (2025-03-10)
+## v0.8.1 (2024-11-01)
 
+### Fix
 
-### Bug Fixes
+- upgrade to Python 3.11 (corresponding to Databricks Runtime 15.4 LTS)
 
-* **deploy-dab:** debug deploy-dab pipeline for Azure and GitHub ([fdda4a8](https://github.com/revodatanl/revo-asset-bundle-templates/commit/fdda4a84bc33904f2d93c71fc8e3413130acfec4))
-* **pre-commit:** add a poetry/uv lock step to the pre-commit hook ([25b4fef](https://github.com/revodatanl/revo-asset-bundle-templates/commit/25b4feffa72c3bba0bf07228b52eda4389189f02))
-* **semantic-release:** standardize Semantic Release with the official Node.js package ([2e58efa](https://github.com/revodatanl/revo-asset-bundle-templates/commit/2e58efa3df043c33d964ca2c17d9f282b008618a))
-* **semantic-release:** streamline semantic release pipeline for Azure DevOps ([466b350](https://github.com/revodatanl/revo-asset-bundle-templates/commit/466b3502bf7aebcc244b515822a4f1885e96a143))
-* **template:** enhance Databricks Asset Bundle template configuration ([065b939](https://github.com/revodatanl/revo-asset-bundle-templates/commit/065b939ab8cb5510a59d47710d73159ad370ec5d))
-* update Ruff configuration to once again exclude default directories (like .venv) ([4ca8d4f](https://github.com/revodatanl/revo-asset-bundle-templates/commit/4ca8d4fc2af1235fdd87ffbc684fb3c02a4b1043))
+## v0.8.0 (2024-11-01)
 
-## [0.10.1] - 2024-11-14
+### Feat
 
-### 🐛 Bug Fixes
+- refactor databricks_template_schema.json to enable conditional template initialization
 
-- *(settings)* Virtual environment will now succesfully be activated after opening a new terminal
-- Downgrade python_only default version to 3.12 since 3.13 was not compatible with mypy and pyenv
-- *(uv)* Make wheel jobs executable by providing a [project.scripts] section in pyproject.toml
+### Fix
 
-## [0.10.0] - 2024-11-11
+- add python_only option in template
+- update deployable modules via Revo Modules make commands
+- conditional deployment of git client files
+- conditional README generation, dependent on git client
 
-### 🚀 Features
+## v0.7.0 (2024-10-31)
 
-- Add a CONTRIBUTING section
-- Add LICENSE
+### Feat
 
-### 🐛 Bug Fixes
+- **DLT**: conditionally include DLT sample pipeline in template by means of a __preamble file
+- **pre-commit**: add bandit to pre-commit checks
 
-- *(makefile)* Simplify workflow by condensing `make install` and `make setup` into a single `make setup` command
+### Fix
 
-## [0.9.4] - 2024-11-11
+- **deps**: update mypy settings
+- notebook folder placement in template
+- **modules**: add __preamble.tmpl to replace certain features of modules
+- **modules**: add databricks-dlt package to dependencies and adapt project configuration accordingly
 
-### 🐛 Bug Fixes
+## v0.6.1 (2024-10-07)
 
-- *(poetry)* Retire poetry-types
-- Integrate sqlfluff configuration
-- Make pre-commit configuration more resilient to auto-formatting
-- Unify CHANGELOG generation location
+### Fix
 
-## [0.9.3] - 2024-11-03
+- **azure-devops**: fix CHANGELOG generation always lagging 1 version behind
 
-### 🐛 Bug Fixes
+## v0.6.0 (2024-10-07)
 
-- Python_only projects default to python version 3.13
+### Feat
 
-## [0.9.2] - 2024-11-02
+- differentiate between project_name and package_name in template
 
-### 🐛 Bug Fixes
+### Fix
 
-- Clean up poetry references in poetry template
+- **DLT**: update the wheel installation (still non-functional)
+- add .vscode settings
+- **semantic-release**: add the version number to the documentation
+- **docs**: add Poetry badge
 
-## [0.9.1] - 2024-11-01
+## v0.5.3 (2024-09-26)
 
-### 🐛 Bug Fixes
+### Fix
 
-- Revert python version to 3.11 (rather than 3.11.0)
+- **docs**: minor fixes in the mkdocs configuration
+- **coverage**: generate coverage badge with `genbadge` and `coverage`
+- **semantic-release**: automatically update version in README template
+- adapted pull request template for all modules
+- **semantic-release**: update the Semantic Release pipeline
+- **semantic-release**: versioning using the language-agnostic Semantic Release package
+- **semantic-release**: remove unnecessary code for fetching and rebasing onto latest main
+- **semantic-release**: fix rebase issue in semantic-release-tagging.yml
 
-## [0.9.0] - 2024-11-01
+## v0.5.2 (2024-09-26)
 
-### 🚀 Features
+## v0.5.1 (2024-09-26)
 
-- Add uv-support
+### Fix
 
-## [0.8.1] - 2024-11-01
+- **modules**: include CI/CD template for Databricks Asset Bundle deployment with GitHub (to Azure)
+- **modules**: update CI/CD pipelines for Azure DevOps and GitHub
+- **semantic-release**: streamline semantic-release pipeline to prevent merge commits
 
-### 🐛 Bug Fixes
+## v0.5.0 (2024-09-25)
 
-- Upgrade to Python 3.11 (corresponding to Databricks Runtime 15.4 LTS)
+### Feat
 
-## [0.8.0] - 2024-10-31
+- **pre-commit**: add conventional commit linter and docstring linter
+- **dependabot**: add dependabot functionality
+- **modules**: split GitHub functionality in its own module
 
-### 🚀 Features
+### Fix
 
-- Refactor databricks_template_schema.json to enable conditional template initialization
+- **modules**: remove non-functional gitlab module
+- **semantic-release**: add git-cliff CHANGELOG generation
 
-### 🐛 Bug Fixes
+## v0.4.3 (2024-07-16)
 
-- Conditional README generation, dependent on git client
-- Conditional deployment of git client files
-- Update deployable modules via Revo Modules make commands
-- Add python_only option in template
+## v0.4.2 (2024-07-16)
 
-## [0.7.0] - 2024-10-31
+### Fix
 
-### 🚀 Features
-
-- *(pre-commit)* Add bandit to pre-commit checks
-- *(DLT)* Conditionally include DLT sample pipeline in template by means of a __preamble file
-
-### 🐛 Bug Fixes
-
-- *(modules)* Add databricks-dlt package to dependencies and adapt project configuration accordingly
-- *(modules)* Add __preamble.tmpl to replace certain features of modules
-- Notebook folder placement in template
-- *(deps)* Update mypy settings
-
-## [0.6.1] - 2024-10-07
-
-### 🐛 Bug Fixes
-
-- *(azure-devops)* Fix CHANGELOG generation always lagging 1 version behind
-
-## [0.6.0] - 2024-10-07
-
-### 🚀 Features
-
-- Differentiate between project_name and package_name in template
-
-### 🐛 Bug Fixes
-
-- *(docs)* Add Poetry badge
-- *(semantic-release)* Add the version number to the documentation
-- Add .vscode settings
-- *(DLT)* Update the wheel installation (still non-functional)
-
-### 📚 Documentation
-
-- Update commands page
-
-### ⚙️ Miscellaneous Tasks
-
-- *(docs)* Minor fixes in docs template
-
-## [0.5.3] - 2024-09-26
-
-### 🐛 Bug Fixes
-
-- *(semantic-release)* Fix rebase issue in semantic-release-tagging.yml
-- *(semantic-release)* Remove unnecessary code for fetching and rebasing onto latest main
-- *(semantic-release)* Versioning using the language-agnostic Semantic Release package
-- *(semantic-release)* Update the Semantic Release pipeline
-- Adapted pull request template for all modules
-- *(semantic-release)* Automatically update version in README template
-- *(coverage)* Generate coverage badge with `genbadge` and `coverage`
-- *(docs)* Minor fixes in the mkdocs configuration
-
-### ◀️ Revert
-
-- *(semantic-release)* Remove semantic PR title pipeline
-
-## [0.5.1] - 2024-09-26
-
-### 🐛 Bug Fixes
-
-- *(semantic-release)* Streamline semantic-release pipeline to prevent merge commits
-- *(modules)* Update CI/CD pipelines for Azure DevOps and GitHub
-- *(modules)* Include CI/CD template for Databricks Asset Bundle deployment with GitHub (to Azure)
-
-## [0.5.0] - 2024-09-25
-
-### 🚀 Features
-
-- *(modules)* Split GitHub functionality in its own module
-- *(dependabot)* Add dependabot functionality
-- *(pre-commit)* Add conventional commit linter and docstring linter
-
-### 🐛 Bug Fixes
-
-- *(semantic-release)* Add git-cliff CHANGELOG generation
-- *(modules)* Remove non-functional gitlab module
-
-### 📚 Documentation
-
-- Add mkdocs documentation
-- Update documentation structure
-
-### ⚙️ Miscellaneous Tasks
-
-- Updated configuration
-- Update pre-commit configuration
-- Minor docfixes
-
-## [0.4.3] - 2024-07-16
-
-### ⚙️ Miscellaneous Tasks
-
-- Fix DLT module pipeline
-
-## [0.4.2] - 2024-07-16
-
-### 🐛 Bug Fixes
-
-- Relax dependency issues
 - Fix Dependabot issue
+- Relax dependency issues
 
-### ⚙️ Miscellaneous Tasks
+## v0.4.1 (2024-07-15)
 
-- Fix typo in CI pipeline
+### Fix
 
-## [0.4.1] - 2024-07-15
+- functionalize the CI pipeline
 
-### 🐛 Bug Fixes
+## v0.4.0 (2024-07-14)
 
-- Functionalize the CI pipeline
+### Fix
 
-### 📚 Documentation
-
-- Fix asset references in docs
-
-### ⚙️ Miscellaneous Tasks
-
-- Fix typo
-- Fix typo in CI pipeline
-- Bump the version
-
-## [0.4.0] - 2024-07-14
-
-### 🐛 Bug Fixes
-
-- Added python vs. pyenv case to makefile configuration
-- Add `install` target to makefile to facilitate setup
-- Update the .PHONY in the makefile template
-- Add .vscode settings
-- Mypy configuration issue + got rid of buggy pylint integration
-- Update Makefile config
-- Add .vscode to template
 - Update make clean target
+- Add .vscode to template
+- Update Makefile config
+- Mypy configuration issue + got rid of buggy pylint integration
+- Add .vscode settings
+- Update the .PHONY in the makefile template
+- Add `install` target to makefile to facilitate setup
+- Added python vs. pyenv case to makefile configuration
 
-### 📚 Documentation
+## v0.3.2 (2024-06-14)
 
-- Update readme
-- Add comprehensive documentation
-
-### ⚙️ Miscellaneous Tasks
-
-- Update Python version to $(PYTHON_VERSION) in Azure DevOps CI pipeline
-- Update makefile settings
-- Remove pylint from default dependencies
-- Use .py rather than .ipynb for notebooks
-- Add docs to readme
-- Bump the version
-
-## [0.3.2] - 2024-06-14
-
-### 🐛 Bug Fixes
+### Fix
 
 - Update problematic MyPy and Ruff configuration
 
-### 📚 Documentation
+## v0.3.1 (2024-06-14)
 
-- Update release version in docs
+### Fix
 
-### ⚙️ Miscellaneous Tasks
-
-- Remove unused module creation command
-- Update RevoData Asset Bundle Template version to 0.3.1
-
-## [0.3.1] - 2024-06-14
-
-### 🐛 Bug Fixes
-
-- Update pool references in job template and variables
-- Debug DLT and basic workflow functionality
-- Update library reference
-- Update VSCode settings module
-- Remove pool configuration for DLT
-- Debug jobs, boththe DLT and the default job
 - Update deploy-dab pipeline
+- Debug jobs, boththe DLT and the default job
+- Remove pool configuration for DLT
+- Update VSCode settings module
+- Update library reference
+- Debug DLT and basic workflow functionality
+- Update pool references in job template and variables
 
-### 📚 Documentation
+## v0.3.0 (2024-06-05)
 
-- Update documentation with images
+### Feat
 
-### ⚙️ Miscellaneous Tasks
-
-- Format the pre-commit hook
-- Rewrite the success messages for various modules
-- Update success message for DLT ingestion pipeline
-
-## [0.3.0] - 2024-06-05
-
-### 🚀 Features
-
-- Restructure repo to include multiple templates
-- Add metadata-driven DLT ingestion template
-- Add issue templates
-- Add Gitlab and Azure DevOps modules
-- Add VSCode settings module
 - Manually bumped the version to 0.3.0
+- Add VSCode settings module
+- Add Gitlab and Azure DevOps modules
+- Add issue templates
+- Add metadata-driven DLT ingestion template
+- Restructure repo to include multiple templates
 
-### 🐛 Bug Fixes
+### Fix
 
-- Label the templates with a separate databricks_template_schema.json file
-- Reset the base template functionality, introduce a modules folder
-- Add RevoData module functionality to Makefile
-- Add profile name to module deployment
-- Group poetry dependencies
-- Update the README
-- Update PyLint configuration in pyproject.toml
-- Restructure the modules
-- Debug the makefile for module use
-- Debug module functionality, and add interactive makefile behavior
 - Add VSCode module functionality to makefile
+- Debug module functionality, and add interactive makefile behavior
+- Debug the makefile for module use
+- Restructure the modules
+- Update PyLint configuration in pyproject.toml
+- Update the README
+- Group poetry dependencies
+- Add profile name to module deployment
+- Add RevoData module functionality to Makefile
+- Reset the base template functionality, introduce a modules folder
+- Label the templates with a separate databricks_template_schema.json file
 
-### ⚙️ Miscellaneous Tasks
+## v0.2.0 (2024-05-13)
 
-- Update branch reference in makefile
-- Add Pull Request template for Azure DevOps module
-- Update CI pipeline trigger requirements
-- Update default dependencies to match Databricks Runtime 14.3 LTS
-- Update success message for module deployment
-- Update pull request template
-- Add coverage report generation in ci pipeline
-- Disable unused ignore warnings in pyproject.toml
-- Add coverage in CI pipeline and readme
-- Update pre-commit hook
+### Feat
 
-## [0.2.0] - 2024-05-13
-
-### 🚀 Features
-
-- Add Python Semantic Release functionality to the template
-- Add GitHub Action to enforce Semantic Pull Requests
-- Integrate separate GitHub Actions in overarching CI pipeline
 - Add profile_name to DAB configuration
-
-### 📚 Documentation
-
-- Restructure README
-
-### ⚙️ Miscellaneous Tasks
-
-- Add template version number to README
-- Fix typo in DAB configuration
-- Update pre-commit configuration
-- Fix typo in README
+- Integrate separate GitHub Actions in overarching CI pipeline
+- Add GitHub Action to enforce Semantic Pull Requests
+- Add Python Semantic Release functionality to the template

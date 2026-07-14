@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Queue release runs instead of running them concurrently.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # create the tag and GitHub release, push the release PR branch
+      pull-requests: write   # open the release PR
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # full history and tags, needed for commit analysis
+
+      # Determines the next version from the conventional commits and updates
+      # CHANGELOG.md in a local bump commit. Nothing is pushed: the
+      # iso27001-protected-main ruleset forbids direct pushes to main.
+      - name: Bump version and changelog
+        id: cz
+        uses: commitizen-tools/commitizen-action@0.27.1
+        with:
+          commitizen_version: "4.16.4"  # keep in sync with .pre-commit-config.yaml
+          push: false
+          changelog_increment_filename: release-notes.md
+          no_raise: "3,21"  # 3 = no commits since the last tag, 21 = none of them release-worthy
+
+      # Tags are not protected by the ruleset: creating the release also
+      # creates the tag, pointing at the commit that triggered this run.
+      - name: Create the GitHub release
+        if: steps.cz.outputs.version != steps.cz.outputs.previous_version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.cz.outputs.version }}
+        run: |
+          gh release create "v$VERSION" \
+            --target "$GITHUB_SHA" \
+            --title "v$VERSION" \
+            --notes-file release-notes.md
+
+      - name: Stamp the released version into the template README
+        if: steps.cz.outputs.version != steps.cz.outputs.previous_version
+        env:
+          VERSION: ${{ steps.cz.outputs.version }}
+        run: |
+          sed -i -E "s/version \`[0-9]+\.[0-9]+\.[0-9]+\`/version \`$VERSION\`/g" \
+            "template/{{.project_name}}/README.md.tmpl"
+
+      # Routes the changelog commit and version stamp to main through a PR,
+      # as the ruleset requires. Reuses one rolling branch/PR across releases.
+      - name: Open the release PR
+        if: steps.cz.outputs.version != steps.cz.outputs.previous_version
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/release
+          delete-branch: true
+          add-paths: |
+            CHANGELOG.md
+            template/{{.project_name}}/README.md.tmpl
+          commit-message: "chore(release): v${{ steps.cz.outputs.version }} [skip ci]"
+          title: "chore(release): v${{ steps.cz.outputs.version }} [skip ci]"
+          body: >
+            Completes release
+            [v${{ steps.cz.outputs.version }}](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.cz.outputs.version }}):
+            adds the CHANGELOG.md entry and updates the template version stamp.

@@ -6,10 +6,10 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with ty](https://img.shields.io/badge/type%20checked-ty-261230.svg)](https://github.com/astral-sh/ty)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](https://github.com/commitizen-tools/commitizen)
 
 [![CI](https://github.com/revodatanl/revo-dabs/actions/workflows/ci-dabs.yml/badge.svg)](https://github.com/revodatanl/revo-dabs/actions/workflows/ci-dabs.yml)
-[![semantic-release](https://github.com/revodatanl/revo-dabs/actions/workflows/semantic-release.yml/badge.svg)](https://github.com/revodatanl/revo-dabs/actions/workflows/semantic-release.yml)
+[![Release](https://github.com/revodatanl/revo-dabs/actions/workflows/release.yml/badge.svg)](https://github.com/revodatanl/revo-dabs/actions/workflows/release.yml)
 ![just](https://img.shields.io/badge/%F0%9F%A4%96%20just-%3E1.25-000000?style=plastic&color=lime&link=https%3A%2F%2Fjust.systems%2Fman%2Fen%2F)
 
 The `RevoData Declarative Automation Bundle Templates` repo contains our own custom templates for Declarative Automation Bundles (formerly Databricks Asset Bundles). The template provides a complete development environment for new Databricks projects, including CI/CD pipelines, pre-commit hooks, semantic release, and example pipelines and jobs that can directly be deployed to Databricks.
