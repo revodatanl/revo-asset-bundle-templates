@@ -34,7 +34,14 @@ jobs:
           commitizen_version: "4.16.4"  # keep in sync with .pre-commit-config.yaml
           push: false
           changelog_increment_filename: release-notes.md
+          git_redirect_stderr: true  # keep git output out of the release notes
           no_raise: "3,21"  # 3 = no commits since the last tag, 21 = none of them release-worthy
+
+      # The commitizen action runs in a Docker container as root, leaving
+      # .git and the changelog root-owned; restore ownership so the release
+      # PR step can commit.
+      - name: Restore workspace ownership
+        run: sudo chown -R "$(id -u):$(id -g)" .
 
       # Tags are not protected by the ruleset: creating the release also
       # creates the tag, pointing at the commit that triggered this run.
@@ -59,10 +66,17 @@ jobs:
 
       # Routes the changelog commit and version stamp to main through a PR,
       # as the ruleset requires. Reuses one rolling branch/PR across releases.
+      # Org policy stops the default GITHUB_TOKEN from opening PRs; with the
+      # optional RELEASE_PR_TOKEN secret (fine-grained PAT, contents + pull
+      # requests write) the PR is opened automatically, without it the branch
+      # is still pushed and the job summary links to the compare page.
       - name: Open the release PR
+        id: release_pr
         if: steps.cz.outputs.version != steps.cz.outputs.previous_version
+        continue-on-error: true
         uses: peter-evans/create-pull-request@v8
         with:
+          token: ${{ secrets.RELEASE_PR_TOKEN || github.token }}
           branch: chore/release
           delete-branch: true
           add-paths: |
@@ -74,3 +88,18 @@ jobs:
             Completes release
             [v${{ steps.cz.outputs.version }}](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.cz.outputs.version }}):
             adds the CHANGELOG.md entry and updates the template version stamp.
+
+      - name: Link the release PR to open manually
+        if: steps.release_pr.outcome == 'failure'
+        run: |
+          {
+            echo "### Release PR needs to be opened manually"
+            echo ""
+            echo "GitHub Actions is not allowed to create pull requests in this organization."
+            echo "The \`chore/release\` branch is pushed; open the PR here:"
+            echo ""
+            echo "https://github.com/${GITHUB_REPOSITORY}/compare/main...chore/release?expand=1"
+            echo ""
+            echo "To automate this, add a \`RELEASE_PR_TOKEN\` repository secret"
+            echo "(fine-grained PAT with contents and pull requests write access)."
+          } >> "$GITHUB_STEP_SUMMARY"
