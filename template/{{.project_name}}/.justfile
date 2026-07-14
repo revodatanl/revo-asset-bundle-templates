@@ -17,7 +17,7 @@ set dotenv-load
 # We have to set the temp directory to prevent OS specific fallbacks that are not always available.
 set tempdir := ".just"
 
-# Imports Databricks Asset Bundle related recipes if they are deployed.
+# Imports Declarative Automation Bundle related recipes if they are deployed.
 import? '.just/dab.justfile'
 
 # Imports VS Code related recipes if they are deployed.

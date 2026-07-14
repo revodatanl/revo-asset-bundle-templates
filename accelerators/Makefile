@@ -5,8 +5,8 @@
 # Interactive module deployment - select and deploy template accelerators
 accelerator:
 	@echo "Select the accelerator to deploy:"
-	@echo "1) Deploy Databricks Asset Bundle pipeline for GitHub"
-	@echo "2) Deploy Databricks Asset Bundle pipeline for Azure DevOps"
+	@echo "1) Deploy Declarative Automation Bundle pipeline for GitHub"
+	@echo "2) Deploy Declarative Automation Bundle pipeline for Azure DevOps"
 	@echo "Enter the number of the accelerator you want to deploy: "
 	@read choice; \
 	case "$$choice" in \
@@ -25,7 +25,7 @@ accelerator_%:
 		set -e; \
 		trap 'if [ -f databricks.yml.bak ]; then mv databricks.yml.bak databricks.yml; fi' EXIT; \
 		if [ -f databricks.yml ]; then mv databricks.yml databricks.yml.bak; fi; \
-		if ! databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --template-dir accelerators/$* 2>&1; then \
+		if ! databricks bundle init https://github.com/revodatanl/revo-dabs --template-dir accelerators/$* 2>&1; then \
 			echo "Exiting." >&2; \
 		fi; \
 	}

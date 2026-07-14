@@ -1,6 +1,6 @@
 # Setting up a Development Environment with WSL
 
-This document explains how to set up a consistent development environment for Databricks Asset Bundles using Windows Subsystem for Linux (WSL).
+This document explains how to set up a consistent development environment for Declarative Automation Bundles using Windows Subsystem for Linux (WSL).
 
 ### Why Not Native Windows?
 
@@ -64,12 +64,12 @@ You need these tools installed on your system:
 
 4. **Initialize a New Project from Template**
 
-   Create a new project using the Databricks Asset Bundle template:
+   Create a new project using the Declarative Automation Bundle template:
 
    ```bash
    mkdir ~/code
    cd ~/code
-   databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates
+   databricks bundle init https://github.com/revodatanl/revo-dabs
    ```
 
    Follow the prompts to configure your project. This will create a new project directory with all necessary files.

@@ -68,7 +68,7 @@ jobs:
         run: |
           echo '{
             "project_name": "revo-dabs-test-project",
-            "project_description": "This project is generated using our own RevoData Asset Bundle Templates.",
+            "project_description": "This project is generated using our own RevoData Declarative Automation Bundle Templates.",
             "author": "Thomas Brouwer",
             "email": "thomas.brouwer@revodata.nl",
             "setup_type": "tailored",
@@ -79,10 +79,10 @@ jobs:
             "support_windows": "${{ matrix.support_windows }}"
           }' > init_params.json
 
-      - name: Initialize Databricks Asset Bundle from template
+      - name: Initialize Declarative Automation Bundle from template
         run: |
           echo "Using branch: $BRANCH_NAME"
-          databricks bundle init https://github.com/revodatanl/revo-asset-bundle-templates --branch $BRANCH_NAME --config-file init_params.json
+          databricks bundle init https://github.com/revodatanl/revo-dabs --branch $BRANCH_NAME --config-file init_params.json
         shell: bash
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
@@ -96,7 +96,7 @@ jobs:
           pwsh -NoProfile -ExecutionPolicy Bypass -File "./.just/just_bash.ps1"
           cd ..
 
-      - name: Build and test Databricks Asset Bundle with justfile
+      - name: Build and test Declarative Automation Bundle with justfile
         run: |
           cd revo-dabs-test-project
           echo ""
@@ -156,7 +156,7 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
-      - name: Deploy Databricks Asset Bundle (using default runner only)
+      - name: Deploy Declarative Automation Bundle (using default runner only)
         if: |
           matrix.os == 'ubuntu-latest' &&
           matrix.cicd_provider == 'github' &&
