@@ -1,19 +1,12 @@
 name: CD DABs
 
-# Post-merge counterpart to `CI DABs`: renders the template from main, deploys
-# the bundle, and runs the deployed example jobs end-to-end. This re-enables
-# the run tests that PR #120 disabled, with the robustness fixes it called for:
-# - `databricks bundle run <resource_key>` targets only this bundle's own
-#   deployment, instead of a workspace-wide job-name search
-# - a concurrency group shared with `CI DABs` ensures only one run touches the
-#   shared workspace at a time
-
 on:
   push:
     branches:
       - main
   workflow_dispatch:
 
+# Only one workflow run may touch the shared Databricks workspace at a time (group shared with ci-dabs.yml).
 concurrency:
   group: databricks-shared-workspace
   cancel-in-progress: false

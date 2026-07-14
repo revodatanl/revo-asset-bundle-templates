@@ -5,11 +5,7 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
-# Serialize all workflows that touch the shared Databricks workspace: concurrent
-# runs deploy/destroy the same bundle (same name, same dev target, same service
-# principal) and race each other's state. `CD DABs` (cd-dabs.yml) uses the same
-# group. Note: GitHub keeps at most one pending run per group — when several PRs
-# trigger at once, superseded pending runs are cancelled and need a re-run.
+# Only one workflow run may touch the shared Databricks workspace at a time (group shared with cd-dabs.yml).
 concurrency:
   group: databricks-shared-workspace
   cancel-in-progress: false
@@ -194,9 +190,6 @@ jobs:
           name: revo-dabs-test-project
           path: revo-dabs-test-project
           retention-days: 1
-
-# The deployed example jobs are exercised post-merge by the `CD DABs` workflow
-# (cd-dabs.yml), which deploys from main and runs them via `databricks bundle run`.
 
 # Destroy bundle regardless of the outcome of the deploy
   destroy-bundle:
