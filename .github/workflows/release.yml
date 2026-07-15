@@ -13,8 +13,7 @@ concurrency:
 
 jobs:
   release:
-    # workflow_dispatch offers every branch in the run-workflow UI; never
-    # release from anything but main.
+    # workflow_dispatch offers every branch; only ever release from main.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
@@ -27,9 +26,7 @@ jobs:
         with:
           fetch-depth: 0  # full history and tags, needed for commit analysis
 
-      # Determines the next version from the conventional commits and updates
-      # CHANGELOG.md in a local bump commit. Nothing is pushed: the
-      # iso27001-protected-main ruleset forbids direct pushes to main.
+      # Compute the next version and changelog in a local commit; the ruleset forbids pushing to main.
       - name: Bump version and changelog
         id: cz
         uses: commitizen-tools/commitizen-action@0.27.1
@@ -40,14 +37,11 @@ jobs:
           git_redirect_stderr: true  # keep git output out of the release notes
           no_raise: "3,21"  # 3 = no commits since the last tag, 21 = none of them release-worthy
 
-      # The commitizen action runs in a Docker container as root, leaving
-      # .git and the changelog root-owned; restore ownership so the release
-      # PR step can commit.
+      # The commitizen Docker action runs as root; restore ownership so later steps can commit.
       - name: Restore workspace ownership
         run: sudo chown -R "$(id -u):$(id -g)" .
 
-      # Tags are not protected by the ruleset: creating the release also
-      # creates the tag, pointing at the commit that triggered this run.
+      # Tags are unprotected: the release creates the tag on the triggering commit.
       - name: Create the GitHub release
         if: steps.cz.outputs.version != steps.cz.outputs.previous_version
         env:
@@ -67,12 +61,7 @@ jobs:
           sed -i -E "s/version \`[0-9]+\.[0-9]+\.[0-9]+\`/version \`$VERSION\`/g" \
             "template/{{.project_name}}/README.md.tmpl"
 
-      # Routes the changelog commit and version stamp to main through a PR,
-      # as the ruleset requires. Reuses one rolling branch/PR across releases.
-      # Org policy stops the default GITHUB_TOKEN from opening PRs; with the
-      # optional RELEASE_PR_TOKEN secret (fine-grained PAT, contents + pull
-      # requests write) the PR is opened automatically, without it the branch
-      # is still pushed and the job summary links to the compare page.
+      # Route the changelog and version stamp to main via a rolling PR; RELEASE_PR_TOKEN (PAT) opens it, without it the job summary links the compare page.
       - name: Open the release PR
         id: release_pr
         if: steps.cz.outputs.version != steps.cz.outputs.previous_version
