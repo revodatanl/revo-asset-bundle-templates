@@ -45,10 +45,10 @@ To contribute to this GitHub project, you can follow these steps:
         git add .
         ```
 
-    2. Commit the changes with a meaningful commit message using the [Angular Commit Message Conventions](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format). For example:
+    2. Commit the changes with a meaningful commit message using the [Conventional Commits](https://www.conventionalcommits.org) format — [commitizen](https://github.com/commitizen-tools/commitizen) enforces this via the commit-msg hook, and the Release workflow derives the next version from these messages (`fix` → patch, `feat` → minor, `feat!`/`BREAKING CHANGE` → major). For example:
 
         ```bash
-        git commit -m "fix(semantic-release): add GitLab support"
+        git commit -m "fix(just): add GitLab support"
         ```
 
     3. Push the changes using the following command:

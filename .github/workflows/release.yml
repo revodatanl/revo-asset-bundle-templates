@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Queue release runs instead of running them concurrently.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    # workflow_dispatch offers every branch; only ever release from main.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # create the tag and GitHub release, push the release PR branch
+      pull-requests: write   # open the release PR
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # full history and tags, needed for commit analysis
+
+      # Compute the next version and changelog in a local commit; the ruleset forbids pushing to main.
+      - name: Bump version and changelog
+        id: cz
+        uses: commitizen-tools/commitizen-action@0.27.1
+        with:
+          commitizen_version: "4.16.4"  # keep in sync with .pre-commit-config.yaml
+          push: false
+          changelog_increment_filename: release-notes.md
+          git_redirect_stderr: true  # keep git output out of the release notes
+          no_raise: "3,21"  # 3 = no commits since the last tag, 21 = none of them release-worthy
+
+      # The commitizen Docker action runs as root; restore ownership so later steps can commit.
+      - name: Restore workspace ownership
+        run: sudo chown -R "$(id -u):$(id -g)" .
+
+      # Tags are unprotected: the release creates the tag on the triggering commit.
+      - name: Create the GitHub release
+        if: steps.cz.outputs.version != steps.cz.outputs.previous_version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.cz.outputs.version }}
+        run: |
+          gh release create "v$VERSION" \
+            --target "$GITHUB_SHA" \
+            --title "v$VERSION" \
+            --notes-file release-notes.md
+
+      - name: Stamp the released version into the template README
+        if: steps.cz.outputs.version != steps.cz.outputs.previous_version
+        env:
+          VERSION: ${{ steps.cz.outputs.version }}
+        run: |
+          sed -i -E "s/version \`[0-9]+\.[0-9]+\.[0-9]+\`/version \`$VERSION\`/g" \
+            "template/{{.project_name}}/README.md.tmpl"
+
+      # Route the changelog and version stamp to main via a rolling PR; RELEASE_PR_TOKEN (PAT) opens it, without it the job summary links the compare page.
+      - name: Open the release PR
+        id: release_pr
+        if: steps.cz.outputs.version != steps.cz.outputs.previous_version
+        continue-on-error: true
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.RELEASE_PR_TOKEN || github.token }}
+          branch: chore/release
+          delete-branch: true
+          add-paths: |
+            CHANGELOG.md
+            template/{{.project_name}}/README.md.tmpl
+          commit-message: "chore(release): v${{ steps.cz.outputs.version }} [skip ci]"
+          title: "chore(release): v${{ steps.cz.outputs.version }} [skip ci]"
+          body: >
+            Completes release
+            [v${{ steps.cz.outputs.version }}](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.cz.outputs.version }}):
+            adds the CHANGELOG.md entry and updates the template version stamp.
+
+      - name: Link the release PR to open manually
+        if: steps.release_pr.outcome == 'failure'
+        run: |
+          {
+            echo "### Release PR needs to be opened manually"
+            echo ""
+            echo "GitHub Actions is not allowed to create pull requests in this organization."
+            echo "The \`chore/release\` branch is pushed; open the PR here:"
+            echo ""
+            echo "https://github.com/${GITHUB_REPOSITORY}/compare/main...chore/release?expand=1"
+            echo ""
+            echo "To automate this, add a \`RELEASE_PR_TOKEN\` repository secret"
+            echo "(fine-grained PAT with contents and pull requests write access)."
+          } >> "$GITHUB_STEP_SUMMARY"

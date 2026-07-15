@@ -1,0 +1,6 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "scm"
+tag_format = "v$version"
+major_version_zero = false
+bump_message = "chore(release): v$new_version [skip ci]"
