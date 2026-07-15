@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  schedule:
+    # Weekly drift check: catches breakage from new CLI/runtime/dependency releases without a merge
+    - cron: "0 6 * * 1"
   workflow_dispatch:
 
 # Serialize CD runs: they deploy the same bundle to the shared Databricks workspace.
@@ -11,25 +14,27 @@ concurrency:
   group: databricks-shared-workspace
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   deploy-and-run-example-jobs:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     defaults:
       run:
         shell: bash
-    env:
-      BRANCH_NAME: ${{ github.ref_name }}
-      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-      DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
       - name: Install Databricks CLI
-        uses: databricks/setup-cli@main
+        uses: databricks/setup-cli@v1.7.0
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          ignore-empty-workdir: true
           enable-cache: false
 
       - name: Create init parameters JSON
@@ -44,8 +49,12 @@ jobs:
 
       - name: Initialize Declarative Automation Bundle from template
         run: |
-          echo "Using branch: $BRANCH_NAME"
-          databricks bundle init https://github.com/revodatanl/revo-dabs --branch $BRANCH_NAME --config-file init_params.json
+          echo "Rendering template from commit $GITHUB_SHA"
+          databricks bundle init "$GITHUB_WORKSPACE" --config-file init_params.json
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
       - name: Deploy Declarative Automation Bundle
         run: |
@@ -55,6 +64,10 @@ jobs:
           echo "======================== DEPLOY BUNDLE ==========================="
           echo "=================================================================="
           databricks bundle deploy
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
       - name: Run example job
         run: |
@@ -65,6 +78,10 @@ jobs:
           echo "=================================================================="
           echo "Starting 'example-job'... (this may take a while)"
           databricks bundle run example-job
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
       - name: Run example pipeline job
         run: |
@@ -75,14 +92,38 @@ jobs:
           echo "=================================================================="
           echo "Starting 'example-pipeline-job'... (this may take a while)"
           databricks bundle run example-pipeline-job
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
 
       # Destroy bundle regardless of the outcome of the deploy and runs
       - name: Destroy Bundle
         if: always()
         run: |
+          if [ ! -d revo-dabs-test-project ]; then
+            echo "Nothing to destroy: bundle was never initialized"
+            exit 0
+          fi
           cd revo-dabs-test-project
           echo ""
           echo "=================================================================="
           echo "======================== DESTROY BUNDLE =========================="
           echo "=================================================================="
           databricks bundle destroy --auto-approve
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+
+      - name: Open issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "CD DABs failed: run #${{ github.run_number }} on ${{ github.ref_name }}" \
+            --assignee thms317 \
+            --body "Post-merge verification of the deployed example jobs failed for commit ${{ github.sha }} (trigger: ${{ github.event_name }}). See the run logs: $RUN_URL"
