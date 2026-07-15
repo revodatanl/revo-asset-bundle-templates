@@ -1,3 +1,32 @@
+# [1.0.0](https://github.com/revodatanl/revo-dabs/compare/v0.20.0...v1.0.0) (2026-07-15)
+
+
+* feat!: rebrand to RevoData Declarative Automation Bundle Templates ([4b6aa5c](https://github.com/revodatanl/revo-dabs/commit/4b6aa5c2da7595f607ad3f54b0c46b99cf934807))
+
+
+### Bug Fixes
+
+* **just:** correct silent failures and portability bugs in recipes ([0ffe36b](https://github.com/revodatanl/revo-dabs/commit/0ffe36b32ef62cfa7f4411d4578409473a21dac9))
+* **just:** git-ignore machine-local shell settings instead of skip-worktree ([e9579cf](https://github.com/revodatanl/revo-dabs/commit/e9579cf3e890b6065fbfa2bc5f2f9bc0eb224701))
+* **just:** harden Windows bootstrap script (just_bash.ps1) ([d8d3a12](https://github.com/revodatanl/revo-dabs/commit/d8d3a12898f4262b22d00bfdb775f6c287869bb1))
+* **pre-commit:** keep the repo: local hooks, with ty instead of mypy ([e84367e](https://github.com/revodatanl/revo-dabs/commit/e84367e364ca6bebfafe1ae8bb9af3f959c496d5))
+* **template:** correct cross-platform path separators and dependabot grouping ([05f096a](https://github.com/revodatanl/revo-dabs/commit/05f096aaee6daafe091e55f38c5f0b6bea6a04e6))
+
+
+### Features
+
+* migrate type checker from mypy to ty ([ff6c0e2](https://github.com/revodatanl/revo-dabs/commit/ff6c0e218a2e4cfbbe3935a7103fdb8c74f744cb))
+
+
+### BREAKING CHANGES
+
+* the minimum supported Databricks CLI version is now
+v0.295.0 (the release that shipped the rename). Existing generated
+projects are unaffected; the rename itself is non-breaking and the DAB
+acronym is unchanged.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
 # [0.20.0](https://github.com/revodatanl/revo-asset-bundle-templates/compare/v0.19.0...v0.20.0) (2026-02-09)
 
 
