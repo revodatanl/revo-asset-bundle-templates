@@ -13,6 +13,9 @@ concurrency:
 
 jobs:
   release:
+    # workflow_dispatch offers every branch in the run-workflow UI; never
+    # release from anything but main.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write        # create the tag and GitHub release, push the release PR branch
