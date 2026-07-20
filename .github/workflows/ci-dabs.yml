@@ -53,7 +53,7 @@ jobs:
 
     steps:
       - name: Install Databricks CLI
-        uses: databricks/setup-cli@v1.7.0
+        uses: databricks/setup-cli@v1.8.0
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
